@@ -1,37 +1,43 @@
 <template>
-    <nav aria-label="Page navigation example">
+    <nav v-if="totalPages > 1">
         <ul class="pagination">
-            <li class="page-item" v-if="page != 1">
-                <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
-                    <i class="fas fa-backward"></i>
-                    <span class="sr-only">First</span>
-                </a>
-            </li>
-            <li class="page-item" v-if="page != 1">
-                <a class="page-link" href="#" aria-label="Previous" @click.prevent="setPage(page - 1)">
-                    <i class="fas fa-caret-left"></i>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li v-for="(link, index) in pages"
+            <template v-if="page != 1">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
+                        <i class="fas fa-backward"></i>
+                        <span class="sr-only">First</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="setPage(page - 1)">
+                        <i class="fas fa-caret-left"></i>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            </template>
+
+            <li v-for="(linkButton, index) in linkButtons"
                 :key="index"
                 class="page-item"
-                :class="{'active': link == page}"
+                :class="{'active': linkButton == page}"
             >
-                <a class="page-link" href="#" @click.prevent="setPage(link)">{{ link }}</a>
+                <a class="page-link" href="#" @click.prevent="setPage(linkButton)">{{ linkButton }}</a>
             </li>
-            <li class="page-item" v-if="page != pages.length">
-                <a class="page-link" href="#" aria-label="Next" @click.prevent="setPage(page + 1)">
-                    <i class="fas fa-caret-right"></i>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-            <li class="page-item" v-if="page != pages.length">
-                <a class="page-link" href="#" aria-label="Last" @click.prevent="setPage(pages.length)">
-                    <i class="fas fa-forward"></i>
-                    <span class="sr-only">Last</span>
-                </a>
-            </li>
+
+            <template v-if="page != totalPages">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next" @click.prevent="setPage(page + 1)">
+                        <i class="fas fa-caret-right"></i>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Last" @click.prevent="setPage(totalPages)">
+                        <i class="fas fa-forward"></i>
+                        <span class="sr-only">Last</span>
+                    </a>
+                </li>
+            </template>
         </ul>
 
         Showing {{ start }} - {{ end }} of {{ items }}
@@ -65,7 +71,7 @@
             },
             maxLinks: {
                 type: Number,
-                default: 6,
+                default: 5,
                 validator: (value) => {
                     return value > 0;
                 }
@@ -88,50 +94,49 @@
             totalPages: function () {
                 return Math.ceil(this.items / this.perPage);
             },
-            pages() {
-                let filteredPages = this.filteredPages;
 
-                let pages = filteredPages ?
-                    [
-                        filteredPages[0] - 1 === 1 ? 1 : '...',
-                        ...filteredPages,
-                        filteredPages[filteredPages.length - 1] + 1 === this.totalPages - 2 ? this.totalPages - 2 : '...',
-                    ] :
-                    [
-                        ...Array(this.totalPages - 2).keys(),
-                    ].map(page => page + 1);
+            linkButtons: function () {
+                let linksSpan = this.linksSpan;
 
-                return [
-                    this.page - 1,
-                    0,
-                    ...pages,
-                    this.totalPages - 1,
-                    this.page + 1,
-                ];
-            },
-            filteredPages() {
-                let diff = this.maxLinks / 2;
+                let pages = [];
 
-                let toFilterPages = [
-                    ...Array(this.totalPages).keys(),
-                ].slice(2, -2);
-
-                if (toFilterPages.length > this.maxLinks) {
-                    let diffFirst = this.page - toFilterPages[0];
-                    let diffLast = this.page - toFilterPages[toFilterPages.length - 1];
-
-                    if (diffFirst < diff) {
-                        return toFilterPages.slice(0, this.maxLinks);
-                    } else if (diffLast >= -diff) {
-                        return toFilterPages.slice(-this.maxLinks);
-                    } else {
-                        return toFilterPages.filter(page => {
-                            let diffPage = this.page - page;
-                            return diffPage < 0 ? Math.abs(diffPage) <= diff : diffPage < diff;
-                        });
-                    }
+                for (let p = linksSpan.lower; p <= linksSpan.higher; p++) {
+                    pages.push(p);
                 }
-                return null;
+
+                return pages;
+            },
+
+            linksSpan: function () {
+                const span = Math.floor(this.maxLinks / 2);
+
+                let lowerBound = this.page - span;
+                console.log('lower bound:', lowerBound);
+
+                let lowerOverflow = lowerBound < 0 ? Math.abs(lowerBound) + 1 : 0;
+                console.log('lower overflow:', lowerOverflow);
+
+                let higherBound = this.page + span;
+                console.log('higher bound:', higherBound);
+
+                let higherOverflow = higherBound > this.totalPages ? higherBound - this.totalPages : 0;
+                console.log('higher overflow:', higherOverflow);
+
+                // Correct overflows
+                lowerBound += lowerOverflow;
+                higherBound -= higherOverflow;
+
+                // Correct bounds
+                lowerBound -= higherOverflow;
+                lowerBound += lowerBound < 1 ? 1 + Math.abs(lowerBound) : 0;
+
+                higherBound += lowerOverflow;
+                higherBound -= higherBound > this.totalPages ? higherBound - this.totalPages : 0;
+
+                return {
+                    lower: lowerBound,
+                    higher: higherBound
+                };
             }
         }
     };
