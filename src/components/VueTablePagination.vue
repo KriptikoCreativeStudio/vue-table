@@ -111,16 +111,12 @@
                 const span = Math.floor(this.maxLinks / 2);
 
                 let lowerBound = this.page - span;
-                console.log('lower bound:', lowerBound);
 
                 let lowerOverflow = lowerBound < 0 ? Math.abs(lowerBound) + 1 : 0;
-                console.log('lower overflow:', lowerOverflow);
 
                 let higherBound = this.page + span;
-                console.log('higher bound:', higherBound);
 
                 let higherOverflow = higherBound > this.totalPages ? higherBound - this.totalPages : 0;
-                console.log('higher overflow:', higherOverflow);
 
                 // Correct overflows
                 lowerBound += lowerOverflow;
