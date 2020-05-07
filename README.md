@@ -29,11 +29,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Options API
 
-| Prop | Type | Default | Description | 
-|----------|----------|----------|----------|
-| paginate | Boolean | true | Paginates the records and enables the pages links. |
-| locale | String | en | Sets the locale. Supported values: en, es, fr, pt. |
-| orderable | Boolean | false | When set to true, the rows can be reorder by dragging them. |
+| Prop      | Type    | Default | Description                                                   | 
+|-----------|:-------:|:-------:|---------------------------------------------------------------|
+| per-page  | Number  | 15      | Number of items displayed per page.                           |
+| paginate  | Boolean | true    | Paginates the records and enables the pages links.            |
+| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.            |
+| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.   |
 
 
 ## About CodeTech
