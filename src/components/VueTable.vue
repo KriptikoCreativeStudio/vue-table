@@ -60,7 +60,10 @@
                         </table>
                     </div>
 
-                    <vue-table-pagination v-if="paginate" :page.sync="page"/>
+                    <vue-table-pagination v-if="paginate"
+                                          :page.sync="page"
+                                          :per-page="perPage"
+                    />
                 </div>
             </div>
         </div>
@@ -73,7 +76,6 @@
     import VueTablePagination from "./VueTablePagination";
     import VueDraggable from 'vuedraggable';
     import ImageIcon from '../assets/image-icon.svg';
-    import axios from 'axios';
 
     export default {
         name: "VueTable",
@@ -86,6 +88,7 @@
         data: function () {
             return {
                 items: [],
+                page: 1,
                 search: '',
                 sortBy: null,
                 sortDirection: null,
@@ -129,9 +132,9 @@
                 type: Boolean,
                 default: true
             },
-            page: {
+            perPage: {
                 type: Number,
-                default: 1,
+                default: 20,
                 validator: function (value) {
                     return value > 0;
                 }
@@ -142,12 +145,19 @@
              * Get the items
              */
             getItems() {
+                const axios = require('axios');
+                const qs = require('qs');
+
                 let options = {
                     params: {
-                        search: this.search,
-                        // columns: this.columns,
-                        page: this.page
-                    }
+                        columns: this.columns,
+                        page: this.page,
+                        perPage: this.perPage,
+                        search: this.search
+                    },
+                    paramsSerializer: function (params) {
+                        return qs.stringify(params);
+                    },
                 };
 
                 axios.get(this.server.uri, options)
@@ -213,6 +223,8 @@
         },
         watch: {
             search: function () {
+                this.page = 1;
+
                 this.getItems();
             },
             columns: function () {

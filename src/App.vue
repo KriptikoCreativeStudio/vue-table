@@ -1,5 +1,20 @@
 <template>
-    <div class="container py-5">
+    <div class="container-fluid py-5">
+        <select class="form-control" name="city" id="city">
+            <option value=""></option>
+            <option value="Abbeyhaven">Abbeyhaven</option>
+            <option value="Abbottton">Abbottton</option>
+            <option value="Abernathyville">Abernathyville</option>
+            <option value="Adriannachester">Adriannachester</option>
+            <option value="Ahmadville">Ahmadville</option>
+            <option value="Baileyfurt">Baileyfurt</option>
+            <option value="Baumbachside">Baumbachside</option>
+            <option value="Camrenland">Camrenland</option>
+            <option value="Delfinamouth">Delfinamouth</option>
+            <option value="East Benborough">East Benborough</option>
+            <option value="Feeneymouth">Feeneymouth</option>
+        </select>
+
         <vue-table v-bind="options">
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-info"
@@ -58,7 +73,15 @@
                             sortable: true
                         },
                         {
+                            title: "City",
+                            name: "city",
+                            searchable: true,
+                            filtererBy: '#city',
+                            sortable: true
+                        },
+                        {
                             title: "Created at",
+                            name: "created_at",
                             sortable: true,
                             render: function (data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
@@ -75,7 +98,8 @@
                         uri: 'https://api.sandbox.codetech.pt/api/users',
                         responseKey: 'data'
                     },
-                    locale: 'pt'
+                    locale: 'pt',
+                    perPage: 15
                 }
             };
         },
