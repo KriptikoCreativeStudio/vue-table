@@ -35,12 +35,12 @@
                                     </td>
                                     <td v-for="(column, index) in columns" :key="index" class="align-middle"
                                         :class="column.rowClasses">
-                                        <template v-if="column.name">
-                                            {{ item[column.name] }}
+                                        <template v-if="column.render && typeof column.render === 'function'">
+                                            <div v-html="column.render(item)"></div>
                                         </template>
 
-                                        <template v-else-if="column.render && typeof column.render === 'function'">
-                                            <div v-html="column.render(item)"></div>
+                                        <template v-else-if="column.name">
+                                            {{ item[column.name] }}
                                         </template>
 
                                         <template v-else-if="column.thumb && typeof column.thumb === 'function'">
@@ -63,6 +63,7 @@
                     <vue-table-pagination v-if="paginate"
                                           :page.sync="page"
                                           :per-page="perPage"
+                                          :items="totalItems"
                     />
                 </div>
             </div>
@@ -92,19 +93,22 @@
                 search: '',
                 sortBy: null,
                 sortDirection: null,
-                lang: require(`../resources/lang/${ this.locale }.json`)
+                lang: require(`../resources/lang/${ this.locale }.json`),
+                totalItems: 0
             };
         },
         props: {
-            server: {
-                uri: {
-                    type: String,
-                    default: null
-                },
-                responseKey: {
-                    type: String,
-                    default: null
-                }
+            uri: {
+                type: String,
+                default: null
+            },
+            dataKey: {
+                type: String,
+                default: 'data'
+            },
+            metaKey: {
+                type: String,
+                default: 'meta'
             },
             columns: {
                 type: Array,
@@ -148,9 +152,14 @@
                 const axios = require('axios');
                 const qs = require('qs');
 
+                let filters = {
+                    // city: ['Predovicshire', 'Port Chayaburgh']
+                };
+
                 let options = {
                     params: {
                         columns: this.columns,
+                        filters: filters,
                         page: this.page,
                         perPage: this.perPage,
                         search: this.search
@@ -160,11 +169,15 @@
                     },
                 };
 
-                axios.get(this.server.uri, options)
+                axios.get(this.uri, options)
                     .then(response => {
-                        const responseKey = this.server.responseKey;
+                        if (typeof response.data[this.dataKey] !== 'undefined') {
+                            this.items = response.data[this.dataKey];
+                        }
 
-                        this.items = responseKey !== null ? response.data[responseKey] : response.data;
+                        if (typeof response.data[this.metaKey] !== 'undefined') {
+                            this.totalItems = response.data[this.metaKey].total ?? this.items.length;
+                        }
 
                         this.$emit('update:items', this.items);
                     });
@@ -235,7 +248,7 @@
             }
         },
         mounted() {
-            if (this.server.uri !== null) {
+            if (this.uri !== null) {
                 this.getItems();
             }
         }

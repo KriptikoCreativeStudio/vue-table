@@ -57,7 +57,7 @@
             },
             items: {
                 type: Number,
-                default: 400,
+                default: 0,
                 validator: (value) => {
                     return value >= 0;
                 }
@@ -94,7 +94,6 @@
             totalPages: function () {
                 return Math.ceil(this.items / this.perPage);
             },
-
             linkButtons: function () {
                 let linksSpan = this.linksSpan;
 
@@ -106,7 +105,6 @@
 
                 return pages;
             },
-
             linksSpan: function () {
                 const span = Math.floor(this.maxLinks / 2);
 
@@ -137,7 +135,3 @@
         }
     };
 </script>
-
-<style scoped>
-
-</style>

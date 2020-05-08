@@ -18,7 +18,7 @@
         <vue-table v-bind="options">
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-info"
-                   :href="`${options.server.uri}/${slotProps.item.id}/edit`"
+                   :href="`${options.uri}/${slotProps.item.id}/edit`"
                 >
                     <i class="fas fa-pencil-alt"></i>
                 </a>
@@ -26,7 +26,7 @@
 
             <template v-slot:action-delete="slotProps">
                 <a class="btn btn-danger"
-                   :href="`${options.server.uri}/${slotProps.item.id}/delete`"
+                   :href="`${options.uri}/${slotProps.item.id}/delete`"
                 >
                     <i class="fas fa-trash-alt"></i>
                 </a>
@@ -82,7 +82,6 @@
                         {
                             title: "Created at",
                             name: "created_at",
-                            sortable: true,
                             render: function (data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
                             }
@@ -94,12 +93,9 @@
                             'delete'
                         ]
                     },
-                    server: {
-                        uri: 'https://api.sandbox.codetech.pt/api/users',
-                        responseKey: 'data'
-                    },
-                    locale: 'pt',
-                    perPage: 15
+                    uri: 'https://api.sandbox.codetech.pt/api/users',
+                    metaKey: 'meta',
+                    locale: 'pt'
                 }
             };
         },

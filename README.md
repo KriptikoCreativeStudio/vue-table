@@ -27,14 +27,17 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-## Options API
+## Props
 
-| Prop      | Type    | Default | Description                                                   | 
-|-----------|:-------:|:-------:|---------------------------------------------------------------|
-| per-page  | Number  | 15      | Number of items displayed per page.                           |
-| paginate  | Boolean | true    | Paginates the records and enables the pages links.            |
-| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.            |
-| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.   |
+| Prop      | Type    | Default | Description                                                    | 
+|-----------|:-------:|:-------:|----------------------------------------------------------------|
+| uri       | String  | ''      | Data source URI                                                |
+| data-key  | String  | 'data'  | The path to the data in the server's JSON response.            | 
+| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response. |
+| per-page  | Number  | 20      | Number of items displayed per page.                            |
+| paginate  | Boolean | true    | Paginates the records and enables the pages links.             |
+| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.             |
+| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.    |
 
 
 ## About CodeTech
