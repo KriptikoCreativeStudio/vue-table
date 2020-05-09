@@ -42,13 +42,6 @@
                                         <template v-else-if="column.name">
                                             {{ item[column.name] }}
                                         </template>
-
-                                        <template v-else-if="column.thumb && typeof column.thumb === 'function'">
-                                            <div class="v-table-img-thumb">
-                                                <img :src="getThumbSrc(column.thumb(item))"
-                                                     :alt="getThumbAlt(column.thumb(item))">
-                                            </div>
-                                        </template>
                                     </td>
                                     <td v-if="rows.actions.length"
                                         class="v-table-options-wrapper min-width align-middle">
@@ -76,7 +69,6 @@
     import VueTableSearchBar from "./VueTableSearchBar";
     import VueTablePagination from "./VueTablePagination";
     import VueDraggable from 'vuedraggable';
-    import ImageIcon from '../assets/image-icon.svg';
 
     export default {
         name: "VueTable",
@@ -192,34 +184,6 @@
                 let columns = this.columns.filter(column => column.searchable);
 
                 return columns;
-            },
-
-            /**
-             * Get the image source.
-             *
-             * @param {Object} thumb
-             * @return {String}
-             */
-            getThumbSrc(thumb) {
-                if (thumb === null) {
-                    return ImageIcon;
-                }
-
-                return thumb.src;
-            },
-
-            /**
-             * Get the image source.
-             *
-             * @param {Object} thumb
-             * @return {String}
-             */
-            getThumbAlt(thumb) {
-                if (!thumb) {
-                    return 'Image alt';
-                }
-
-                return thumb.alt;
             }
         },
         computed: {
