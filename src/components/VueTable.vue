@@ -122,7 +122,7 @@
             },
             orderable: {
                 type: Boolean,
-                default: true
+                default: false
             },
             paginate: {
                 type: Boolean,
