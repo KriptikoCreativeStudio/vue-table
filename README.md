@@ -31,7 +31,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 | Prop      | Type    | Default | Description                                                    | 
 |-----------|:-------:|:-------:|----------------------------------------------------------------|
-| uri       | String  | ''      | Data source URI                                                |
+| uri       | String  | null    | Data source URI                                                |
 | data-key  | String  | 'data'  | The path to the data in the server's JSON response.            | 
 | meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response. |
 | per-page  | Number  | 20      | Number of items displayed per page.                            |
