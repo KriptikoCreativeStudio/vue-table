@@ -47,20 +47,6 @@
             return {
                 options: {
                     columns: [
-                        // {
-                        //     rowClasses: "min-width",
-                        //     thumb: function (data) {
-                        //         if (data.avatar === null) {
-                        //             return null;
-                        //         }
-                        //
-                        //         return {
-                        //             src: data.avatar,
-                        //             alt: `${ data.first_name } ${ data.last_name }`
-                        //         };
-                        //     },
-                        //     sortable: false
-                        // },
                         {
                             title: "Name",
                             name: "name",
