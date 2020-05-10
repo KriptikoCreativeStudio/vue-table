@@ -48,31 +48,37 @@
                 options: {
                     columns: [
                         {
-                            title: "Name",
                             name: "name",
-                            searchable: true
+                            rowClasses: 'align-middle',
+                            searchable: true,
+                            title: "Name"
                         },
                         {
-                            title: "Email",
                             name: "email",
+                            rowClasses: 'align-middle',
                             searchable: true,
-                            sortable: true
+                            title: "Email"
                         },
                         {
-                            title: "City",
+                            headerClasses: 'text-center',
                             name: "city",
+                            rowClasses: 'align-middle text-center',
                             searchable: true,
-                            filtererBy: '#city',
-                            sortable: true
+                            sortable: false,
+                            title: "City"
                         },
                         {
-                            title: "Created at",
                             name: "created_at",
-                            render: function (data) {
+                            rowClasses: 'align-middle',
+                            title: "Created at",
+                            render(data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
                             }
                         }
                     ],
+                    sort: {
+                        name: 'asc',
+                    },
                     rows: {
                         actions: [
                             'edit',

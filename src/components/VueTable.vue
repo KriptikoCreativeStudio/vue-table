@@ -14,8 +14,14 @@
                             <thead>
                                 <tr>
                                     <th v-if="orderable" class="min-width"></th>
-                                    <th v-for="column in columns" :key="column.name" :class="column.class">
-                                        <vue-table-heading :column.sync="column"/>
+                                    <th v-for="column in columns"
+                                        :key="column.name"
+                                        :class="column.headerClasses"
+                                    >
+                                        <vue-table-heading :column="column"
+                                                           :direction="sort[column.name]"
+                                                           @sort="handleSort"
+                                        />
                                     </th>
                                     <th v-if="rows.actions.length"></th>
                                 </tr>
@@ -33,8 +39,10 @@
                                             <i class="fas fa-arrows-alt-v"></i>
                                         </button>
                                     </td>
-                                    <td v-for="(column, index) in columns" :key="index" class="align-middle"
-                                        :class="column.rowClasses">
+                                    <td v-for="(column, index) in columns"
+                                        :key="index"
+                                        :class="column.rowClasses"
+                                    >
                                         <template v-if="column.render && typeof column.render === 'function'">
                                             <div v-html="column.render(item)"></div>
                                         </template>
@@ -80,45 +88,32 @@
         },
         data: function () {
             return {
+                currentSort: this.sort,
                 items: [],
+                lang: require(`../resources/lang/${ this.locale }.json`),
                 page: 1,
                 search: '',
-                sortBy: null,
-                sortDirection: null,
-                lang: require(`../resources/lang/${ this.locale }.json`),
                 totalItems: 0
             };
         },
         props: {
-            uri: {
-                type: String,
-                default: null
-            },
-            dataKey: {
-                type: String,
-                default: 'data'
-            },
-            metaKey: {
-                type: String,
-                default: 'meta'
-            },
             columns: {
                 type: Array,
                 default: function () {
                     return [];
                 }
             },
-            rows: {
-                type: Object,
-                default: function () {
-                    return {
-                        actions: []
-                    };
-                }
+            dataKey: {
+                type: String,
+                default: 'data'
             },
             locale: {
                 type: String,
                 default: 'en'
+            },
+            metaKey: {
+                type: String,
+                default: 'meta'
             },
             orderable: {
                 type: Boolean,
@@ -134,6 +129,24 @@
                 validator: function (value) {
                     return value > 0;
                 }
+            },
+            rows: {
+                type: Object,
+                default: function () {
+                    return {
+                        actions: []
+                    };
+                }
+            },
+            sort: {
+                type: Object,
+                default: function () {
+                    return {};
+                }
+            },
+            uri: {
+                type: String,
+                default: null
             }
         },
         methods: {
@@ -144,17 +157,13 @@
                 const axios = require('axios');
                 const qs = require('qs');
 
-                let filters = {
-                    // city: ['Predovicshire', 'Port Chayaburgh']
-                };
-
                 let options = {
                     params: {
                         columns: this.columns,
-                        filters: filters,
                         page: this.page,
                         perPage: this.perPage,
-                        search: this.search
+                        search: this.search,
+                        sort: this.currentSort
                     },
                     paramsSerializer: function (params) {
                         return qs.stringify(params);
@@ -163,11 +172,11 @@
 
                 axios.get(this.uri, options)
                     .then(response => {
-                        if (typeof response.data[this.dataKey] !== 'undefined') {
+                        if (Object.prototype.hasOwnProperty.call(response.data, this.dataKey)) {
                             this.items = response.data[this.dataKey];
                         }
 
-                        if (typeof response.data[this.metaKey] !== 'undefined') {
+                        if (Object.prototype.hasOwnProperty.call(response.data, this.metaKey)) {
                             this.totalItems = response.data[this.metaKey].total ?? this.items.length;
                         }
 
@@ -184,13 +193,36 @@
                 let columns = this.columns.filter(column => column.searchable);
 
                 return columns;
+            },
+
+            handleSort(column, direction) {
+                this.currentSort[column] = direction;
+
+                this.getItems();
+            },
+
+            /**
+             * Checks whether the property has all the required information
+             * for the correct functioning of the component.
+             */
+            hydrateColumns() {
+                this.columns.forEach(column => {
+                    // Set title defaults
+                    if (!Object.prototype.hasOwnProperty.call(column, 'title')) {
+                        column.title = '';
+                    }
+
+                    // Set sortable defaults
+                    if (!Object.prototype.hasOwnProperty.call(column, 'sortable') || typeof column.sortable !== 'boolean') {
+                        column.sortable = true;
+                    }
+                });
             }
         },
         computed: {
             /**
-             * Checks whether the search form should be displayed.
-             * The form will be displayed if there are filters
-             * or if there is at least one searchable columns.
+             * Checks whether the search form should be displayed. The form will
+             * be displayed if there is at least one searchable column.
              *
              * @returns {boolean}
              */
@@ -199,17 +231,17 @@
             }
         },
         watch: {
+            page: function () {
+                this.getItems();
+            },
             search: function () {
                 this.page = 1;
 
                 this.getItems();
-            },
-            columns: function () {
-                this.getItems();
-            },
-            page: function () {
-                this.getItems();
             }
+        },
+        created() {
+            this.hydrateColumns();
         },
         mounted() {
             if (this.uri !== null) {
