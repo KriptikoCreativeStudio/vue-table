@@ -1,5 +1,5 @@
 <template>
-    <span v-if="typeof column.sortable !== 'undefined' && column.sortable === false">
+    <span v-if="!column.sortable">
         {{ column.title }}
     </span>
 
@@ -10,36 +10,68 @@
     >
         {{ column.title }}
 
-        <i class="fas" :class="`fa-sort-amount-${ direction == 'asc' ? 'up-alt' : 'down' }`"></i>
+        <i class="fas fa-fw" :class="sortIcon"></i>
     </a>
 </template>
 
 <script>
     export default {
         name: "VueTableHeading",
-        data: function () {
+        data() {
             return {
-                direction: 'asc'
+                currentDirection: null
             };
         },
         props: {
             column: {
                 type: Object,
-                required: true
+                required: true,
+                validator: function (value) {
+                    return Object.prototype.hasOwnProperty.call(value, 'name') &&
+                        Object.prototype.hasOwnProperty.call(value, 'title') &&
+                        Object.prototype.hasOwnProperty.call(value, 'sortable');
+                }
+            },
+            direction: {
+                type: String,
+                default: null,
+                validator: function (value) {
+                    if (value === null) {
+                        return true;
+                    }
+
+                    return ['asc', 'desc'].indexOf(value) !== -1;
+                }
+            }
+        },
+        computed: {
+            sortIcon: function () {
+                switch (this.direction) {
+                    case 'asc':
+                        return 'fa-sort-up';
+
+                    case 'desc':
+                        return 'fa-sort-down';
+
+                    default:
+                        return 'fa-sort';
+                }
             }
         },
         methods: {
+            setCurrentDirection() {
+                if (this.direction == null || ['asc', 'desc'].indexOf(this.direction) !== -1) {
+                    this.currentDirection = this.direction;
+                }
+            },
             setOrder() {
-                this.direction = this.direction == 'asc' ? 'desc' : 'asc';
+                this.currentDirection = this.direction == null ? 'asc' : (this.direction === 'asc' ? 'desc' : null);
 
-                this.column.sort.direction = this.direction;
-
-                this.$emit('update:column', this.column);
+                this.$emit('sort', this.column.name, this.currentDirection);
             }
+        },
+        mounted() {
+            this.setCurrentDirection();
         }
     };
 </script>
-
-<style scoped>
-
-</style>

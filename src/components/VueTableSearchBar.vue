@@ -31,12 +31,6 @@
             value: {
                 type: String,
                 default: ''
-            },
-            filters: {
-                type: Array,
-                default: function () {
-                    return [];
-                },
             }
         }
     };
