@@ -202,8 +202,8 @@
             },
 
             /**
-             * Checks whether the property has all the required information
-             * for the correct functioning of the component.
+             * Checks whether the columns contain all the necessary properties
+             * and whether these properties have been initialized correctly.
              */
             hydrateColumns() {
                 this.columns.forEach(column => {
