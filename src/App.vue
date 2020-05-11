@@ -1,21 +1,38 @@
 <template>
     <div class="container-fluid py-5">
-        <select class="form-control" name="city" id="city">
-            <option value=""></option>
-            <option value="Abbeyhaven">Abbeyhaven</option>
-            <option value="Abbottton">Abbottton</option>
-            <option value="Abernathyville">Abernathyville</option>
-            <option value="Adriannachester">Adriannachester</option>
-            <option value="Ahmadville">Ahmadville</option>
-            <option value="Baileyfurt">Baileyfurt</option>
-            <option value="Baumbachside">Baumbachside</option>
-            <option value="Camrenland">Camrenland</option>
-            <option value="Delfinamouth">Delfinamouth</option>
-            <option value="East Benborough">East Benborough</option>
-            <option value="Feeneymouth">Feeneymouth</option>
-        </select>
+        <div class="form-row">
+            <div class="col">
+                <select class="form-control" v-filter-column:city multiple>
+                    <option value="Sipesburgh">Sipesburgh</option>
+                    <option value="Abbottton">Abbottton</option>
+                    <option value="Abernathyville">Abernathyville</option>
+                    <option value="Adriannachester">Adriannachester</option>
+                    <option value="Ahmadville">Ahmadville</option>
+                    <option value="Baileyfurt">Baileyfurt</option>
+                    <option value="Baumbachside">Baumbachside</option>
+                    <option value="Camrenland">Camrenland</option>
+                    <option value="Delfinamouth">Delfinamouth</option>
+                    <option value="East Benborough">East Benborough</option>
+                    <option value="Feeneymouth">Feeneymouth</option>
+                </select>
+            </div>
 
-        <vue-table v-bind="options">
+            <div class="col">
+                <select class="form-control" v-filter-column:name>
+                    <option value="Abe Fritsch Jr.">Abe Fritsch Jr.</option>
+                    <option value="Ada Stark">Ada Stark</option>
+                    <option value="Alexandrine Mertz">Alexandrine Mertz</option>
+                </select>
+            </div>
+        </div>
+
+        <ul>
+            <li v-for="(value, property, index) in $store.state.filtersModule.filters" :key="index">
+                {{ property }}: {{ value }}
+            </li>
+        </ul>
+
+        <vue-table v-bind="options" :items.sync="items">
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-info"
                    :href="`${options.uri}/${slotProps.item.id}/edit`"
@@ -25,9 +42,7 @@
             </template>
 
             <template v-slot:action-delete="slotProps">
-                <a class="btn btn-danger"
-                   :href="`${options.uri}/${slotProps.item.id}/delete`"
-                >
+                <a class="btn btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </template>
@@ -45,6 +60,7 @@
         },
         data() {
             return {
+                items: [],
                 options: {
                     columns: [
                         {
@@ -99,7 +115,7 @@
              */
             handleItemDeleted(item) {
                 this.items.splice(this.items.indexOf(item), 1);
-            },
+            }
         }
     };
 </script>

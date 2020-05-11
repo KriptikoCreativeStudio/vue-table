@@ -161,6 +161,7 @@
                     params: {
                         columns: this.columns,
                         page: this.page,
+                        filters: this.filters,
                         perPage: this.perPage,
                         search: this.search,
                         sort: this.currentSort
@@ -228,6 +229,10 @@
              */
             isSearchable: function () {
                 return this.getSearchableColumns().length > 0;
+            },
+
+            filters: function () {
+                return this.$store.state.filtersModule.filters;
             }
         },
         watch: {
@@ -237,6 +242,9 @@
             search: function () {
                 this.page = 1;
 
+                this.getItems();
+            },
+            filters: function () {
                 this.getItems();
             }
         },
