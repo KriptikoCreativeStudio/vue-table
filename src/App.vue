@@ -2,7 +2,7 @@
     <div class="container-fluid py-5">
         <div class="form-row">
             <div class="col">
-                <select class="form-control" v-filter-column:city>
+                <select class="form-control" v-filter-column:city multiple>
                     <option value="Sipesburgh">Sipesburgh</option>
                     <option value="Abbottton">Abbottton</option>
                     <option value="Abernathyville">Abernathyville</option>
