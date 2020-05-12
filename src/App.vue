@@ -27,8 +27,6 @@
         </div>
 
         <vue-table v-bind="options" :items.sync="items">
-
-
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-info"
                    :href="`${options.uri}/${slotProps.item.id}/edit`"
