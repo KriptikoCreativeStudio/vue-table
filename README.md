@@ -86,6 +86,10 @@ filters[0][values][1]: Benborough
 This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [columns API](#columns-api) for more info.
 
 
+## License
+
+**kriptiko/vue-table** is open-sourced software licensed under the [MIT license](https://github.com/KriptikoCreativeStudio/vue-table/blob/master/LICENSE).
+
 
 ## About Kriptiko
 
