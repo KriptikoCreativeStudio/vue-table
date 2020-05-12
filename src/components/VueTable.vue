@@ -245,6 +245,8 @@
                 this.getItems();
             },
             filters: function () {
+                this.page = 1;
+
                 this.getItems();
             }
         },

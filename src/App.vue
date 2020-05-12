@@ -2,7 +2,7 @@
     <div class="container-fluid py-5">
         <div class="form-row">
             <div class="col">
-                <select class="form-control" v-filter-column:city multiple>
+                <select class="form-control" v-filter-column:city>
                     <option value="Sipesburgh">Sipesburgh</option>
                     <option value="Abbottton">Abbottton</option>
                     <option value="Abernathyville">Abernathyville</option>
@@ -26,13 +26,9 @@
             </div>
         </div>
 
-        <ul>
-            <li v-for="(value, property, index) in $store.state.filtersModule.filters" :key="index">
-                {{ property }}: {{ value }}
-            </li>
-        </ul>
-
         <vue-table v-bind="options" :items.sync="items">
+
+
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-info"
                    :href="`${options.uri}/${slotProps.item.id}/edit`"
