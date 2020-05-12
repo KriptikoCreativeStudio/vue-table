@@ -61,6 +61,30 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 | title         | String   | ""      | The column's header title.                                     |
 | render()      | function | false   | Callback for transforming the column's data.                   |
 
+
+## Filters
+
+If you need to filter a column, you can use the `v-filter-column` directive.
+```
+<select v-filter-column:city>
+    ...
+</select>
+```
+This directive will sync your selector with the `city` column.<br>
+Here is an example of the data that will be attached to the request when you select an option:
+```
+filters[city][0]=Abbottton
+```
+It also works with selectors with the `multiple` attribute. The request will look like this:
+```
+filters[city][0]=Abbottton
+filters[city][1]=East Benborough
+```
+
+This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [columns API](#columns-api) for more info.
+
+
+
 ## About CodeTech
 
-[CodeTech](https://www.codetech.pt) is a web development agency based on Matosinhos, Portugal. Oh, and we LOVE Laravel!
+[Kriptiko](https://www.kriptiko.com) is a Creative Studio specialized in web development based in Matosinhos, Portugal.
