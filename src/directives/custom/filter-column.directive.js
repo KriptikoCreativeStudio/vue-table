@@ -1,6 +1,8 @@
+import { filtersStorageName } from "../../store/modules/filters.module";
+
 export const columnFilter = {
     bind: function (el, binding, vnode) {
-        let storedFilters = window.localStorage.getItem('filters');
+        let storedFilters = window.localStorage.getItem(filtersStorageName);
 
         storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
 

@@ -1,4 +1,6 @@
-let filters = window.localStorage.getItem('filters');
+export const filtersStorageName = `vue_table_${ window.location.pathname }_filters`;
+
+let filters = window.localStorage.getItem(filtersStorageName);
 
 export const filtersModule = {
     namespaced: true,
@@ -27,7 +29,7 @@ export const filtersModule = {
          * @param state
          */
         saveData(state) {
-            window.localStorage.setItem('filters', JSON.stringify(state.filters));
+            window.localStorage.setItem(filtersStorageName, JSON.stringify(state.filters));
         }
     },
     actions: {
