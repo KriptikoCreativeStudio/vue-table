@@ -87,6 +87,6 @@ This will append data to the request in order to search for the selected value i
 
 
 
-## About CodeTech
+## About Kriptiko
 
 [Kriptiko](https://www.kriptiko.com) is a Creative Studio specialized in web development based in Matosinhos, Portugal.
