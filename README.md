@@ -73,12 +73,14 @@ If you need to filter a column, you can use the `v-filter-column` directive.
 This directive will sync your selector with the `city` column.<br>
 Here is an example of the data that will be attached to the request when you select an option:
 ```
-filters[city][0]=Abbottton
+filters[0][column]: name
+filters[0][values][0]: Ada Stark
 ```
 It also works with selectors with the `multiple` attribute. The request will look like this:
 ```
-filters[city][0]=Abbottton
-filters[city][1]=East Benborough
+filters[0][column]: city
+filters[0][values][0]: Abbottton
+filters[0][values][1]: Benborough
 ```
 
 This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [columns API](#columns-api) for more info.
