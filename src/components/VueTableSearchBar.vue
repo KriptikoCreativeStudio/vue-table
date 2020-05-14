@@ -11,7 +11,7 @@
                         </div>
 
                         <input type="text" class="form-control" :value="value" :placeholder="lang.search_for"
-                               @keyup="$emit('input', $event.target.value)">
+                               @input="setValue($event.target.value)">
                     </div>
                 </div>
             </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+    import { mapActions, mapState } from 'vuex';
+
     export default {
         name: "VueTableSearchBar",
         data() {
@@ -27,11 +29,11 @@
                 lang: this.$parent.lang
             };
         },
-        props: {
-            value: {
-                type: String,
-                default: ''
-            }
+        methods: {
+            ...mapActions('searchModule', { setValue: 'setValueAction' })
+        },
+        computed: {
+            ...mapState('searchModule', ['value'])
         }
     };
 </script>
