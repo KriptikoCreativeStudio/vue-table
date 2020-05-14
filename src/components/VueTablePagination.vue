@@ -45,16 +45,11 @@
 </template>
 
 <script>
+    import { mapActions, mapState } from 'vuex';
+
     export default {
         name: "VueTablePagination",
         props: {
-            page: {
-                type: Number,
-                default: 1,
-                validator: (value) => {
-                    return value >= 1;
-                },
-            },
             items: {
                 type: Number,
                 default: 0,
@@ -78,9 +73,7 @@
             }
         },
         methods: {
-            setPage(page) {
-                this.$emit('update:page', page);
-            }
+            ...mapActions('paginationModule', { setPage: 'setPageAction' })
         },
         computed: {
             start: function () {
@@ -131,7 +124,8 @@
                     lower: lowerBound,
                     higher: higherBound
                 };
-            }
+            },
+            ...mapState('paginationModule', ['page'])
         }
     };
 </script>

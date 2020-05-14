@@ -62,7 +62,6 @@
                     </div>
 
                     <vue-table-pagination v-if="paginate"
-                                          :page.sync="page"
                                           :per-page="perPage"
                                           :items="totalItems"
                     />
@@ -73,6 +72,7 @@
 </template>
 
 <script>
+    import { mapActions, mapState } from 'vuex';
     import VueTableHeading from "./VueTableHeading";
     import VueTableSearchBar from "./VueTableSearchBar";
     import VueTablePagination from "./VueTablePagination";
@@ -91,7 +91,6 @@
                 currentSort: this.sort,
                 items: [],
                 lang: require(`../resources/lang/${ this.locale }.json`),
-                page: 1,
                 search: '',
                 totalItems: 0
             };
@@ -218,7 +217,9 @@
                         column.sortable = true;
                     }
                 });
-            }
+            },
+
+            ...mapActions('paginationModule', { setPage: 'setPageAction' })
         },
         computed: {
             /**
@@ -230,23 +231,19 @@
             isSearchable: function () {
                 return this.getSearchableColumns().length > 0;
             },
-
-            filters: function () {
-                return this.$store.state.filtersModule.filters;
-            }
+            ...mapState('filtersModule', ['filters']),
+            ...mapState('paginationModule', ['page']),
         },
         watch: {
             page: function () {
                 this.getItems();
             },
             search: function () {
-                this.page = 1;
-
+                this.setPage(1);
                 this.getItems();
             },
             filters: function () {
-                this.page = 1;
-
+                this.setPage(1);
                 this.getItems();
             }
         },
