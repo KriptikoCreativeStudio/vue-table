@@ -9,6 +9,8 @@ Vue tables with server-side data support.
  - Sortable columns
  - Filterable columns
  - Drag and drop for reordering the tables' rows
+ - Store modules
+ - Persist the state to local storage
 
 
 ## Project setup

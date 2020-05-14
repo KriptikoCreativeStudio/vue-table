@@ -9,10 +9,10 @@ export const paginationModule = {
     },
     mutations: {
         /**
-         * Adds a filter to the store.
+         * Sets the page number.
          *
          * @param state
-         * @param newFilter
+         * @param page
          */
         setPage(state, page) {
             state.page = page;
@@ -29,13 +29,13 @@ export const paginationModule = {
     },
     actions: {
         /**
-         * The action of adding a filter.
+         * The action of setting a page.
          *
          * @param commit
-         * @param filter
+         * @param page
          */
-        setPageAction({ commit }, filter) {
-            commit('setPage', filter);
+        setPageAction({ commit }, page) {
+            commit('setPage', page);
             commit('saveData');
         }
     }

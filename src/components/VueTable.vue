@@ -1,6 +1,6 @@
 <template>
     <div>
-        <vue-table-search-bar v-if="isSearchable" v-model="search"/>
+        <vue-table-search-bar v-if="isSearchable"/>
 
         <div class="card">
             <div class="card-body">
@@ -91,7 +91,6 @@
                 currentSort: this.sort,
                 items: [],
                 lang: require(`../resources/lang/${ this.locale }.json`),
-                search: '',
                 totalItems: 0
             };
         },
@@ -218,7 +217,6 @@
                     }
                 });
             },
-
             ...mapActions('paginationModule', { setPage: 'setPageAction' })
         },
         computed: {
@@ -232,6 +230,7 @@
                 return this.getSearchableColumns().length > 0;
             },
             ...mapState('filtersModule', ['filters']),
+            ...mapState('searchModule', { search: 'value' }),
             ...mapState('paginationModule', ['page']),
         },
         watch: {

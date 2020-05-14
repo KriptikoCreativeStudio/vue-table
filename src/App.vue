@@ -19,6 +19,7 @@
 
             <div class="col">
                 <select class="form-control" v-filter-column:name>
+                    <option></option>
                     <option value="Abe Fritsch Jr.">Abe Fritsch Jr.</option>
                     <option value="Ada Stark">Ada Stark</option>
                     <option value="Alexandrine Mertz">Alexandrine Mertz</option>

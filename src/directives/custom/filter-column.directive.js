@@ -15,7 +15,9 @@ export const columnFilter = {
         }
 
         el.addEventListener('change', (event) => {
-            const selectedValues = [...event.target.options].filter(option => option.selected).map(option => option.value);
+            let selectedValues = [...event.target.options]
+                .filter(option => option.selected && option.value)
+                .map(option => option.value);
 
             vnode.context.$store.dispatch('filtersModule/addFilterAction', {
                 column: binding.arg,
