@@ -37,16 +37,17 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Props
 
-| Prop      | Type    | Default | Description                                                    | 
-|-----------|:-------:|:-------:|----------------------------------------------------------------|
-| uri       | String  | null    | Data source URI                                                |
-| data-key  | String  | 'data'  | The path to the data in the server's JSON response.            |
-| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response. |
-| per-page  | Number  | 20      | Number of items displayed per page.                            |
-| paginate  | Boolean | true    | Paginates the records and enables the pages links.             |
-| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.             |
-| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.    |
-| sort      | Object  | {}      | The columns' sort directions. Supports multi-column.           |
+| Prop      | Type    | Default | Description                                                           | 
+|-----------|:-------:|:-------:|-----------------------------------------------------------------------|
+| columns   | Array   | []      | The table columns. See the [Columns API](#columns-api) for more info. |
+| uri       | String  | null    | Data source URI                                                       |
+| data-key  | String  | 'data'  | The path to the data in the server's JSON response.                   |
+| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response.        |
+| per-page  | Number  | 20      | Number of items displayed per page.                                   |
+| paginate  | Boolean | true    | Paginates the records and enables the pages links.                    |
+| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.                    |
+| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.           |
+| sort      | Object  | {}      | The columns' sort directions. Supports multi-column.                  |
 
 
 ## Columns API
@@ -83,7 +84,7 @@ filters[0][values][0]: Abbottton
 filters[0][values][1]: Benborough
 ```
 
-This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [columns API](#columns-api) for more info.
+This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [Columns API](#columns-api) for more info.
 
 
 ## License
