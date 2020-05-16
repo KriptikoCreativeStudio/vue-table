@@ -66,12 +66,12 @@
                         },
                         {
                             name: "email",
-                            rowClasses: 'align-middle',
+                            rowClasses: "align-middle",
                             searchable: true,
                             title: "Email"
                         },
                         {
-                            headerClasses: 'text-center',
+                            headerClasses: "text-center",
                             name: "city",
                             rowClasses: 'align-middle text-center',
                             searchable: true,
@@ -80,25 +80,32 @@
                         },
                         {
                             name: "created_at",
-                            rowClasses: 'align-middle',
+                            rowClasses: "align-middle",
                             title: "Created at",
                             render(data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
                             }
                         }
                     ],
-                    sort: {
-                        name: 'asc',
-                    },
+                    sorting: [
+                        {
+                            column: "name",
+                            direction: "desc"
+                        },
+                        {
+                            column: "email",
+                            direction: "asc"
+                        }
+                    ],
                     rows: {
                         actions: [
-                            'edit',
-                            'delete'
+                            "edit",
+                            "delete"
                         ]
                     },
                     uri: 'https://api.sandbox.codetech.pt/api/users',
-                    metaKey: 'meta',
-                    locale: 'pt'
+                    metaKey: "meta",
+                    locale: "pt"
                 }
             };
         },

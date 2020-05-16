@@ -18,10 +18,7 @@
                                         :key="column.name"
                                         :class="column.headerClasses"
                                     >
-                                        <vue-table-heading :column="column"
-                                                           :direction="sort[column.name]"
-                                                           @sort="handleSort"
-                                        />
+                                        <vue-table-heading :column="column"/>
                                     </th>
                                     <th v-if="rows.actions.length"></th>
                                 </tr>
@@ -88,7 +85,6 @@
         },
         data: function () {
             return {
-                currentSort: this.sort,
                 items: [],
                 lang: require(`../resources/lang/${ this.locale }.json`),
                 totalItems: 0
@@ -136,10 +132,10 @@
                     };
                 }
             },
-            sort: {
-                type: Object,
+            sorting: {
+                type: Array,
                 default: function () {
-                    return {};
+                    return [];
                 }
             },
             uri: {
@@ -162,7 +158,7 @@
                         filters: this.filters,
                         perPage: this.perPage,
                         search: this.search,
-                        sort: this.currentSort
+                        sorting: this.currentSorting
                     },
                     paramsSerializer: function (params) {
                         return qs.stringify(params);
@@ -194,12 +190,6 @@
                 return columns;
             },
 
-            handleSort(column, direction) {
-                this.currentSort[column] = direction;
-
-                this.getItems();
-            },
-
             /**
              * Checks whether the columns contain all the necessary properties
              * and whether these properties have been initialized correctly.
@@ -217,6 +207,7 @@
                     }
                 });
             },
+            ...mapActions('sortingModule', { addSort: 'addSortAction' }),
             ...mapActions('paginationModule', { setPage: 'setPageAction' })
         },
         computed: {
@@ -230,11 +221,15 @@
                 return this.getSearchableColumns().length > 0;
             },
             ...mapState('filtersModule', ['filters']),
+            ...mapState('sortingModule', { currentSorting: 'sorting' }),
             ...mapState('searchModule', { search: 'value' }),
             ...mapState('paginationModule', ['page']),
         },
         watch: {
             page: function () {
+                this.getItems();
+            },
+            currentSorting: function () {
                 this.getItems();
             },
             search: function () {
@@ -250,6 +245,9 @@
             this.hydrateColumns();
         },
         mounted() {
+            // Dispatch the sorting prop values
+            this.sorting.forEach(sort => this.addSort(sort));
+
             if (this.uri !== null) {
                 this.getItems();
             }
