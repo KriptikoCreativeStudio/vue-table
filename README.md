@@ -39,17 +39,59 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Props
 
-| Prop      | Type    | Default | Description                                                                          |
-|-----------|:-------:|:-------:|--------------------------------------------------------------------------------------|
-| columns   | Array   | []      | The table columns. See the [Columns API](#columns-api) for more info.                |
-| uri       | String  | null    | Data source URI                                                                      |
-| data-key  | String  | 'data'  | The path to the data in the server's JSON response.                                  |
-| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response.                       |
-| per-page  | Number  | 20      | Number of items displayed per page.                                                  |
-| paginate  | Boolean | true    | Paginates the records and enables the pages links.                                   |
-| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.                                   |
-| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.                          |
-| sorting   | Array   | []      | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.  |
+| Prop      | Type    | Default                    | Description                                                                            |
+|-----------|:-------:|:--------------------------:|----------------------------------------------------------------------------------------|
+| actions   | Array   | { classes: "", slots: [] } | The actions' slots names. See the [Actions API](#actions-api) for more info.           |
+| columns   | Array   | []                         | The table columns. See the [Columns API](#columns-api) for more info.                  |
+| uri       | String  | null                       | Data source URI                                                                        |
+| data-key  | String  | 'data'                     | The path to the data in the server's JSON response.                                    |
+| meta-key  | String  | 'meta'                     | The path to the pagination meta in the server's JSON response.                         |
+| per-page  | Number  | 20                         | Number of items displayed per page.                                                    |
+| paginate  | Boolean | true                       | Paginates the records and enables the pages links.                                     |
+| locale    | String  | en                         | Sets the locale. Supported values: en, es, fr, pt.                                     |
+| orderable | Boolean | false                      | When set to true, the rows can be reorder by dragging them.                            |
+| sorting   | Array   | []                         | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.    |
+
+
+## Actions API
+
+| Property  | Type      | Default | Description                                                    | 
+|-----------|:---------:|:-------:|----------------------------------------------------------------|
+| classes   | String    | ""      | The CSS classes that will be assigned to the row cell.         |
+| slots     | Array     | []      | An array containing the names for the slots.                   |
+
+### Example
+```
+data(){
+    return {
+        actions: {
+            classes: "text-right align-middle",
+            slots: [
+                "edit",
+                "delete"
+            ]
+        }
+    };
+}
+```
+
+```
+<vue-table :actions="actions">
+    <template v-slot:action-edit="slotProps">
+        <a class="btn btn-sm btn-info"
+           :href="`${options.uri}/${slotProps.item.id}/edit`"
+        >
+            <i class="fas fa-pencil-alt"></i>
+        </a>
+    </template>
+
+    <template v-slot:action-delete="slotProps">
+        <a class="btn btn-sm btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+    </template>
+</vue-table>
+```
 
 
 ## Columns API
