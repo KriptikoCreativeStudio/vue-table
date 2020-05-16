@@ -64,7 +64,9 @@
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
         },
         mounted() {
-            this.direction = this.extractDirectionFromSorting();
+            if(this.sortable){
+                this.direction = this.extractDirectionFromSorting();
+            }
         }
     };
 </script>

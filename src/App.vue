@@ -29,7 +29,7 @@
 
         <vue-table v-bind="options" :items.sync="items">
             <template v-slot:action-edit="slotProps">
-                <a class="btn btn-info"
+                <a class="btn btn-sm btn-info"
                    :href="`${options.uri}/${slotProps.item.id}/edit`"
                 >
                     <i class="fas fa-pencil-alt"></i>
@@ -37,7 +37,7 @@
             </template>
 
             <template v-slot:action-delete="slotProps">
-                <a class="btn btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
+                <a class="btn btn-sm btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </template>
@@ -79,8 +79,9 @@
                             title: "City"
                         },
                         {
+                            headerClasses: "fit-content",
                             name: "created_at",
-                            rowClasses: "align-middle",
+                            rowClasses: "fit-content align-middle",
                             title: "Created at",
                             render(data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
@@ -97,8 +98,9 @@
                             direction: "asc"
                         }
                     ],
-                    rows: {
-                        actions: [
+                    actions: {
+                        classes: "fit-content align-middle",
+                        slots: [
                             "edit",
                             "delete"
                         ]
@@ -130,5 +132,10 @@
         text-align: center;
         color: #2c3e50;
         margin-top: 60px;
+    }
+
+    .fit-content {
+        width: 1%;
+        white-space: nowrap;
     }
 </style>

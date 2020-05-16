@@ -20,7 +20,7 @@
                                     >
                                         <vue-table-heading :column="column"/>
                                     </th>
-                                    <th v-if="rows.actions.length"></th>
+                                    <th v-if="actions.slots.length"></th>
                                 </tr>
                             </thead>
 
@@ -48,9 +48,9 @@
                                             {{ item[column.name] }}
                                         </template>
                                     </td>
-                                    <td v-if="rows.actions.length"
+                                    <td v-if="actions.slots.length" :class="actions.classes"
                                         class="v-table-options-wrapper min-width align-middle">
-                                        <slot v-for="action in rows.actions" :name="`action-${action}`"
+                                        <slot v-for="action in actions.slots" :name="`action-${action}`"
                                               v-bind:item="item"></slot>
                                     </td>
                                 </tr>
@@ -91,6 +91,18 @@
             };
         },
         props: {
+            actions: {
+                type: Object,
+                default: function () {
+                    return {
+                        classes: "",
+                        slots: []
+                    };
+                },
+                validator: function (actions) {
+                    return Object.prototype.hasOwnProperty.call(actions, 'slots') && typeof actions.slots === "object";
+                }
+            },
             columns: {
                 type: Array,
                 default: function () {
@@ -122,14 +134,6 @@
                 default: 20,
                 validator: function (value) {
                     return value > 0;
-                }
-            },
-            rows: {
-                type: Object,
-                default: function () {
-                    return {
-                        actions: []
-                    };
                 }
             },
             sorting: {
@@ -196,6 +200,11 @@
              */
             hydrateColumns() {
                 this.columns.forEach(column => {
+                    // Set name defaults
+                    if (!Object.prototype.hasOwnProperty.call(column, 'name')) {
+                        column.name = null;
+                    }
+
                     // Set title defaults
                     if (!Object.prototype.hasOwnProperty.call(column, 'title')) {
                         column.title = '';
