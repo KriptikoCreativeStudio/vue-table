@@ -39,22 +39,22 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Props
 
-| Prop      | Type    | Default | Description                                                           | 
-|-----------|:-------:|:-------:|-----------------------------------------------------------------------|
-| columns   | Array   | []      | The table columns. See the [Columns API](#columns-api) for more info. |
-| uri       | String  | null    | Data source URI                                                       |
-| data-key  | String  | 'data'  | The path to the data in the server's JSON response.                   |
-| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response.        |
-| per-page  | Number  | 20      | Number of items displayed per page.                                   |
-| paginate  | Boolean | true    | Paginates the records and enables the pages links.                    |
-| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.                    |
-| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.           |
-| sort      | Object  | {}      | The columns' sort directions. Supports multi-column.                  |
+| Prop      | Type    | Default | Description                                                                          |
+|-----------|:-------:|:-------:|--------------------------------------------------------------------------------------|
+| columns   | Array   | []      | The table columns. See the [Columns API](#columns-api) for more info.                |
+| uri       | String  | null    | Data source URI                                                                      |
+| data-key  | String  | 'data'  | The path to the data in the server's JSON response.                                  |
+| meta-key  | String  | 'meta'  | The path to the pagination meta in the server's JSON response.                       |
+| per-page  | Number  | 20      | Number of items displayed per page.                                                  |
+| paginate  | Boolean | true    | Paginates the records and enables the pages links.                                   |
+| locale    | String  | en      | Sets the locale. Supported values: en, es, fr, pt.                                   |
+| orderable | Boolean | false   | When set to true, the rows can be reorder by dragging them.                          |
+| sorting   | Array   | []      | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.  |
 
 
 ## Columns API
 
-| Prop          | Type     | Default | Description                                                    | 
+| Property      | Type     | Default | Description                                                    | 
 |---------------|:--------:|:-------:|----------------------------------------------------------------|
 | headerClasses | String   | null    | The CSS classes that will be assigned to the table headers.    |
 | name          | String   | ""      | The column's attribute name.                                   | 
@@ -65,6 +65,39 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 | render()      | function | false   | Callback for transforming the column's data.                   |
 
 
+## Sorting API
+
+| Property      | Type     | Description                                                      | 
+|---------------|:--------:|------------------------------------------------------------------|
+| column        | String   | The name of the column to be sorted. Must be an existing column. |
+| direction     | String   | The sorting direction. Allowed values: 'asc' or 'desc'.          |
+
+You can set a default sorting for your table's columns by passing a prop containing an array of objects with the names 
+of the columns and respective sorting directions. Here's an example:
+
+```
+sorting: [
+    {
+        column: "name",
+        direction: "asc"
+    },
+    {
+        column: "created_at",
+        direction: "desc"
+    }
+],
+``` 
+
+### Request payload
+Whenever you sort a column, the current sorting information will be attached to the request. For the previous example,
+this is how the payload will look like:
+```
+sorting[0][column]: name
+sorting[0][direction]: asc
+sorting[1][column]: name
+sorting[1][direction]: created_at
+```
+
 ## Filters
 
 If you need to filter a column, you can use the `v-filter-column` directive.
@@ -74,7 +107,7 @@ If you need to filter a column, you can use the `v-filter-column` directive.
 </select>
 ```
 This directive will sync your selector with the `city` column.<br>
-Here is an example of the data that will be attached to the request when you select an option:
+Here's an example of the data that will be attached to the request when you select an option:
 ```
 filters[0][column]: name
 filters[0][values][0]: Ada Stark
@@ -85,8 +118,7 @@ filters[0][column]: city
 filters[0][values][0]: Abbottton
 filters[0][values][1]: Benborough
 ```
-
-This will append data to the request in order to search for the selected value in the column with the name `city`. Check the [Columns API](#columns-api) for more info.
+This will append the data to the request in order to search for the selected value in the column with the name `city`. Check the [Columns API](#columns-api) for more info.
 
 
 ## License

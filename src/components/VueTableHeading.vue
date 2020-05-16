@@ -15,11 +15,13 @@
 </template>
 
 <script>
+    import { mapActions, mapState } from "vuex";
+
     export default {
         name: "VueTableHeading",
         data() {
             return {
-                currentDirection: null
+                direction: null
             };
         },
         props: {
@@ -30,17 +32,6 @@
                     return Object.prototype.hasOwnProperty.call(value, 'name') &&
                         Object.prototype.hasOwnProperty.call(value, 'title') &&
                         Object.prototype.hasOwnProperty.call(value, 'sortable');
-                }
-            },
-            direction: {
-                type: String,
-                default: null,
-                validator: function (value) {
-                    if (value === null) {
-                        return true;
-                    }
-
-                    return ['asc', 'desc'].indexOf(value) !== -1;
                 }
             }
         },
@@ -56,22 +47,24 @@
                     default:
                         return 'fa-sort';
                 }
-            }
+            },
+            ...mapState('sortingModule', ['sorting'])
         },
         methods: {
-            setCurrentDirection() {
-                if (this.direction == null || ['asc', 'desc'].indexOf(this.direction) !== -1) {
-                    this.currentDirection = this.direction;
-                }
-            },
             setOrder() {
-                this.currentDirection = this.direction == null ? 'asc' : (this.direction === 'asc' ? 'desc' : null);
+                this.direction = this.direction == null ? 'asc' : (this.direction === 'asc' ? 'desc' : null);
 
-                this.$emit('sort', this.column.name, this.currentDirection);
-            }
+                this.addSort({ column: this.column.name, direction: this.direction });
+            },
+            extractDirectionFromSorting() {
+                let column = this.sorting.filter(sort => sort.column == this.column.name);
+
+                return column[0] ? column[0].direction : null;
+            },
+            ...mapActions('sortingModule', { addSort: 'addSortAction' }),
         },
         mounted() {
-            this.setCurrentDirection();
+            this.direction = this.extractDirectionFromSorting();
         }
     };
 </script>
