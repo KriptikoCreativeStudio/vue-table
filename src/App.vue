@@ -1,33 +1,20 @@
 <template>
     <div class="container-fluid py-5">
-        <div class="form-row">
-            <div class="col">
-                <select class="form-control" v-filter-column:city multiple>
-                    <option value="Sipesburgh">Sipesburgh</option>
-                    <option value="Abbottton">Abbottton</option>
-                    <option value="Abernathyville">Abernathyville</option>
-                    <option value="Adriannachester">Adriannachester</option>
-                    <option value="Ahmadville">Ahmadville</option>
-                    <option value="Baileyfurt">Baileyfurt</option>
-                    <option value="Baumbachside">Baumbachside</option>
-                    <option value="Camrenland">Camrenland</option>
-                    <option value="Delfinamouth">Delfinamouth</option>
-                    <option value="East Benborough">East Benborough</option>
-                    <option value="Feeneymouth">Feeneymouth</option>
-                </select>
-            </div>
-
-            <div class="col">
-                <select class="form-control" v-filter-column:name>
-                    <option></option>
-                    <option value="Abe Fritsch Jr.">Abe Fritsch Jr.</option>
-                    <option value="Ada Stark">Ada Stark</option>
-                    <option value="Alexandrine Mertz">Alexandrine Mertz</option>
-                </select>
-            </div>
-        </div>
-
         <vue-table v-bind="options" :items.sync="items">
+            <template v-slot:filters>
+                <div class="col-md-3">
+                    <select class="form-control" v-filter-column:city>
+                        <option>Cities</option>
+                        <option value="Abbottton">Abbottton</option>
+                        <option value="Camrenland">Camrenland</option>
+                        <option value="Delfinamouth">Delfinamouth</option>
+                        <option value="East Benborough">East Benborough</option>
+                        <option value="Feeneymouth">Feeneymouth</option>
+                        <option value="Sipesburgh">Sipesburgh</option>
+                    </select>
+                </div>
+            </template>
+
             <template v-slot:action-edit="slotProps">
                 <a class="btn btn-sm btn-info"
                    :href="`${options.uri}/${slotProps.item.id}/edit`"
