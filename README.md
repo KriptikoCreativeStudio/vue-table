@@ -1,8 +1,14 @@
 # Vue Table
 
-Vue tables with server-side data support.
+Vue table component for rendering server-side data.
 
-#### Main features
+[![npm](https://img.shields.io/npm/v/@kriptiko/vue-table?style=flat-square)](https://www.npmjs.com/package/kriptiko@@kriptiko/vue-table)
+[![npm](https://img.shields.io/npm/dt/@kriptiko/vue-table?style=flat-square)](https://www.npmjs.com/package/@kriptiko/vue-table)
+[![npm](https://img.shields.io/npm/l/@kriptiko/vue-table?style=flat-square)](https://github.com/KriptikoCreativeStudio/vue-table/blob/master/LICENSE)
+[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen?style=flat-square)](https://vuejs.org/)
+
+
+### Main features
 
  - Server-side data
  - Searchable columns
@@ -13,28 +19,31 @@ Vue tables with server-side data support.
  - Persist the state to local storage
 
 
-## Project setup
-```
-npm install
+---
+
+
+## Installation
+
+```bash
+# NPM
+npm install @kriptiko/vue-table
+
+# Yarn
+yarn add @kriptiko/vue-table
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+
+## Usage
+
+```javascript
+import Vue from 'vue'
+import VueTable from '@kriptiko/vue-table'
+
+Vue.use(VueTable)
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+---
 
 
 ## Props

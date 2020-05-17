@@ -1,12 +1,32 @@
 {
-  "name": "vue-table",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@kriptiko/vue-table",
+  "description": "Vue table component for rendering server-side data.",
+  "version": "1.0.0-beta",
+  "license": "MIT",
+  "private": false,
+  "author": "José Osório",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KriptikoCreativeStudio/vue-table.git"
+  },
+  "keywords": [
+    "vue-table",
+    "pagination",
+    "search",
+    "sorting",
+    "filters",
+    "reorderable",
+    "bootstrap4-theme",
+    "datatables"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:npm": "vue-cli-service build --target lib --name vue-table src/components/VueTable.vue",
     "lint": "vue-cli-service lint"
   },
+  "main": "dist/vue-table.umd.js",
+  "unpkg": "dist/vue-table.umd.min.js",
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
@@ -44,5 +64,10 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/KriptikoCreativeStudio/vue-table/issues"
+  },
+  "homepage": "https://github.com/KriptikoCreativeStudio/vue-table#readme",
+  "main": "babel.config.js"
 }

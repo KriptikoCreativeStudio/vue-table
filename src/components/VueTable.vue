@@ -273,20 +273,3 @@
         }
     };
 </script>
-
-<style lang="scss" scoped>
-    .v-table {
-        // Options wrapper
-        &-options-wrapper {
-            & > {
-                :not(:last-child) {
-                    margin-right: 4px;
-                }
-
-                :not(:first-child) {
-                    margin-left: 4px;
-                }
-            }
-        }
-    }
-</style>
