@@ -162,6 +162,26 @@ filters[0][values][1]: Benborough
 ```
 This will append the data to the request in order to search for the selected value in the column with the name `city`. Check the [Columns API](#columns-api) for more info.
 
+### Filters slot
+You can make use of the filters slot for placing your selectors inline with the search bar. See this example:
+```
+<vue-table>
+    <template v-slot:filters>
+        <div class="col-md-3">
+            <select class="form-control" v-filter-column:city>
+                <option>Cities</option>
+                <option value="Abbottton">Abbottton</option>
+                <option value="Camrenland">Camrenland</option>
+                <option value="Delfinamouth">Delfinamouth</option>
+                <option value="East Benborough">East Benborough</option>
+                <option value="Feeneymouth">Feeneymouth</option>
+                <option value="Sipesburgh">Sipesburgh</option>
+            </select>
+        </div>
+    </template>
+</vue-table>
+```
+
 
 ## License
 

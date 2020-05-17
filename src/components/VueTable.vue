@@ -1,6 +1,16 @@
 <template>
     <div>
-        <vue-table-search-bar v-if="isSearchable"/>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="form-row">
+                    <slot name="filters"></slot>
+
+                    <div class="col">
+                        <vue-table-search-bar v-if="isSearchable"/>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-body">
