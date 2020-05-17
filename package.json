@@ -1,7 +1,7 @@
 {
   "name": "@kriptiko/vue-table",
   "description": "Vue table component for rendering server-side data.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "private": false,
   "author": "José Osório",
