@@ -1,7 +1,7 @@
 {
   "name": "@kriptiko/vue-table",
   "description": "Vue table component for rendering server-side data.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "private": false,
   "author": "José Osório",
@@ -25,7 +25,7 @@
     "build:npm": "vue-cli-service build --target lib --name vue-table src/components/VueTable.vue",
     "lint": "vue-cli-service lint"
   },
-  "main": "babel.config.js",
+  "main": "dist/vue-table.umd.js",
   "unpkg": "dist/vue-table.umd.min.js",
   "dependencies": {
     "axios": "^0.19.2",
