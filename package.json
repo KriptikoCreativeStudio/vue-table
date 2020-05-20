@@ -11,7 +11,7 @@
     "bootstrap4-theme",
     "datatables"
   ],
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "private": false,
   "author": "José Osório",
@@ -19,10 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/KriptikoCreativeStudio/vue-table.git"
   },
-  "main": "dist/vue-table.ssr.js",
-  "browser": "dist/vue-table.esm.js",
-  "module": "dist/vue-table.esm.js",
-  "unpkg": "dist/vue-table.min.js",
+  "main": ".dist/vue-table.common.js",
   "files": [
     "dist/*",
     "src/*",
@@ -33,7 +30,7 @@
   "scripts": {
     "serve": "vue-cli-service serve dev/app.js",
     "build": "vue-cli-service build dev/app.js",
-    "build-bundle": "vue-cli-service build --target lib --name VueTable ./src/index.js",
+    "build-bundle": "vue-cli-service build --target lib --name vue-table ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
