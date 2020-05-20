@@ -151,9 +151,23 @@ sorting[1][direction]: created_at
 
 If you need to filter a column, you can use the `v-filter-column` directive.
 ```
-<select v-filter-column:city>
-    ...
-</select>
+<template>
+    <select v-filter-column:city>
+        ...
+    </select>
+</template>
+
+<script>
+    import VueTable from "../src/components/VueTable";
+    import { filterColumn } from "../src/directives/filter-column.directive";
+
+    export default {
+        components: {
+            VueTable
+        },
+        directives: { filterColumn }
+    }
+</sc
 ```
 This directive will sync your selector with the `city` column.<br>
 Here's an example of the data that will be attached to the request when you select an option:

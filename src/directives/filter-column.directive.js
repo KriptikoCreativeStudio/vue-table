@@ -1,6 +1,6 @@
-import { filtersStorageName } from "../../store/modules/filters.module";
+import { filtersStorageName } from "../store/modules/filters.module";
 
-export const columnFilter = {
+export const filterColumn = {
     bind: function (el, binding, vnode) {
         let storedFilters = window.localStorage.getItem(filtersStorageName);
 

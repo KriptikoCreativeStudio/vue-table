@@ -1,8 +1,8 @@
 import VueTable from "@/components/VueTable";
 
-import store from './store/';
+import store from '@/store/';
+import { filterColumn } from "@/directives/filter-column.directive";
 
-const directives = require('./directives/');
 
 // install function executed by Vue.use()
 const install = function installVueTable(Vue) {
@@ -39,7 +39,7 @@ VueTable.install = install;
 export default {
     VueTable,
     store,
-    directives
+    filterColumn
 };
 
 // It's possible to expose named exports when writing components that can
