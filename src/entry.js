@@ -1,12 +1,15 @@
-import VueTable from "@/components/VueTable";
-// import store from '@/store/index';
-// import { filterColumn } from "@/directives/filter-column.directive";
+import VueTable from '@/components/VueTable';
+import filterColumn from '@/directives/filter-column.directive';
 
 // install function executed by Vue.use()
 const install = function installVueTable(Vue) {
-    if (install.installed) return;
+    if (install.installed) {
+        return;
+    }
+
     install.installed = true;
-    Vue.component(VueTable.name, VueTable);
+
+    Vue.component('VueTable', VueTable);
 };
 
 // Create module definition for Vue.use()
@@ -19,11 +22,13 @@ const plugin = {
 /* global window, global */
 if ('false' === process.env.ES_BUILD) {
     let GlobalVue = null;
+
     if (typeof window !== 'undefined') {
         GlobalVue = window.Vue;
     } else if (typeof global !== 'undefined') {
         GlobalVue = global.Vue;
     }
+
     if (GlobalVue) {
         GlobalVue.use(plugin);
     }
@@ -34,10 +39,7 @@ if ('false' === process.env.ES_BUILD) {
 VueTable.install = install;
 
 // Export component by default
-export default {
-    VueTable
+export {
+    VueTable,
+    filterColumn
 };
-
-// It's possible to expose named exports when writing components that can
-// also be used as directives, etc. - eg. import { RollupDemoDirective } from 'rollup-demo';
-// export const RollupDemoDirective = component;

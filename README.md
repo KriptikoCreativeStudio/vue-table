@@ -158,14 +158,15 @@ If you need to filter a column, you can use the `v-filter-column` directive.
 </template>
 
 <script>
-    import VueTable from "../src/components/VueTable";
-    import { filterColumn } from "../src/directives/filter-column.directive";
+    import { filterColumn, VueTable } from '@kriptiko/vue-table';
 
     export default {
         components: {
             VueTable
         },
-        directives: { filterColumn }
+        directives: {
+            filterColumn 
+        }
     }
 </sc
 ```

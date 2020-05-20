@@ -32,7 +32,7 @@
 
 <script>
     import VueTable from "../src/components/VueTable";
-    import { filterColumn } from "../src/directives/filter-column.directive";
+    import filterColumn from "../src/directives/filter-column.directive";
 
     export default {
         name: 'App',
@@ -77,12 +77,8 @@
                     ],
                     sorting: [
                         {
-                            column: "name",
+                            column: "created_at",
                             direction: "desc"
-                        },
-                        {
-                            column: "email",
-                            direction: "asc"
                         }
                     ],
                     actions: {

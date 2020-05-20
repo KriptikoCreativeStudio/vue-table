@@ -83,11 +83,9 @@
     import VueTableHeading from "@/components/VueTableHeading";
     import VueTableSearchBar from "@/components/VueTableSearchBar";
     import VueTablePagination from "@/components/VueTablePagination";
-    import store from '@/store/';
     import VueDraggable from 'vuedraggable';
 
     export default {
-        store,
         name: "VueTable",
         components: {
             VueTableHeading,
@@ -98,10 +96,7 @@
         data: function () {
             return {
                 items: [],
-                lang: {
-                    "no_records": "No records found!",
-                    "search_for": "Search for..."
-                },
+                lang: require(`../resources/lang/${ this.locale }.json`),
                 totalItems: 0
             };
         },
@@ -232,8 +227,7 @@
                 });
             },
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
-            ...mapActions('paginationModule', { setPage: 'setPageAction' }),
-            ...mapActions('filtersModule', { setFilter: 'addFilterAction' })
+            ...mapActions('paginationModule', { setPage: 'setPageAction' })
         },
         computed: {
             /**
@@ -272,9 +266,6 @@
         mounted() {
             // Dispatch the sorting prop values
             this.sorting.forEach(sort => this.addSort(sort));
-
-            // Register events
-            this.$root.$on('filterOptionSelected', this.setFilter);
 
             if (this.uri !== null) {
                 this.getItems();
