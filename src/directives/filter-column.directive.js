@@ -1,6 +1,7 @@
 import { filtersStorageName } from "../store/modules/filters.module";
 
-export const filterColumn = {
+export default {
+    name: 'filter-column',
     bind: function (el, binding, vnode) {
         let storedFilters = window.localStorage.getItem(filtersStorageName);
 
@@ -19,12 +20,12 @@ export const filterColumn = {
                 .filter(option => option.selected && option.value)
                 .map(option => option.value);
 
-            vnode.context.$store.dispatch('filtersModule/addFilterAction', {
+            const payload = {
                 column: binding.arg,
                 values: selectedValues
-            });
+            };
+
+            vnode.context.$root.$emit('filterOptionSelected', payload);
         });
     },
 };
-
-
