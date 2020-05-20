@@ -25,14 +25,15 @@
   "unpkg": "dist/vue-table.min.js",
   "files": [
     "dist/*",
-    "src/**/*.vue"
+    "src/*",
+    "*.json",
+    "*.js",
+    "*.md"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "cross-env NODE_ENV=production rollup --config build/rollup.config.js",
-    "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
-    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
-    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
+    "serve": "vue-cli-service serve dev/app.js",
+    "build": "vue-cli-service build dev/app.js",
+    "build-bundle": "vue-cli-service build --target lib --name VueTable ./src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

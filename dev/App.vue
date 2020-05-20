@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import VueTable from "./components/VueTable";
+    import VueTable from "../src/components/VueTable";
 
     export default {
         name: 'App',
