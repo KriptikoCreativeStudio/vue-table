@@ -15,7 +15,7 @@
         </template>
 
         <template v-slot:action-edit="slotProps">
-            <a class="btn btn-sm btn-info"
+            <a class="btn btn-sm btn-primary"
                :href="`${options.uri}/${slotProps.item.id}/edit`"
             >
                 <i class="fas fa-pencil-alt"></i>
@@ -23,7 +23,7 @@
         </template>
 
         <template v-slot:action-delete="slotProps">
-            <a class="btn btn-sm btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
+            <a class="btn btn-sm btn-danger ml-2" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
                 <i class="fas fa-trash-alt"></i>
             </a>
         </template>
@@ -32,12 +32,14 @@
 
 <script>
     import VueTable from "../src/components/VueTable";
+    import { filterColumn } from "../src/directives/filter-column.directive";
 
     export default {
         name: 'App',
         components: {
             VueTable
         },
+        directives: { filterColumn },
         data() {
             return {
                 items: [],
