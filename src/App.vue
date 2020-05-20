@@ -1,35 +1,33 @@
 <template>
-    <div class="container-fluid py-5">
-        <vue-table v-bind="options" :items.sync="items">
-            <template v-slot:filters>
-                <div class="col-md-3">
-                    <select class="form-control" v-filter-column:city>
-                        <option>Cities</option>
-                        <option value="Abbottton">Abbottton</option>
-                        <option value="Camrenland">Camrenland</option>
-                        <option value="Delfinamouth">Delfinamouth</option>
-                        <option value="East Benborough">East Benborough</option>
-                        <option value="Feeneymouth">Feeneymouth</option>
-                        <option value="Sipesburgh">Sipesburgh</option>
-                    </select>
-                </div>
-            </template>
+    <vue-table v-bind="options" :items.sync="items">
+        <template v-slot:filters>
+            <div class="col-md-3">
+                <select class="form-control" v-filter-column:city>
+                    <option value="">Cities</option>
+                    <option value="Abbottton">Abbottton</option>
+                    <option value="Camrenland">Camrenland</option>
+                    <option value="Delfinamouth">Delfinamouth</option>
+                    <option value="East Benborough">East Benborough</option>
+                    <option value="Feeneymouth">Feeneymouth</option>
+                    <option value="Sipesburgh">Sipesburgh</option>
+                </select>
+            </div>
+        </template>
 
-            <template v-slot:action-edit="slotProps">
-                <a class="btn btn-sm btn-info"
-                   :href="`${options.uri}/${slotProps.item.id}/edit`"
-                >
-                    <i class="fas fa-pencil-alt"></i>
-                </a>
-            </template>
+        <template v-slot:action-edit="slotProps">
+            <a class="btn btn-sm btn-info"
+               :href="`${options.uri}/${slotProps.item.id}/edit`"
+            >
+                <i class="fas fa-pencil-alt"></i>
+            </a>
+        </template>
 
-            <template v-slot:action-delete="slotProps">
-                <a class="btn btn-sm btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
-                    <i class="fas fa-trash-alt"></i>
-                </a>
-            </template>
-        </vue-table>
-    </div>
+        <template v-slot:action-delete="slotProps">
+            <a class="btn btn-sm btn-danger" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
+                <i class="fas fa-trash-alt"></i>
+            </a>
+        </template>
+    </vue-table>
 </template>
 
 <script>

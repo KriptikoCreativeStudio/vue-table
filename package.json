@@ -1,14 +1,6 @@
 {
   "name": "@kriptiko/vue-table",
   "description": "Vue table component for rendering server-side data.",
-  "version": "1.0.2",
-  "license": "MIT",
-  "private": false,
-  "author": "José Osório",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KriptikoCreativeStudio/vue-table.git"
-  },
   "keywords": [
     "vue-table",
     "pagination",
@@ -19,14 +11,30 @@
     "bootstrap4-theme",
     "datatables"
   ],
+  "version": "1.0.2",
+  "license": "MIT",
+  "private": false,
+  "author": "José Osório",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KriptikoCreativeStudio/vue-table.git"
+  },
+  "main": "dist/vue-table.ssr.js",
+  "browser": "dist/vue-table.esm.js",
+  "module": "dist/vue-table.esm.js",
+  "unpkg": "dist/vue-table.min.js",
+  "files": [
+    "dist/*",
+    "src/**/*.vue"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build:npm": "vue-cli-service build --target lib --name vue-table src/components/VueTable.vue",
+    "build": "cross-env NODE_ENV=production rollup --config build/rollup.config.js",
+    "build:ssr": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format cjs",
+    "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
+    "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
     "lint": "vue-cli-service lint"
   },
-  "main": "dist/vue-table.umd.js",
-  "unpkg": "dist/vue-table.umd.min.js",
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
@@ -36,13 +44,24 @@
     "vuex": "^3.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@rollup/plugin-alias": "^2.2.0",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-replace": "^2.3.2",
     "@vue/cli-plugin-babel": "~4.3.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "minimist": "^1.2.5",
     "node-sass": "^4.14.0",
+    "rollup": "^2.7.3",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-vue": "^5.1.6",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
   },
@@ -60,11 +79,6 @@
     },
     "rules": {}
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
   "bugs": {
     "url": "https://github.com/KriptikoCreativeStudio/vue-table/issues"
   },

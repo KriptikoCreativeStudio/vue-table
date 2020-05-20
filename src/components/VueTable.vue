@@ -80,9 +80,9 @@
 
 <script>
     import { mapActions, mapState } from 'vuex';
-    import VueTableHeading from "./VueTableHeading";
-    import VueTableSearchBar from "./VueTableSearchBar";
-    import VueTablePagination from "./VueTablePagination";
+    import VueTableHeading from "@/components/VueTableHeading";
+    import VueTableSearchBar from "@/components/VueTableSearchBar";
+    import VueTablePagination from "@/components/VueTablePagination";
     import VueDraggable from 'vuedraggable';
 
     export default {
