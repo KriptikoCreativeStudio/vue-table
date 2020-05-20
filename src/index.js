@@ -3,7 +3,6 @@ import VueTable from "@/components/VueTable";
 import store from '@/store/';
 import { filterColumn } from "@/directives/filter-column.directive";
 
-
 // install function executed by Vue.use()
 const install = function installVueTable(Vue) {
     if (install.installed) return;
