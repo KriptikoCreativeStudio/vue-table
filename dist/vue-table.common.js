@@ -87,63 +87,6 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
-/***/ "0062":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return filtersStorageName; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return filtersModule; });
-var filtersStorageName = "vue_table_".concat(window.location.pathname, "_filters");
-var filters = window.localStorage.getItem(filtersStorageName);
-var filtersModule = {
-  namespaced: true,
-  state: {
-    filters: filters ? JSON.parse(filters) : []
-  },
-  mutations: {
-    /**
-     * Adds a filter to the store.
-     *
-     * @param state
-     * @param newFilter
-     */
-    addFilter: function addFilter(state, newFilter) {
-      // If a filter with this key already exists, it must be removed from the array.
-      state.filters = state.filters.filter(function (filter) {
-        return filter.column != newFilter.column;
-      });
-
-      if (newFilter.values.length) {
-        state.filters.push(newFilter);
-      }
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(filtersStorageName, JSON.stringify(state.filters));
-    }
-  },
-  actions: {
-    /**
-     * The action of adding a filter.
-     *
-     * @param commit
-     * @param filter
-     */
-    addFilterAction: function addFilterAction(_ref, filter) {
-      var commit = _ref.commit;
-      commit('addFilter', filter);
-      commit('saveData');
-    }
-  }
-};
-
-/***/ }),
-
 /***/ "0a06":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -281,58 +224,6 @@ module.exports = function spread(callback) {
 
 /***/ }),
 
-/***/ "1344":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return filterColumn; });
-/* harmony import */ var _store_modules_filters_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("0062");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-
-var filterColumn = {
-  bind: function bind(el, binding, vnode) {
-    var storedFilters = window.localStorage.getItem(_store_modules_filters_module__WEBPACK_IMPORTED_MODULE_0__[/* filtersStorageName */ "b"]);
-    storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
-    var storedFilter = storedFilters.find(function (filter) {
-      return filter.column == binding.arg;
-    });
-
-    if (typeof storedFilter !== 'undefined') {
-      _toConsumableArray(el.options).filter(function (option) {
-        return storedFilter.values.includes(option.value);
-      }).map(function (option) {
-        return option.setAttribute('selected', true);
-      });
-    }
-
-    el.addEventListener('change', function (event) {
-      var selectedValues = _toConsumableArray(event.target.options).filter(function (option) {
-        return option.selected && option.value;
-      }).map(function (option) {
-        return option.value;
-      });
-
-      vnode.context.$store.dispatch('filtersModule/addFilterAction', {
-        column: binding.arg,
-        values: selectedValues
-      });
-    });
-  }
-};
-
-/***/ }),
-
 /***/ "1d2b":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -463,7 +354,7 @@ module.exports = defaults;
 
 "use strict";
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"03c55578-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=1f8b2596&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"56b54816-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTable.vue?vue&type=template&id=1f8b2596&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('div',{staticClass:"card mb-4"},[_c('div',{staticClass:"card-body"},[_c('div',{staticClass:"form-row"},[_vm._t("filters"),_c('div',{staticClass:"col"},[(_vm.isSearchable)?_c('vue-table-search-bar'):_vm._e()],1)],2)])]),_c('div',{staticClass:"card"},[_c('div',{staticClass:"card-body"},[(_vm.items.length === 0)?_c('div',{staticClass:"alert alert-info"},[_vm._v(" "+_vm._s(_vm.lang.no_records)+" ")]):_c('div',[_c('div',{staticClass:"table-responsive"},[_c('table',{staticClass:"table table-striped"},[_c('thead',[_c('tr',[(_vm.orderable)?_c('th',{staticClass:"min-width"}):_vm._e(),_vm._l((_vm.columns),function(column){return _c('th',{key:column.name,class:column.headerClasses},[_c('vue-table-heading',{attrs:{"column":column}})],1)}),(_vm.actions.slots.length)?_c('th'):_vm._e()],2)]),_c('vue-draggable',{attrs:{"tag":"tbody","handle":".v-table-drag-handle","disabled":!_vm.orderable},on:{"change":function($event){return _vm.$emit('itemsReordered', $event.moved.element, $event.moved.newIndex)}},model:{value:(_vm.items),callback:function ($$v) {_vm.items=$$v},expression:"items"}},_vm._l((_vm.items),function(item){return _c('tr',{key:item.id},[(_vm.orderable)?_c('td',{staticClass:"min-width align-middle"},[_c('button',{staticClass:"btn btn-sm v-table-drag-handle",attrs:{"type":"button"}},[_c('i',{staticClass:"fas fa-arrows-alt-v"})])]):_vm._e(),_vm._l((_vm.columns),function(column,index){return _c('td',{key:index,class:column.rowClasses},[(column.render && typeof column.render === 'function')?[_c('div',{domProps:{"innerHTML":_vm._s(column.render(item))}})]:(column.name)?[_vm._v(" "+_vm._s(item[column.name])+" ")]:_vm._e()],2)}),(_vm.actions.slots.length)?_c('td',{staticClass:"v-table-options-wrapper min-width align-middle",class:_vm.actions.classes},[_vm._l((_vm.actions.slots),function(action){return _vm._t(("action-" + action),null,{"item":item})})],2):_vm._e()],2)}),0)],1)]),(_vm.paginate)?_c('vue-table-pagination',{attrs:{"per-page":_vm.perPage,"items":_vm.totalItems}}):_vm._e()],1)])])])}
 var staticRenderFns = []
 
@@ -473,7 +364,7 @@ var staticRenderFns = []
 // EXTERNAL MODULE: ./node_modules/vuex/dist/vuex.esm.js
 var vuex_esm = __webpack_require__("2f62");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"03c55578-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTableHeading.vue?vue&type=template&id=45316468&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"56b54816-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTableHeading.vue?vue&type=template&id=45316468&
 var VueTableHeadingvue_type_template_id_45316468_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (!_vm.column.sortable)?_c('span',[_vm._v(" "+_vm._s(_vm.column.title)+" ")]):_c('a',{attrs:{"role":"button","href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.setOrder($event)}}},[_vm._v(" "+_vm._s(_vm.column.title)+" "),_c('i',{staticClass:"fas fa-fw",class:_vm.sortIcon})])}
 var VueTableHeadingvue_type_template_id_45316468_staticRenderFns = []
 
@@ -533,7 +424,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return 'fa-sort';
       }
     }
-  }, Object(vuex_esm["c" /* mapState */])('sortingModule', ['sorting'])),
+  }, Object(vuex_esm["b" /* mapState */])('sortingModule', ['sorting'])),
   methods: _objectSpread({
     setOrder: function setOrder() {
       this.direction = this.direction == null ? 'asc' : this.direction === 'asc' ? 'desc' : null;
@@ -550,7 +441,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
       return column[0] ? column[0].direction : null;
     }
-  }, Object(vuex_esm["b" /* mapActions */])('sortingModule', {
+  }, Object(vuex_esm["a" /* mapActions */])('sortingModule', {
     addSort: 'addSortAction'
   })),
   mounted: function mounted() {
@@ -676,7 +567,7 @@ var component = normalizeComponent(
 )
 
 /* harmony default export */ var VueTableHeading = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"03c55578-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTableSearchBar.vue?vue&type=template&id=4fcafd0a&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"56b54816-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTableSearchBar.vue?vue&type=template&id=4fcafd0a&
 var VueTableSearchBarvue_type_template_id_4fcafd0a_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"input-group"},[_vm._m(0),_c('input',{staticClass:"form-control",attrs:{"type":"text","placeholder":_vm.lang.search_for},domProps:{"value":_vm.value},on:{"input":function($event){return _vm.setValue($event.target.value)}}})])}
 var VueTableSearchBarvue_type_template_id_4fcafd0a_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"input-group-prepend"},[_c('div',{staticClass:"input-group-text"},[_c('i',{staticClass:"fas fa-search"})])])}]
 
@@ -711,10 +602,10 @@ function VueTableSearchBarvue_type_script_lang_js_defineProperty(obj, key, value
       lang: this.$parent.lang
     };
   },
-  methods: VueTableSearchBarvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["b" /* mapActions */])('searchModule', {
+  methods: VueTableSearchBarvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["a" /* mapActions */])('searchModule', {
     setValue: 'setValueAction'
   })),
-  computed: VueTableSearchBarvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["c" /* mapState */])('searchModule', ['value']))
+  computed: VueTableSearchBarvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["b" /* mapState */])('searchModule', ['value']))
 });
 // CONCATENATED MODULE: ./src/components/VueTableSearchBar.vue?vue&type=script&lang=js&
  /* harmony default export */ var components_VueTableSearchBarvue_type_script_lang_js_ = (VueTableSearchBarvue_type_script_lang_js_); 
@@ -738,7 +629,7 @@ var VueTableSearchBar_component = normalizeComponent(
 )
 
 /* harmony default export */ var VueTableSearchBar = (VueTableSearchBar_component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"03c55578-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTablePagination.vue?vue&type=template&id=c38177d8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"56b54816-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/VueTablePagination.vue?vue&type=template&id=c38177d8&
 var VueTablePaginationvue_type_template_id_c38177d8_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.totalPages > 1)?_c('nav',[_c('ul',{staticClass:"pagination"},[(_vm.page != 1)?[_c('li',{staticClass:"page-item"},[_c('a',{staticClass:"page-link",attrs:{"href":"#","aria-label":"First"},on:{"click":function($event){$event.preventDefault();return _vm.setPage(1)}}},[_c('i',{staticClass:"fas fa-backward"}),_c('span',{staticClass:"sr-only"},[_vm._v("First")])])]),_c('li',{staticClass:"page-item"},[_c('a',{staticClass:"page-link",attrs:{"href":"#","aria-label":"Previous"},on:{"click":function($event){$event.preventDefault();return _vm.setPage(_vm.page - 1)}}},[_c('i',{staticClass:"fas fa-caret-left"}),_c('span',{staticClass:"sr-only"},[_vm._v("Previous")])])])]:_vm._e(),_vm._l((_vm.linkButtons),function(linkButton,index){return _c('li',{key:index,staticClass:"page-item",class:{'active': linkButton == _vm.page}},[_c('a',{staticClass:"page-link",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.setPage(linkButton)}}},[_vm._v(_vm._s(linkButton))])])}),(_vm.page != _vm.totalPages)?[_c('li',{staticClass:"page-item"},[_c('a',{staticClass:"page-link",attrs:{"href":"#","aria-label":"Next"},on:{"click":function($event){$event.preventDefault();return _vm.setPage(_vm.page + 1)}}},[_c('i',{staticClass:"fas fa-caret-right"}),_c('span',{staticClass:"sr-only"},[_vm._v("Next")])])]),_c('li',{staticClass:"page-item"},[_c('a',{staticClass:"page-link",attrs:{"href":"#","aria-label":"Last"},on:{"click":function($event){$event.preventDefault();return _vm.setPage(_vm.totalPages)}}},[_c('i',{staticClass:"fas fa-forward"}),_c('span',{staticClass:"sr-only"},[_vm._v("Last")])])])]:_vm._e()],2),_vm._v(" Showing "+_vm._s(_vm.start)+" - "+_vm._s(_vm.end)+" of "+_vm._s(_vm.items)+" ")]):_vm._e()}
 var VueTablePaginationvue_type_template_id_c38177d8_staticRenderFns = []
 
@@ -824,7 +715,7 @@ function VueTablePaginationvue_type_script_lang_js_defineProperty(obj, key, valu
       }
     }
   },
-  methods: VueTablePaginationvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["b" /* mapActions */])('paginationModule', {
+  methods: VueTablePaginationvue_type_script_lang_js_objectSpread({}, Object(vuex_esm["a" /* mapActions */])('paginationModule', {
     setPage: 'setPageAction'
   })),
   computed: VueTablePaginationvue_type_script_lang_js_objectSpread({
@@ -867,7 +758,7 @@ function VueTablePaginationvue_type_script_lang_js_defineProperty(obj, key, valu
         higher: higherBound
       };
     }
-  }, Object(vuex_esm["c" /* mapState */])('paginationModule', ['page']))
+  }, Object(vuex_esm["b" /* mapState */])('paginationModule', ['page']))
 });
 // CONCATENATED MODULE: ./src/components/VueTablePagination.vue?vue&type=script&lang=js&
  /* harmony default export */ var components_VueTablePaginationvue_type_script_lang_js_ = (VueTablePaginationvue_type_script_lang_js_); 
@@ -1134,9 +1025,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }
       });
     }
-  }, Object(vuex_esm["b" /* mapActions */])('sortingModule', {
+  }, Object(vuex_esm["a" /* mapActions */])('sortingModule', {
     addSort: 'addSortAction'
-  }), {}, Object(vuex_esm["b" /* mapActions */])('paginationModule', {
+  }), {}, Object(vuex_esm["a" /* mapActions */])('paginationModule', {
     setPage: 'setPageAction'
   })),
   computed: VueTablevue_type_script_lang_js_objectSpread({
@@ -1149,11 +1040,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     isSearchable: function isSearchable() {
       return this.getSearchableColumns().length > 0;
     }
-  }, Object(vuex_esm["c" /* mapState */])('filtersModule', ['filters']), {}, Object(vuex_esm["c" /* mapState */])('sortingModule', {
+  }, Object(vuex_esm["b" /* mapState */])('filtersModule', ['filters']), {}, Object(vuex_esm["b" /* mapState */])('sortingModule', {
     currentSorting: 'sorting'
-  }), {}, Object(vuex_esm["c" /* mapState */])('searchModule', {
+  }), {}, Object(vuex_esm["b" /* mapState */])('searchModule', {
     search: 'value'
-  }), {}, Object(vuex_esm["c" /* mapState */])('paginationModule', ['page'])),
+  }), {}, Object(vuex_esm["b" /* mapState */])('paginationModule', ['page'])),
   watch: {
     page: function page() {
       this.getItems();
@@ -1256,10 +1147,10 @@ module.exports = function isCancel(value) {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* unused harmony export Store */
 /* unused harmony export install */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mapState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapState; });
 /* unused harmony export mapMutations */
 /* unused harmony export mapGetters */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return mapActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return mapActions; });
 /* unused harmony export createNamespacedHelpers */
 /**
  * vuex v3.3.0
@@ -2262,7 +2153,7 @@ var index_esm = {
   createNamespacedHelpers: createNamespacedHelpers
 };
 
-/* harmony default export */ __webpack_exports__["a"] = (index_esm);
+/* unused harmony default export */ var _unused_webpack_default_export = (index_esm);
 
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("c8ba")))
@@ -5978,170 +5869,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "4360":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
-var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
-var external_commonjs_vue_commonjs2_vue_root_Vue_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_vue_commonjs2_vue_root_Vue_);
-
-// EXTERNAL MODULE: ./node_modules/vuex/dist/vuex.esm.js
-var vuex_esm = __webpack_require__("2f62");
-
-// EXTERNAL MODULE: ./src/store/modules/filters.module.js
-var filters_module = __webpack_require__("0062");
-
-// CONCATENATED MODULE: ./src/store/modules/pagination.module.js
-var paginationStorageName = "vue_table_".concat(window.location.pathname, "_page");
-var page = window.localStorage.getItem(paginationStorageName);
-var paginationModule = {
-  namespaced: true,
-  state: {
-    page: page ? parseInt(page) : 1
-  },
-  mutations: {
-    /**
-     * Sets the page number.
-     *
-     * @param state
-     * @param page
-     */
-    setPage: function setPage(state, page) {
-      state.page = page;
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(paginationStorageName, state.page);
-    }
-  },
-  actions: {
-    /**
-     * The action of setting a page.
-     *
-     * @param commit
-     * @param page
-     */
-    setPageAction: function setPageAction(_ref, page) {
-      var commit = _ref.commit;
-      commit('setPage', page);
-      commit('saveData');
-    }
-  }
-};
-// CONCATENATED MODULE: ./src/store/modules/search.module.js
-var searchStorageName = "vue_table_".concat(window.location.pathname, "_search");
-var value = window.localStorage.getItem(searchStorageName);
-var searchModule = {
-  namespaced: true,
-  state: {
-    value: value !== null && value !== void 0 ? value : ''
-  },
-  mutations: {
-    /**
-     * Sets the value.
-     *
-     * @param state
-     * @param value
-     */
-    setValue: function setValue(state, value) {
-      state.value = value;
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(searchStorageName, state.value);
-    }
-  },
-  actions: {
-    /**
-     * The action of setting the value tha will be searched.
-     *
-     * @param commit
-     * @param value
-     */
-    setValueAction: function setValueAction(_ref, value) {
-      var commit = _ref.commit;
-      commit('setValue', value);
-      commit('saveData');
-    }
-  }
-};
-// CONCATENATED MODULE: ./src/store/modules/sorting.module.js
-var sortingStorageName = "vue_table_".concat(window.location.pathname, "_sorting");
-var sorting = window.localStorage.getItem(sortingStorageName);
-var sortingModule = {
-  namespaced: true,
-  state: {
-    sorting: sorting ? JSON.parse(sorting) : []
-  },
-  mutations: {
-    /**
-     * Adds a sort to the store.
-     *
-     * @param state
-     * @param newSorting
-     */
-    addSort: function addSort(state, newSort) {
-      // If a sorting with this key already exists, it must be removed from the array.
-      state.sorting = state.sorting.filter(function (sort) {
-        return sort.column != newSort.column;
-      });
-      state.sorting.push(newSort);
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(sortingStorageName, JSON.stringify(state.sorting));
-    }
-  },
-  actions: {
-    /**
-     * The action of adding a sorting.
-     *
-     * @param commit
-     * @param sorting
-     */
-    addSortAction: function addSortAction(_ref, sort) {
-      var commit = _ref.commit;
-      commit('addSort', sort);
-      commit('saveData');
-    }
-  }
-};
-// CONCATENATED MODULE: ./src/store/index.js
-
-
-
-
-
-
-external_commonjs_vue_commonjs2_vue_root_Vue_default.a.use(vuex_esm["a" /* default */]);
-/* harmony default export */ var store = __webpack_exports__["a"] = (new vuex_esm["a" /* default */].Store({
-  modules: {
-    filtersModule: filters_module["a" /* filtersModule */],
-    paginationModule: paginationModule,
-    searchModule: searchModule,
-    sortingModule: sortingModule
-  }
-}));
-
-/***/ }),
-
 /***/ "4362":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6621,13 +6348,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   return getCurrentScript
 }));
 
-
-/***/ }),
-
-/***/ "8bbf":
-/***/ (function(module, exports) {
-
-module.exports = require("vue");
 
 /***/ }),
 
@@ -10822,16 +10542,14 @@ module.exports = function xhrAdapter(config) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _components_VueTable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("2a6d");
-/* harmony import */ var _store___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("4360");
-/* harmony import */ var _directives_filter_column_directive__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("1344");
-
-
- // install function executed by Vue.use()
+ // import store from '@/store/index';
+// import { filterColumn } from "@/directives/filter-column.directive";
+// install function executed by Vue.use()
 
 var install = function installVueTable(Vue) {
   if (install.installed) return;
   install.installed = true;
-  Vue.component('VueTable', _components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
+  Vue.component(_components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].name, _components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]);
 }; // Create module definition for Vue.use()
 
 
@@ -10861,9 +10579,7 @@ if ('false' === Object({"NODE_ENV":"production","BASE_URL":"/"}).ES_BUILD) {
 _components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"].install = install; // Export component by default
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-  VueTable: _components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"],
-  store: _store___WEBPACK_IMPORTED_MODULE_1__[/* default */ "a"],
-  filterColumn: _directives_filter_column_directive__WEBPACK_IMPORTED_MODULE_2__[/* filterColumn */ "a"]
+  VueTable: _components_VueTable__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]
 }); // It's possible to expose named exports when writing components that can
 // also be used as directives, etc. - eg. import { RollupDemoDirective } from 'rollup-demo';
 // export const RollupDemoDirective = component;

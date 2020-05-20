@@ -1,13 +1,12 @@
 import VueTable from "@/components/VueTable";
-
-import store from '@/store/';
-import { filterColumn } from "@/directives/filter-column.directive";
+// import store from '@/store/index';
+// import { filterColumn } from "@/directives/filter-column.directive";
 
 // install function executed by Vue.use()
 const install = function installVueTable(Vue) {
     if (install.installed) return;
     install.installed = true;
-    Vue.component('VueTable', VueTable);
+    Vue.component(VueTable.name, VueTable);
 };
 
 // Create module definition for Vue.use()
@@ -36,9 +35,7 @@ VueTable.install = install;
 
 // Export component by default
 export default {
-    VueTable,
-    store,
-    filterColumn
+    VueTable
 };
 
 // It's possible to expose named exports when writing components that can
