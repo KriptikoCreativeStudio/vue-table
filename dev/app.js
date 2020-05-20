@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
-import store from './store/';
+import store from '../src/store';
 
-require('./directives/');
+require('../src/directives');
 
 Vue.config.productionTip = false;
 
