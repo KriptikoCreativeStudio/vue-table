@@ -24,7 +24,7 @@
                             <thead>
                                 <tr>
                                     <th v-if="orderable" class="min-width"></th>
-                                    <th v-for="column in columns"
+                                    <th v-for="column in visibleColumns"
                                         :key="column.name"
                                         :class="column.headerClasses"
                                     >
@@ -46,7 +46,7 @@
                                             <i class="fas fa-arrows-alt-v"></i>
                                         </button>
                                     </td>
-                                    <td v-for="(column, index) in columns"
+                                    <td v-for="(column, index) in visibleColumns"
                                         :key="index"
                                         :class="column.rowClasses"
                                     >
@@ -229,6 +229,11 @@
                     if (!Object.prototype.hasOwnProperty.call(column, 'sortable') || typeof column.sortable !== 'boolean') {
                         column.sortable = true;
                     }
+
+                    // Set visibility defaults
+                    if (!Object.prototype.hasOwnProperty.call(column, 'visible')) {
+                        column.visible = true;
+                    }
                 });
             },
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
@@ -245,6 +250,14 @@
             isSearchable: function () {
                 return this.getSearchableColumns().length > 0;
             },
+
+            /**
+             *
+             */
+            visibleColumns: function () {
+                return this.columns.filter((column) => column.visible);
+            },
+
             ...mapState('filtersModule', ['filters']),
             ...mapState('sortingModule', { currentSorting: 'sorting' }),
             ...mapState('searchModule', { search: 'value' }),

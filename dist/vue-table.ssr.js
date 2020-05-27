@@ -751,6 +751,11 @@ var store = new Vuex__default.Store({
 
         if (!Object.prototype.hasOwnProperty.call(column, 'sortable') || typeof column.sortable !== 'boolean') {
           column.sortable = true;
+        } // Set visibility defaults
+
+
+        if (!Object.prototype.hasOwnProperty.call(column, 'visible')) {
+          column.visible = true;
         }
       });
     }
@@ -770,6 +775,15 @@ var store = new Vuex__default.Store({
      */
     isSearchable: function isSearchable() {
       return this.getSearchableColumns().length > 0;
+    },
+
+    /**
+     *
+     */
+    visibleColumns: function visibleColumns() {
+      return this.columns.filter(function (column) {
+        return column.visible;
+      });
     }
   }, Vuex.mapState('filtersModule', ['filters']), {}, Vuex.mapState('sortingModule', {
     currentSorting: 'sorting'
@@ -820,7 +834,7 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm._ssrNode("<div class=\"form-row\">", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\">", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\">", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\">", "</div>", [_vm._ssrNode("<table class=\"table table-striped\">", "</table>", [_vm._ssrNode("<thead>", "</thead>", [_vm._ssrNode("<tr>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"min-width\"></th>" : "<!---->") + " "), _vm._l(_vm.columns, function (column) {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm._ssrNode("<div class=\"form-row\">", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\">", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\">", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\">", "</div>", [_vm._ssrNode("<table class=\"table table-striped\">", "</table>", [_vm._ssrNode("<thead>", "</thead>", [_vm._ssrNode("<tr>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"min-width\"></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
     return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + ">", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
@@ -856,7 +870,7 @@ var __vue_render__$3 = function __vue_render__() {
       }
     }, [_c('i', {
       staticClass: "fas fa-arrows-alt-v"
-    })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.columns, function (column, index) {
+    })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column, index) {
       return _c('td', {
         key: index,
         class: column.rowClasses
@@ -890,7 +904,7 @@ var __vue_inject_styles__$3 = undefined;
 var __vue_scope_id__$3 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-52037432";
+var __vue_module_identifier__$3 = "data-v-21df5b6c";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;

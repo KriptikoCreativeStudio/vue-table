@@ -111,6 +111,7 @@ data(){
 | searchable    | Boolean  | false   | Determines whether the column is searchable.                   |
 | sortable      | Boolean  | false   | Determines whether the column is sortable.                     |
 | title         | String   | ""      | The column's header title.                                     |
+| visible       | Boolean  | true    | Determines whether the column is visible.                      |
 | render()      | function | false   | Callback for transforming the column's data.                   |
 
 

@@ -46,6 +46,12 @@
                 options: {
                     columns: [
                         {
+                            name: "id",
+                            rowClasses: 'align-middle',
+                            title: "#",
+                            visible: false
+                        },
+                        {
                             name: "name",
                             rowClasses: 'align-middle',
                             searchable: true,
