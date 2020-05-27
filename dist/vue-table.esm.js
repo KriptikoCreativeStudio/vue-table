@@ -822,6 +822,11 @@ var script$3 = {
 
         if (!Object.prototype.hasOwnProperty.call(column, 'sortable') || typeof column.sortable !== 'boolean') {
           column.sortable = true;
+        } // Set visibility defaults
+
+
+        if (!Object.prototype.hasOwnProperty.call(column, 'visible')) {
+          column.visible = true;
         }
       });
     },
@@ -845,6 +850,13 @@ var script$3 = {
      */
     isSearchable: function () {
       return this.getSearchableColumns().length > 0;
+    },
+
+    /**
+     *
+     */
+    visibleColumns: function () {
+      return this.columns.filter(column => column.visible);
     },
     ...mapState('filtersModule', ['filters']),
     ...mapState('sortingModule', {
@@ -920,7 +932,7 @@ var __vue_render__$3 = function () {
     staticClass: "table table-striped"
   }, [_c('thead', [_c('tr', [_vm.orderable ? _c('th', {
     staticClass: "min-width"
-  }) : _vm._e(), _vm._v(" "), _vm._l(_vm.columns, function (column) {
+  }) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column) {
     return _c('th', {
       key: column.name,
       class: column.headerClasses
@@ -959,7 +971,7 @@ var __vue_render__$3 = function () {
       }
     }, [_c('i', {
       staticClass: "fas fa-arrows-alt-v"
-    })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.columns, function (column, index) {
+    })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column, index) {
       return _c('td', {
         key: index,
         class: column.rowClasses
