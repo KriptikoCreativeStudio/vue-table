@@ -2,7 +2,7 @@
     <vue-table v-bind="options" :items.sync="items">
         <template v-slot:filters>
             <div class="col-md-3">
-                <select class="form-control" v-filter-column:city>
+                <select class="form-control" v-filter-column="'city'">
                     <option value="">Cities</option>
                     <option value="Abbottton">Abbottton</option>
                     <option value="Camrenland">Camrenland</option>

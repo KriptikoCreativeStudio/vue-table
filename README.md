@@ -153,7 +153,7 @@ sorting[1][direction]: created_at
 If you need to filter a column, you can use the `v-filter-column` directive.
 ```
 <template>
-    <select v-filter-column:city>
+    <select v-filter-column="'city'">
         ...
     </select>
 </template>
@@ -191,7 +191,7 @@ You can make use of the filters slot for placing your selectors inline with the 
 <vue-table>
     <template v-slot:filters>
         <div class="col-md-3">
-            <select class="form-control" v-filter-column:city>
+            <select class="form-control" v-filter-column="'city'">
                 <option>Cities</option>
                 <option value="Abbottton">Abbottton</option>
                 <option value="Camrenland">Camrenland</option>

@@ -3,11 +3,12 @@ import { filtersStorageName } from "../store/modules/filters.module";
 export default {
     name: 'filter-column',
     bind: function (el, binding, vnode) {
-        let storedFilters = window.localStorage.getItem(filtersStorageName);
+        let columnName = binding.value;
 
+        let storedFilters = window.localStorage.getItem(filtersStorageName);
         storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
 
-        let storedFilter = storedFilters.find(filter => filter.column == binding.arg);
+        let storedFilter = storedFilters.find(filter => filter.column == columnName);
 
         if (typeof storedFilter !== 'undefined') {
             [...el.options]
@@ -21,7 +22,7 @@ export default {
                 .map(option => option.value);
 
             const payload = {
-                column: binding.arg,
+                column: columnName,
                 values: selectedValues
             };
 

@@ -1023,9 +1023,10 @@ const __vue_component__$3 = /*#__PURE__*/normalizeComponent({
 var filterColumn_directive = {
   name: 'filter-column',
   bind: function (el, binding, vnode) {
+    let columnName = binding.value;
     let storedFilters = window.localStorage.getItem(filtersStorageName);
     storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
-    let storedFilter = storedFilters.find(filter => filter.column == binding.arg);
+    let storedFilter = storedFilters.find(filter => filter.column == columnName);
 
     if (typeof storedFilter !== 'undefined') {
       [...el.options].filter(option => storedFilter.values.includes(option.value)).map(option => option.setAttribute('selected', true));
@@ -1034,7 +1035,7 @@ var filterColumn_directive = {
     el.addEventListener('change', event => {
       let selectedValues = [...event.target.options].filter(option => option.selected && option.value).map(option => option.value);
       const payload = {
-        column: binding.arg,
+        column: columnName,
         values: selectedValues
       };
       vnode.context.$root.$emit('filterOptionSelected', payload);
