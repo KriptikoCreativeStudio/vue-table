@@ -920,10 +920,11 @@ var __vue_component__$3 = /*#__PURE__*/normalizeComponent({
 }, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);var filterColumn_directive = {
   name: 'filter-column',
   bind: function bind(el, binding, vnode) {
+    var columnName = binding.value;
     var storedFilters = window.localStorage.getItem(filtersStorageName);
     storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
     var storedFilter = storedFilters.find(function (filter) {
-      return filter.column == binding.arg;
+      return filter.column == columnName;
     });
 
     if (typeof storedFilter !== 'undefined') {
@@ -942,7 +943,7 @@ var __vue_component__$3 = /*#__PURE__*/normalizeComponent({
       });
 
       var payload = {
-        column: binding.arg,
+        column: columnName,
         values: selectedValues
       };
       vnode.context.$root.$emit('filterOptionSelected', payload);
