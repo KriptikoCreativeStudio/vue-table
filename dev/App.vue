@@ -2,14 +2,11 @@
     <vue-table v-bind="options" :items.sync="items">
         <template v-slot:filters>
             <div class="col-md-3">
-                <select class="form-control" v-filter-column="'city'">
+                <select class="custom-select" v-filter-column="'city.id'" ref="cityFilter">
                     <option value="">Cities</option>
-                    <option value="Abbottton">Abbottton</option>
-                    <option value="Camrenland">Camrenland</option>
-                    <option value="Delfinamouth">Delfinamouth</option>
-                    <option value="East Benborough">East Benborough</option>
-                    <option value="Feeneymouth">Feeneymouth</option>
-                    <option value="Sipesburgh">Sipesburgh</option>
+                    <option v-for="city in filters.cities" :value="city.id" :key="city.id">
+                        {{ city.name }}
+                    </option>
                 </select>
             </div>
         </template>
@@ -43,6 +40,9 @@
         data() {
             return {
                 items: [],
+                filters: {
+                    cities: [],
+                },
                 options: {
                     columns: [
                         {
@@ -65,11 +65,14 @@
                         },
                         {
                             headerClasses: "text-center",
-                            name: "city",
+                            name: "city_id",
                             rowClasses: 'align-middle text-center',
-                            searchable: true,
                             sortable: false,
-                            title: "City"
+                            searchable: true,
+                            title: "City",
+                            render: function (data) {
+                                return data.city.name;
+                            }
                         },
                         {
                             headerClasses: "fit-content",
@@ -108,7 +111,29 @@
              */
             handleItemDeleted(item) {
                 this.items.splice(this.items.indexOf(item), 1);
+            },
+
+            /**
+             * Get the cities from an external API.
+             */
+            getCitiesOptions: function () {
+                const axios = require('axios');
+
+                axios.get('https://api.sandbox.codetech.pt/api/cities')
+                    .then(response => {
+                        new Promise((resolve) => {
+                            this.filters.cities = response.data.data;
+
+                            resolve();
+                        })
+                            .then(() => {
+                                this.$refs.cityFilter.dispatchEvent(new Event('vueTable.optionsLoaded'));
+                            });
+                    });
             }
+        },
+        mounted() {
+            this.getCitiesOptions();
         }
     };
 </script>

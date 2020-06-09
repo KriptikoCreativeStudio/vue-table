@@ -151,6 +151,7 @@ sorting[1][direction]: created_at
 ## Filters
 
 If you need to filter a column, you can use the `v-filter-column` directive.
+
 ```
 <template>
     <select v-filter-column="'city'">
@@ -171,19 +172,94 @@ If you need to filter a column, you can use the `v-filter-column` directive.
     }
 </sc
 ```
+
 This directive will sync your selector with the `city` column.<br>
 Here's an example of the data that will be attached to the request when you select an option:
+
 ```
 filters[0][column]: name
 filters[0][values][0]: Ada Stark
 ```
-It also works with selectors with the `multiple` attribute. The request will look like this:
+
+It also works with selectors with the `multiple` attribute. In these cases, the request will look like this:
+
 ```
 filters[0][column]: city
 filters[0][values][0]: Abbottton
 filters[0][values][1]: Benborough
 ```
+
 This will append the data to the request in order to search for the selected value in the column with the name `city`. Check the [Columns API](#columns-api) for more info.
+
+### Storage of the current selection
+In addition to triggering a request to the server, the directive is also responsible for storing the current value of the selector in local storage. 
+Thus, when the page loads, the option gets automatically selected. 
+
+Let's say you're fetching data for your selector from an external API and you need the selection to be triggered **after** the options have been loaded. 
+In that case, you can use the `vueTable.optionsLoaded` event as follows:
+
+```
+// Get the cities from an external API.
+
+<template>
+    <vue-table v-bind="options" :items.sync="items">
+        <template v-slot:filters>
+            <div class="col-md-3">
+                <select class="custom-select" v-filter-column="'city.id'" ref="cityFilter">
+                    <option value="">Cities</option>
+                    <option v-for="city in filters.cities" :value="city.id" :key="city.id">
+                        {{ city.name }}
+                    </option>
+                </select>
+            </div>
+        </template>
+    </vue-table>
+</template>
+
+<script>
+    import { filterColumn, VueTable } from '@kriptiko/vue-table';
+
+    export default {
+        name: 'App',
+        components: {
+            VueTable
+        },
+        directives: { filterColumn },
+        data() {
+            return {
+                items: [],
+                filters: {
+                    cities: [],
+                },
+                options: {},
+            };
+        },
+        methods: {
+            /**
+             * Get the cities from an external API.
+             */
+            getCitiesOptions: function () {
+                const axios = require('axios');
+
+                axios.get('https://api.sandbox.codetech.pt/api/cities')
+                    .then(response => {
+                        new Promise((resolve) => {
+                            this.filters.cities = response.data.data;
+
+                            resolve();
+                        })
+                            .then(() => {
+                                this.$refs.cityFilter.dispatchEvent(new Event('vueTable.optionsLoaded'));
+                            });
+                    });
+            }
+        },
+        mounted() {
+            this.getCitiesOptions();
+        }
+    };
+</script>
+```
 
 ### Filters slot
 You can make use of the filters slot for placing your selectors inline with the search bar. See this example:
