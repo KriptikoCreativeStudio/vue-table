@@ -46,10 +46,10 @@
                 options: {
                     columns: [
                         {
+                            headerClasses: "fit-content",
                             name: "id",
                             rowClasses: 'align-middle',
-                            title: "#",
-                            visible: false
+                            title: "#"
                         },
                         {
                             name: "name",
