@@ -10,11 +10,19 @@ export default {
 
         let storedFilter = storedFilters.find(filter => filter.column == columnName);
 
-        if (typeof storedFilter !== 'undefined') {
-            [...el.options]
-                .filter(option => storedFilter.values.includes(option.value))
-                .map(option => option.setAttribute('selected', true));
-        }
+        let setSelection = (el) => {
+            if (typeof storedFilter !== 'undefined') {
+                [...el.options]
+                    .filter(option => storedFilter.values.includes(option.value))
+                    .map(option => option.setAttribute('selected', true));
+            }
+        };
+
+        setSelection(el);
+
+        el.addEventListener('vueTable.optionsLoaded', (event) => {
+            setSelection(event.target);
+        });
 
         el.addEventListener('change', (event) => {
             let selectedValues = [...event.target.options]
