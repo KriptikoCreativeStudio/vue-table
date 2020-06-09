@@ -310,10 +310,10 @@ var script$2 = {
   },
   computed: {
     start: function () {
-      return (this.page - 1) * this.perPage;
+      return (this.page - 1) * this.perPage + 1;
     },
     end: function () {
-      let end = this.start + this.perPage;
+      let end = this.start + this.perPage - 1;
       return this.items < end ? this.items : end;
     },
     totalPages: function () {
@@ -363,7 +363,11 @@ var __vue_render__$2 = function () {
 
   var _c = _vm._self._c || _h;
 
-  return _vm.totalPages > 1 ? _c('nav', [_c('ul', {
+  return _c('nav', {
+    staticClass: "row mt-5"
+  }, [_c('div', {
+    staticClass: "col-sm-6"
+  }, [_vm.totalPages > 1 ? _c('ul', {
     staticClass: "pagination"
   }, [_vm.page != 1 ? [_c('li', {
     staticClass: "page-item"
@@ -456,7 +460,9 @@ var __vue_render__$2 = function () {
     staticClass: "fas fa-forward"
   }), _vm._v(" "), _c('span', {
     staticClass: "sr-only"
-  }, [_vm._v("Last")])])])] : _vm._e()], 2), _vm._v("\n\n    Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n")]) : _vm._e();
+  }, [_vm._v("Last")])])])] : _vm._e()], 2) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 text-sm-right"
+  }, [_vm._v("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ")])]);
 };
 
 var __vue_staticRenderFns__$2 = [];
@@ -1028,10 +1034,16 @@ var filterColumn_directive = {
     storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
     let storedFilter = storedFilters.find(filter => filter.column == columnName);
 
-    if (typeof storedFilter !== 'undefined') {
-      [...el.options].filter(option => storedFilter.values.includes(option.value)).map(option => option.setAttribute('selected', true));
-    }
+    let setSelection = el => {
+      if (typeof storedFilter !== 'undefined') {
+        [...el.options].filter(option => storedFilter.values.includes(option.value)).map(option => option.setAttribute('selected', true));
+      }
+    };
 
+    setSelection(el);
+    el.addEventListener('vueTable.optionsLoaded', event => {
+      setSelection(event.target);
+    });
     el.addEventListener('change', event => {
       let selectedValues = [...event.target.options].filter(option => option.selected && option.value).map(option => option.value);
       const payload = {

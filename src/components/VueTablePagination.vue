@@ -1,46 +1,50 @@
 <template>
-    <nav v-if="totalPages > 1">
-        <ul class="pagination">
-            <template v-if="page != 1">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
-                        <i class="fas fa-backward"></i>
-                        <span class="sr-only">First</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="setPage(page - 1)">
-                        <i class="fas fa-caret-left"></i>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
-            </template>
+    <nav class="row mt-5">
+        <div class="col-sm-6">
+            <ul class="pagination" v-if="totalPages > 1">
+                <template v-if="page != 1">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
+                            <i class="fas fa-backward"></i>
+                            <span class="sr-only">First</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous" @click.prevent="setPage(page - 1)">
+                            <i class="fas fa-caret-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                </template>
 
-            <li v-for="(linkButton, index) in linkButtons"
-                :key="index"
-                class="page-item"
-                :class="{'active': linkButton == page}"
-            >
-                <a class="page-link" href="#" @click.prevent="setPage(linkButton)">{{ linkButton }}</a>
-            </li>
-
-            <template v-if="page != totalPages">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next" @click.prevent="setPage(page + 1)">
-                        <i class="fas fa-caret-right"></i>
-                        <span class="sr-only">Next</span>
-                    </a>
+                <li v-for="(linkButton, index) in linkButtons"
+                    :key="index"
+                    class="page-item"
+                    :class="{'active': linkButton == page}"
+                >
+                    <a class="page-link" href="#" @click.prevent="setPage(linkButton)">{{ linkButton }}</a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Last" @click.prevent="setPage(totalPages)">
-                        <i class="fas fa-forward"></i>
-                        <span class="sr-only">Last</span>
-                    </a>
-                </li>
-            </template>
-        </ul>
 
-        Showing {{ start }} - {{ end }} of {{ items }}
+                <template v-if="page != totalPages">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next" @click.prevent="setPage(page + 1)">
+                            <i class="fas fa-caret-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Last" @click.prevent="setPage(totalPages)">
+                            <i class="fas fa-forward"></i>
+                            <span class="sr-only">Last</span>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <div class="col-sm-6 text-sm-right">
+            Showing {{ start }} - {{ end }} of {{ items }}
+        </div>
     </nav>
 </template>
 
@@ -77,10 +81,10 @@
         },
         computed: {
             start: function () {
-                return (this.page - 1) * this.perPage;
+                return (this.page - 1) * this.perPage + 1;
             },
             end: function () {
-                let end = this.start + this.perPage;
+                let end = this.start + this.perPage - 1;
 
                 return this.items < end ? this.items : end;
             },

@@ -347,10 +347,10 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
   })),
   computed: _objectSpread2({
     start: function start() {
-      return (this.page - 1) * this.perPage;
+      return (this.page - 1) * this.perPage + 1;
     },
     end: function end() {
-      var end = this.start + this.perPage;
+      var end = this.start + this.perPage - 1;
       return this.items < end ? this.items : end;
     },
     totalPages: function totalPages() {
@@ -397,11 +397,13 @@ var __vue_render__$2 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _vm.totalPages > 1 ? _c('nav', [_vm._ssrNode("<ul class=\"pagination\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
+  return _c('nav', {
+    staticClass: "row mt-5"
+  }, [_vm._ssrNode("<div class=\"col-sm-6\">" + (_vm.totalPages > 1 ? "<ul class=\"pagination\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
     return "<li" + _vm._ssrClass("page-item", {
       'active': linkButton == _vm.page
     }) + "><a href=\"#\" class=\"page-link\">" + _vm._ssrEscape(_vm._s(linkButton)) + "</a></li>";
-  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" + _vm._ssrEscape("\n\n    Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n"))]) : _vm._e();
+  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" : "<!---->") + "</div> <div class=\"col-sm-6 text-sm-right\">" + _vm._ssrEscape("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ") + "</div>")]);
 };
 
 var __vue_staticRenderFns__$2 = [];
@@ -413,7 +415,7 @@ var __vue_inject_styles__$2 = undefined;
 var __vue_scope_id__$2 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = "data-v-686e296c";
+var __vue_module_identifier__$2 = "data-v-0231a6a9";
 /* functional template */
 
 var __vue_is_functional_template__$2 = false;
@@ -927,14 +929,20 @@ var __vue_component__$3 = /*#__PURE__*/normalizeComponent({
       return filter.column == columnName;
     });
 
-    if (typeof storedFilter !== 'undefined') {
-      _toConsumableArray(el.options).filter(function (option) {
-        return storedFilter.values.includes(option.value);
-      }).map(function (option) {
-        return option.setAttribute('selected', true);
-      });
-    }
+    var setSelection = function setSelection(el) {
+      if (typeof storedFilter !== 'undefined') {
+        _toConsumableArray(el.options).filter(function (option) {
+          return storedFilter.values.includes(option.value);
+        }).map(function (option) {
+          return option.setAttribute('selected', true);
+        });
+      }
+    };
 
+    setSelection(el);
+    el.addEventListener('vueTable.optionsLoaded', function (event) {
+      setSelection(event.target);
+    });
     el.addEventListener('change', function (event) {
       var selectedValues = _toConsumableArray(event.target.options).filter(function (option) {
         return option.selected && option.value;
