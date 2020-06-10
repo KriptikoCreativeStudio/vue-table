@@ -134,7 +134,7 @@
             },
             metaKey: {
                 type: String,
-                default: 'meta'
+                default: null
             },
             orderable: {
                 type: Boolean,
@@ -190,9 +190,7 @@
                             this.items = response.data[this.dataKey];
                         }
 
-                        if (Object.prototype.hasOwnProperty.call(response.data, this.metaKey)) {
-                            this.totalItems = response.data[this.metaKey].total ?? this.items.length;
-                        }
+                        this.totalItems = ((this.metaKey != null) ? response.data[this.metaKey].total : response.data.total) ?? this.items.length;
 
                         this.$emit('update:items', this.items);
                     });

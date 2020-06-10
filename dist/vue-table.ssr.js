@@ -655,7 +655,7 @@ var store = new Vuex__default.Store({
     },
     metaKey: {
       type: String,
-      default: 'meta'
+      default: null
     },
     orderable: {
       type: Boolean,
@@ -708,15 +708,13 @@ var store = new Vuex__default.Store({
         }
       };
       axios$1.get(this.uri, options).then(function (response) {
+        var _ref;
+
         if (Object.prototype.hasOwnProperty.call(response.data, _this.dataKey)) {
           _this.items = response.data[_this.dataKey];
         }
 
-        if (Object.prototype.hasOwnProperty.call(response.data, _this.metaKey)) {
-          var _response$data$_this$;
-
-          _this.totalItems = (_response$data$_this$ = response.data[_this.metaKey].total) !== null && _response$data$_this$ !== void 0 ? _response$data$_this$ : _this.items.length;
-        }
+        _this.totalItems = (_ref = _this.metaKey != null ? response.data[_this.metaKey].total : response.data.total) !== null && _ref !== void 0 ? _ref : _this.items.length;
 
         _this.$emit('update:items', _this.items);
       });
@@ -906,7 +904,7 @@ var __vue_inject_styles__$3 = undefined;
 var __vue_scope_id__$3 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-21df5b6c";
+var __vue_module_identifier__$3 = "data-v-a7673e7a";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;
