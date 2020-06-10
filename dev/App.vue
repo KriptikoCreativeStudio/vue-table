@@ -48,12 +48,12 @@
                         {
                             headerClasses: "fit-content",
                             name: "id",
-                            rowClasses: 'align-middle',
+                            rowClasses: "align-middle",
                             title: "#"
                         },
                         {
                             name: "name",
-                            rowClasses: 'align-middle',
+                            rowClasses: "align-middle",
                             searchable: true,
                             title: "Name"
                         },
@@ -66,7 +66,7 @@
                         {
                             headerClasses: "text-center",
                             name: "city_id",
-                            rowClasses: 'align-middle text-center',
+                            rowClasses: "align-middle text-center",
                             sortable: false,
                             searchable: true,
                             title: "City",
@@ -97,7 +97,7 @@
                             "delete"
                         ]
                     },
-                    uri: 'https://api.sandbox.codetech.pt/api/users',
+                    uri: "https://api.sandbox.codetech.pt/api/users",
                     metaKey: "meta",
                     locale: "pt"
                 }

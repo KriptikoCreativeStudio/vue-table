@@ -734,7 +734,7 @@ var script$3 = {
     },
     metaKey: {
       type: String,
-      default: 'meta'
+      default: null
     },
     orderable: {
       type: Boolean,
@@ -785,16 +785,13 @@ var script$3 = {
         }
       };
       axios$1.get(this.uri, options).then(response => {
+        var _ref;
+
         if (Object.prototype.hasOwnProperty.call(response.data, this.dataKey)) {
           this.items = response.data[this.dataKey];
         }
 
-        if (Object.prototype.hasOwnProperty.call(response.data, this.metaKey)) {
-          var _response$data$this$m;
-
-          this.totalItems = (_response$data$this$m = response.data[this.metaKey].total) !== null && _response$data$this$m !== void 0 ? _response$data$this$m : this.items.length;
-        }
-
+        this.totalItems = (_ref = this.metaKey != null ? response.data[this.metaKey].total : response.data.total) !== null && _ref !== void 0 ? _ref : this.items.length;
         this.$emit('update:items', this.items);
       });
     },
