@@ -46,18 +46,19 @@ import VueTable from '@kriptiko/vue-table'
 
 ## Props
 
-| Prop      | Type    | Default                    | Description                                                                            |
-|-----------|:-------:|:--------------------------:|----------------------------------------------------------------------------------------|
-| actions   | Array   | { classes: "", slots: [] } | The actions' slots names. See the [Actions API](#actions-api) for more info.           |
-| columns   | Array   | []                         | The table columns. See the [Columns API](#columns-api) for more info.                  |
-| uri       | String  | null                       | Data source URI                                                                        |
-| data-key  | String  | 'data'                     | The path to the data in the server's JSON response.                                    |
-| meta-key  | String  | null                       | The path to the pagination meta in the server's JSON response.                         |
-| per-page  | Number  | 20                         | Number of items displayed per page.                                                    |
-| paginate  | Boolean | true                       | Paginates the records and enables the pages links.                                     |
-| locale    | String  | en                         | Sets the locale. Supported values: en, es, fr, pt.                                     |
-| orderable | Boolean | false                      | When set to true, the rows can be reorder by dragging them.                            |
-| sorting   | Array   | []                         | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.    |
+| Prop      | Type    | Default                             | Description                                                                                      |
+|-----------|:-------:|:-----------------------------------:|--------------------------------------------------------------------------------------------------|
+| actions   | Object  | { classes: "", slots: [] }          | The actions' slots names. See the [Actions API](#actions-api) for more info.                     |
+| columns   | Array   | []                                  | The table columns. See the [Columns API](#columns-api) for more info.                            |
+| uri       | String  | null                                | Data source URI                                                                                  |
+| data-key  | String  | 'data'                              | The path to the data in the server's JSON response.                                              |
+| meta-key  | String  | null                                | The path to the pagination meta in the server's JSON response.                                   |
+| per-page  | Number  | 20                                  | Number of items displayed per page.                                                              |
+| paginate  | Boolean | true                                | Paginates the records and enables the pages links.                                               |
+| locale    | String  | en                                  | Sets the locale. Supported values: en, es, fr, pt.                                               |
+| orderable | Boolean | false                               | When set to true, the rows can be reorder by dragging them.                                      |
+| checkable | Object  | { display: false, attribute: null } | Show/hide checkboxes for bulk operations. See the [Checkable API](#checkable-api) for more info. |
+| sorting   | Array   | []                                  | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.              |
 
 
 ## Actions API
@@ -136,7 +137,7 @@ sorting: [
         direction: "desc"
     }
 ],
-``` 
+```
 
 ### Request payload
 Whenever you sort a column, the current sorting information will be attached to the request. For the previous example,
@@ -147,6 +148,24 @@ sorting[0][direction]: asc
 sorting[1][column]: name
 sorting[1][direction]: created_at
 ```
+
+
+## Checkable API
+
+| Property      | Type     | Description                                                      | 
+|---------------|:--------:|------------------------------------------------------------------|
+| display       | Boolean  | Determines whether the checkboxes are displayed or not.          |
+| attribute     | String   | The item's attribute to be stored on the selectedItems array     |
+
+### Example
+
+```
+checkable: {
+    display: true,
+    attribute: "id"
+},
+```
+
 
 ## Filters
 

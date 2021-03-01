@@ -23,7 +23,16 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th v-if="orderable" class="min-width"></th>
+                                    <th v-if="orderable" class="fit-content"></th>
+                                    <th v-if="checkable.display" class="fit-content">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox"
+                                                   :id="`vueTableCheckableAll${_uid}`"
+                                                   @change="toggleVueTableCheckables">
+                                            <label class="custom-control-label"
+                                                   :for="`vueTableCheckableAll${_uid}`"></label>
+                                        </div>
+                                    </th>
                                     <th v-for="column in visibleColumns"
                                         :key="column.name"
                                         :class="column.headerClasses"
@@ -40,11 +49,21 @@
                                            :disabled="!orderable"
                                            @change="$emit('itemsReordered', $event.moved.element, $event.moved.newIndex)"
                             >
-                                <tr v-for="item in items" :key="item.id">
-                                    <td v-if="orderable" class="min-width align-middle">
+                                <tr v-for="(item, index) in items" :key="index">
+                                    <td v-if="orderable" class="fit-content align-middle">
                                         <button class="btn btn-sm v-table-drag-handle" type="button">
                                             <i class="fas fa-arrows-alt-v"></i>
                                         </button>
+                                    </td>
+                                    <td v-if="checkable.display" class="fit-content align-middle">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox"
+                                                   :id="`vueTableCheckable${_uid}_${item[checkable.attribute]}`" :value="item[checkable.attribute]"
+                                                   v-model="selectedItems"
+                                            >
+                                            <label class="custom-control-label"
+                                                   :for="`vueTableCheckable${_uid}_${item[checkable.attribute]}`"></label>
+                                        </div>
                                     </td>
                                     <td v-for="(column, index) in visibleColumns"
                                         :key="index"
@@ -59,7 +78,7 @@
                                         </template>
                                     </td>
                                     <td v-if="actions.slots.length" :class="actions.classes"
-                                        class="v-table-options-wrapper min-width align-middle">
+                                        class="fit-content align-middle">
                                         <slot v-for="action in actions.slots" :name="`action-${action}`"
                                               v-bind:item="item"></slot>
                                     </td>
@@ -98,6 +117,7 @@
         data: function () {
             return {
                 items: [],
+                selectedItems: [],
                 lang: {
                     "no_records": "No records found!",
                     "search_for": "Search for..."
@@ -139,6 +159,18 @@
             orderable: {
                 type: Boolean,
                 default: false
+            },
+            checkable: {
+                type: Object,
+                default: function () {
+                    return {
+                        display: false,
+                        attribute: null
+                    };
+                },
+                validator: function (checkable) {
+                    return Object.prototype.hasOwnProperty.call(checkable, 'display') && Object.prototype.hasOwnProperty.call(checkable, 'attribute');
+                }
             },
             paginate: {
                 type: Boolean,
@@ -234,6 +266,18 @@
                     }
                 });
             },
+
+            /**
+             * Toggles the selected items.
+             */
+            toggleVueTableCheckables(event) {
+                if (event.target.checked) {
+                    this.selectedItems = this.items.map(item => item[this.checkable.attribute]);
+                } else {
+                    this.selectedItems = [];
+                }
+            },
+
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
             ...mapActions('paginationModule', { setPage: 'setPageAction' }),
             ...mapActions('filtersModule', { setFilter: 'addFilterAction' })
@@ -293,3 +337,10 @@
         }
     };
 </script>
+
+<style scoped lang="scss">
+    .fit-content {
+        width: 1%;
+        white-space: nowrap;
+    }
+</style>

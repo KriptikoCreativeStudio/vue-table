@@ -90,6 +90,11 @@
                             direction: "desc"
                         }
                     ],
+                    checkable: {
+                        display: true,
+                        attribute: 'id',
+                    },
+                    orderable: true,
                     actions: {
                         classes: "fit-content align-middle",
                         slots: [
@@ -146,10 +151,5 @@
         text-align: center;
         color: #2c3e50;
         margin-top: 60px;
-    }
-
-    .fit-content {
-        width: 1%;
-        white-space: nowrap;
     }
 </style>
