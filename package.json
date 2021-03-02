@@ -11,7 +11,7 @@
     "bootstrap4-theme",
     "datatables"
   ],
-  "version": "1.1.13",
+  "version": "1.2.0",
   "license": "MIT",
   "private": false,
   "author": "José Osório",
