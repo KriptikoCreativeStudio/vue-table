@@ -619,6 +619,7 @@ var store = new Vuex__default.Store({
   data: function data() {
     return {
       items: [],
+      selectedItems: [],
       lang: {
         "no_records": "No records found!",
         "search_for": "Search for..."
@@ -660,6 +661,18 @@ var store = new Vuex__default.Store({
     orderable: {
       type: Boolean,
       default: false
+    },
+    checkable: {
+      type: Object,
+      default: function _default() {
+        return {
+          display: false,
+          attribute: null
+        };
+      },
+      validator: function validator(checkable) {
+        return Object.prototype.hasOwnProperty.call(checkable, 'display') && Object.prototype.hasOwnProperty.call(checkable, 'attribute');
+      }
     },
     paginate: {
       type: Boolean,
@@ -758,6 +771,21 @@ var store = new Vuex__default.Store({
           column.visible = true;
         }
       });
+    },
+
+    /**
+     * Toggles the selected items.
+     */
+    toggleVueTableCheckables: function toggleVueTableCheckables(event) {
+      var _this2 = this;
+
+      if (event.target.checked) {
+        this.selectedItems = this.items.map(function (item) {
+          return item[_this2.checkable.attribute];
+        });
+      } else {
+        this.selectedItems = [];
+      }
     }
   }, Vuex.mapActions('sortingModule', {
     addSort: 'addSortAction'
@@ -810,11 +838,11 @@ var store = new Vuex__default.Store({
     this.hydrateColumns();
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     // Dispatch the sorting prop values
     this.sorting.forEach(function (sort) {
-      return _this2.addSort(sort);
+      return _this3.addSort(sort);
     }); // Register events
 
     this.$root.$on('filterOptionSelected', this.setFilter);
@@ -823,7 +851,47 @@ var store = new Vuex__default.Store({
       this.getItems();
     }
   }
-};/* script */
+};function createInjectorSSR(context) {
+    if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+    }
+    if (!context)
+        return () => { };
+    if (!('styles' in context)) {
+        context._styles = context._styles || {};
+        Object.defineProperty(context, 'styles', {
+            enumerable: true,
+            get: () => context._renderStyles(context._styles)
+        });
+        context._renderStyles = context._renderStyles || renderStyles;
+    }
+    return (id, style) => addStyle(id, style, context);
+}
+function addStyle(id, css, context) {
+    const group =  css.media || 'default' ;
+    const style = context._styles[group] || (context._styles[group] = { ids: [], css: '' });
+    if (!style.ids.includes(id)) {
+        style.media = css.media;
+        style.ids.push(id);
+        let code = css.source;
+        style.css += code + '\n';
+    }
+}
+function renderStyles(styles) {
+    let css = '';
+    for (const key in styles) {
+        const style = styles[key];
+        css +=
+            '<style data-vue-ssr-id="' +
+                Array.from(style.ids).join(' ') +
+                '"' +
+                (style.media ? ' media="' + style.media + '"' : '') +
+                '>' +
+                style.css +
+                '</style>';
+    }
+    return css;
+}/* script */
 var __vue_script__$3 = script$3;
 /* template */
 
@@ -834,13 +902,13 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm._ssrNode("<div class=\"form-row\">", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\">", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\">", "</div>", [_vm._ssrNode("<div class=\"card-body\">", "</div>", [_vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\">", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\">", "</div>", [_vm._ssrNode("<table class=\"table table-striped\">", "</table>", [_vm._ssrNode("<thead>", "</thead>", [_vm._ssrNode("<tr>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"min-width\"></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
-    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + ">", "</th>", [_c('vue-table-heading', {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-b4288ed2>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-b4288ed2>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-b4288ed2>", "</div>", [_vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-b4288ed2>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<table class=\"table table-striped\" data-v-b4288ed2>", "</table>", [_vm._ssrNode("<thead data-v-b4288ed2>", "</thead>", [_vm._ssrNode("<tr data-v-b4288ed2>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-b4288ed2></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-b4288ed2><div class=\"custom-control custom-checkbox\" data-v-b4288ed2><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-b4288ed2> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-b4288ed2></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
+    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-b4288ed2>", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
       }
     })], 1);
-  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
+  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-b4288ed2></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
     attrs: {
       "tag": "tbody",
       "handle": ".v-table-drag-handle",
@@ -858,11 +926,11 @@ var __vue_render__$3 = function __vue_render__() {
       },
       expression: "items"
     }
-  }, _vm._l(_vm.items, function (item) {
+  }, _vm._l(_vm.items, function (item, index) {
     return _c('tr', {
-      key: item.id
+      key: index
     }, [_vm.orderable ? _c('td', {
-      staticClass: "min-width align-middle"
+      staticClass: "fit-content align-middle"
     }, [_c('button', {
       staticClass: "btn btn-sm v-table-drag-handle",
       attrs: {
@@ -870,6 +938,51 @@ var __vue_render__$3 = function __vue_render__() {
       }
     }, [_c('i', {
       staticClass: "fas fa-arrows-alt-v"
+    })])]) : _vm._e(), _vm._v(" "), _vm.checkable.display ? _c('td', {
+      staticClass: "fit-content align-middle"
+    }, [_c('div', {
+      staticClass: "custom-control custom-checkbox"
+    }, [_c('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.selectedItems,
+        expression: "selectedItems"
+      }],
+      staticClass: "custom-control-input",
+      attrs: {
+        "type": "checkbox",
+        "id": "vueTableCheckable" + _vm._uid + "_" + item[_vm.checkable.attribute]
+      },
+      domProps: {
+        "value": item[_vm.checkable.attribute],
+        "checked": Array.isArray(_vm.selectedItems) ? _vm._i(_vm.selectedItems, item[_vm.checkable.attribute]) > -1 : _vm.selectedItems
+      },
+      on: {
+        "change": function change($event) {
+          var $$a = _vm.selectedItems,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false;
+
+          if (Array.isArray($$a)) {
+            var $$v = item[_vm.checkable.attribute],
+                $$i = _vm._i($$a, $$v);
+
+            if ($$el.checked) {
+              $$i < 0 && (_vm.selectedItems = $$a.concat([$$v]));
+            } else {
+              $$i > -1 && (_vm.selectedItems = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.selectedItems = $$c;
+          }
+        }
+      }
+    }), _vm._v(" "), _c('label', {
+      staticClass: "custom-control-label",
+      attrs: {
+        "for": "vueTableCheckable" + _vm._uid + "_" + item[_vm.checkable.attribute]
+      }
     })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column, index) {
       return _c('td', {
         key: index,
@@ -880,7 +993,7 @@ var __vue_render__$3 = function __vue_render__() {
         }
       })] : column.name ? [_vm._v("\n                                        " + _vm._s(item[column.name]) + "\n                                    ")] : _vm._e()], 2);
     }), _vm._v(" "), _vm.actions.slots.length ? _c('td', {
-      staticClass: "v-table-options-wrapper min-width align-middle",
+      staticClass: "fit-content align-middle",
       class: _vm.actions.classes
     }, [_vm._l(_vm.actions.slots, function (action) {
       return _vm._t("action-" + action, null, {
@@ -898,26 +1011,30 @@ var __vue_render__$3 = function __vue_render__() {
 var __vue_staticRenderFns__$3 = [];
 /* style */
 
-var __vue_inject_styles__$3 = undefined;
+var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
+  if (!inject) return;
+  inject("data-v-b4288ed2_0", {
+    source: ".fit-content[data-v-b4288ed2]{width:1%;white-space:nowrap}",
+    map: undefined,
+    media: undefined
+  });
+};
 /* scoped */
 
-var __vue_scope_id__$3 = undefined;
+
+var __vue_scope_id__$3 = "data-v-b4288ed2";
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-a7673e7a";
+var __vue_module_identifier__$3 = "data-v-b4288ed2";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;
-/* style inject */
-
-/* style inject SSR */
-
 /* style inject shadow dom */
 
 var __vue_component__$3 = /*#__PURE__*/normalizeComponent({
   render: __vue_render__$3,
   staticRenderFns: __vue_staticRenderFns__$3
-}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);var filterColumn_directive = {
+}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, createInjectorSSR, undefined);var filterColumn_directive = {
   name: 'filter-column',
   bind: function bind(el, binding, vnode) {
     var columnName = binding.value;
