@@ -698,6 +698,7 @@ var script$3 = {
   data: function () {
     return {
       items: [],
+      selectedItems: [],
       lang: {
         "no_records": "No records found!",
         "search_for": "Search for..."
@@ -739,6 +740,18 @@ var script$3 = {
     orderable: {
       type: Boolean,
       default: false
+    },
+    checkable: {
+      type: Object,
+      default: function () {
+        return {
+          display: false,
+          attribute: null
+        };
+      },
+      validator: function (checkable) {
+        return Object.prototype.hasOwnProperty.call(checkable, 'display') && Object.prototype.hasOwnProperty.call(checkable, 'attribute');
+      }
     },
     paginate: {
       type: Boolean,
@@ -834,6 +847,17 @@ var script$3 = {
       });
     },
 
+    /**
+     * Toggles the selected items.
+     */
+    toggleVueTableCheckables(event) {
+      if (event.target.checked) {
+        this.selectedItems = this.items.map(item => item[this.checkable.attribute]);
+      } else {
+        this.selectedItems = [];
+      }
+    },
+
     ...mapActions('sortingModule', {
       addSort: 'addSortAction'
     }),
@@ -904,6 +928,59 @@ var script$3 = {
 
 };
 
+const isOldIE = typeof navigator !== 'undefined' &&
+    /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+function createInjector(context) {
+    return (id, style) => addStyle(id, style);
+}
+let HEAD;
+const styles = {};
+function addStyle(id, css) {
+    const group = isOldIE ? css.media || 'default' : id;
+    const style = styles[group] || (styles[group] = { ids: new Set(), styles: [] });
+    if (!style.ids.has(id)) {
+        style.ids.add(id);
+        let code = css.source;
+        if (css.map) {
+            // https://developer.chrome.com/devtools/docs/javascript-debugging
+            // this makes source maps inside style tags work properly in Chrome
+            code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+            // http://stackoverflow.com/a/26603875
+            code +=
+                '\n/*# sourceMappingURL=data:application/json;base64,' +
+                    btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+                    ' */';
+        }
+        if (!style.element) {
+            style.element = document.createElement('style');
+            style.element.type = 'text/css';
+            if (css.media)
+                style.element.setAttribute('media', css.media);
+            if (HEAD === undefined) {
+                HEAD = document.head || document.getElementsByTagName('head')[0];
+            }
+            HEAD.appendChild(style.element);
+        }
+        if ('styleSheet' in style.element) {
+            style.styles.push(code);
+            style.element.styleSheet.cssText = style.styles
+                .filter(Boolean)
+                .join('\n');
+        }
+        else {
+            const index = style.ids.size - 1;
+            const textNode = document.createTextNode(code);
+            const nodes = style.element.childNodes;
+            if (nodes[index])
+                style.element.removeChild(nodes[index]);
+            if (nodes.length)
+                style.element.insertBefore(textNode, nodes[index]);
+            else
+                style.element.appendChild(textNode);
+        }
+    }
+}
+
 /* script */
 const __vue_script__$3 = script$3;
 /* template */
@@ -934,8 +1011,26 @@ var __vue_render__$3 = function () {
   }, [_c('table', {
     staticClass: "table table-striped"
   }, [_c('thead', [_c('tr', [_vm.orderable ? _c('th', {
-    staticClass: "min-width"
-  }) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column) {
+    staticClass: "fit-content"
+  }) : _vm._e(), _vm._v(" "), _vm.checkable.display ? _c('th', {
+    staticClass: "fit-content"
+  }, [_c('div', {
+    staticClass: "custom-control custom-checkbox"
+  }, [_c('input', {
+    staticClass: "custom-control-input",
+    attrs: {
+      "type": "checkbox",
+      "id": "vueTableCheckableAll" + _vm._uid
+    },
+    on: {
+      "change": _vm.toggleVueTableCheckables
+    }
+  }), _vm._v(" "), _c('label', {
+    staticClass: "custom-control-label",
+    attrs: {
+      "for": "vueTableCheckableAll" + _vm._uid
+    }
+  })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column) {
     return _c('th', {
       key: column.name,
       class: column.headerClasses
@@ -962,11 +1057,11 @@ var __vue_render__$3 = function () {
       },
       expression: "items"
     }
-  }, _vm._l(_vm.items, function (item) {
+  }, _vm._l(_vm.items, function (item, index) {
     return _c('tr', {
-      key: item.id
+      key: index
     }, [_vm.orderable ? _c('td', {
-      staticClass: "min-width align-middle"
+      staticClass: "fit-content align-middle"
     }, [_c('button', {
       staticClass: "btn btn-sm v-table-drag-handle",
       attrs: {
@@ -974,6 +1069,51 @@ var __vue_render__$3 = function () {
       }
     }, [_c('i', {
       staticClass: "fas fa-arrows-alt-v"
+    })])]) : _vm._e(), _vm._v(" "), _vm.checkable.display ? _c('td', {
+      staticClass: "fit-content align-middle"
+    }, [_c('div', {
+      staticClass: "custom-control custom-checkbox"
+    }, [_c('input', {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.selectedItems,
+        expression: "selectedItems"
+      }],
+      staticClass: "custom-control-input",
+      attrs: {
+        "type": "checkbox",
+        "id": "vueTableCheckable" + _vm._uid + "_" + item[_vm.checkable.attribute]
+      },
+      domProps: {
+        "value": item[_vm.checkable.attribute],
+        "checked": Array.isArray(_vm.selectedItems) ? _vm._i(_vm.selectedItems, item[_vm.checkable.attribute]) > -1 : _vm.selectedItems
+      },
+      on: {
+        "change": function ($event) {
+          var $$a = _vm.selectedItems,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false;
+
+          if (Array.isArray($$a)) {
+            var $$v = item[_vm.checkable.attribute],
+                $$i = _vm._i($$a, $$v);
+
+            if ($$el.checked) {
+              $$i < 0 && (_vm.selectedItems = $$a.concat([$$v]));
+            } else {
+              $$i > -1 && (_vm.selectedItems = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.selectedItems = $$c;
+          }
+        }
+      }
+    }), _vm._v(" "), _c('label', {
+      staticClass: "custom-control-label",
+      attrs: {
+        "for": "vueTableCheckable" + _vm._uid + "_" + item[_vm.checkable.attribute]
+      }
     })])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.visibleColumns, function (column, index) {
       return _c('td', {
         key: index,
@@ -984,7 +1124,7 @@ var __vue_render__$3 = function () {
         }
       })] : column.name ? [_vm._v("\n                                        " + _vm._s(item[column.name]) + "\n                                    ")] : _vm._e()], 2);
     }), _vm._v(" "), _vm.actions.slots.length ? _c('td', {
-      staticClass: "v-table-options-wrapper min-width align-middle",
+      staticClass: "fit-content align-middle",
       class: _vm.actions.classes
     }, [_vm._l(_vm.actions.slots, function (action) {
       return _vm._t("action-" + action, null, {
@@ -1002,18 +1142,24 @@ var __vue_render__$3 = function () {
 var __vue_staticRenderFns__$3 = [];
 /* style */
 
-const __vue_inject_styles__$3 = undefined;
+const __vue_inject_styles__$3 = function (inject) {
+  if (!inject) return;
+  inject("data-v-b4288ed2_0", {
+    source: ".fit-content[data-v-b4288ed2]{width:1%;white-space:nowrap}",
+    map: undefined,
+    media: undefined
+  });
+};
 /* scoped */
 
-const __vue_scope_id__$3 = undefined;
+
+const __vue_scope_id__$3 = "data-v-b4288ed2";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
 /* functional template */
 
 const __vue_is_functional_template__$3 = false;
-/* style inject */
-
 /* style inject SSR */
 
 /* style inject shadow dom */
@@ -1021,7 +1167,7 @@ const __vue_is_functional_template__$3 = false;
 const __vue_component__$3 = /*#__PURE__*/normalizeComponent({
   render: __vue_render__$3,
   staticRenderFns: __vue_staticRenderFns__$3
-}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, undefined, undefined);
+}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, createInjector, undefined, undefined);
 
 var filterColumn_directive = {
   name: 'filter-column',
