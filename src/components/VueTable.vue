@@ -19,6 +19,8 @@
                 </div>
 
                 <div v-else>
+                    <slot name="header"></slot>
+
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>

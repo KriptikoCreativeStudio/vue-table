@@ -11,6 +11,18 @@
             </div>
         </template>
 
+        <template v-slot:header>
+            <div class="mb-4 text-right">
+                <button class="btn btn-outline-secondary btn-sm mr-1">
+                    <i class="fas fa-file-import mr-1"></i> Import
+                </button>
+
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-file-export mr-1"></i> Export
+                </button>
+            </div>
+        </template>
+
         <template v-slot:action-edit="slotProps">
             <a class="btn btn-sm btn-primary"
                :href="`${options.uri}/${slotProps.item.id}/edit`"
@@ -92,7 +104,7 @@
                     ],
                     checkable: {
                         display: true,
-                        attribute: 'id',
+                        attribute: "id",
                     },
                     orderable: true,
                     actions: {
