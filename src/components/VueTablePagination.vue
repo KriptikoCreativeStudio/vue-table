@@ -1,7 +1,19 @@
 <template>
-    <nav class="row mt-5">
-        <div class="col-sm-6">
-            <ul class="pagination" v-if="totalPages > 1">
+    <nav class="row align-items-center mt-5">
+        <div class="col-auto">
+            <select class="custom-select" @change="setItemsPerPage($event.target.value)" v-model="selectedItemsPerPage">
+                <option :value="perPageOption" v-for="perPageOption in perPageOptions"
+                        :key="`perPageOptions${perPageOption}`">{{ perPageOption }}
+                </option>
+            </select>
+        </div>
+
+        <div class="col">
+            Showing {{ start }} - {{ end }} of {{ items }}
+        </div>
+
+        <div class="col-sm-auto mt-4 mt-sm-0">
+            <ul class="pagination mb-0" v-if="totalPages > 1">
                 <template v-if="page != 1">
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
@@ -41,10 +53,6 @@
                 </template>
             </ul>
         </div>
-
-        <div class="col-sm-6 text-sm-right">
-            Showing {{ start }} - {{ end }} of {{ items }}
-        </div>
     </nav>
 </template>
 
@@ -53,19 +61,23 @@
 
     export default {
         name: "VueTablePagination",
+        data() {
+            return {
+                selectedItemsPerPage: null
+            };
+        },
         props: {
+            perPageOptions: {
+                type: Array,
+                default() {
+                    return [20, 50, 100];
+                }
+            },
             items: {
                 type: Number,
                 default: 0,
                 validator: (value) => {
                     return value >= 0;
-                }
-            },
-            perPage: {
-                type: Number,
-                default: 20,
-                validator: (value) => {
-                    return value > 0;
                 }
             },
             maxLinks: {
@@ -77,19 +89,20 @@
             }
         },
         methods: {
-            ...mapActions('paginationModule', { setPage: 'setPageAction' })
+            ...mapActions('paginationModule', { setPage: 'setPageAction' }),
+            ...mapActions('itemsPerPageModule', { setItemsPerPage: 'setItemsPerPageAction' })
         },
         computed: {
             start: function () {
-                return (this.page - 1) * this.perPage + 1;
+                return (this.page - 1) * this.itemsPerPage + 1;
             },
             end: function () {
-                let end = this.start + this.perPage - 1;
+                let end = this.start + this.itemsPerPage - 1;
 
                 return this.items < end ? this.items : end;
             },
             totalPages: function () {
-                return Math.ceil(this.items / this.perPage);
+                return Math.ceil(this.items / this.itemsPerPage);
             },
             linkButtons: function () {
                 let linksSpan = this.linksSpan;
@@ -129,7 +142,11 @@
                     higher: higherBound
                 };
             },
-            ...mapState('paginationModule', ['page'])
+            ...mapState('paginationModule', ['page']),
+            ...mapState('itemsPerPageModule', ['itemsPerPage'])
+        },
+        mounted() {
+            this.selectedItemsPerPage = this.itemsPerPage;
         }
     };
 </script>

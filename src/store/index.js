@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { filtersModule } from "./modules/filters.module";
 import { paginationModule } from "./modules/pagination.module";
+import { itemsPerPageModule } from "./modules/itemsPerPage.module";
 import { searchModule } from "./modules/search.module";
 import { sortingModule } from "./modules/sorting.module";
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
     modules: {
         filtersModule,
         paginationModule,
+        itemsPerPageModule,
         searchModule,
         sortingModule
     }
