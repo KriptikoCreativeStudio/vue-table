@@ -281,19 +281,27 @@ const __vue_component__$1 = /*#__PURE__*/normalizeComponent({
 //
 var script$2 = {
   name: "VueTablePagination",
+
+  data() {
+    return {
+      selectedItemsPerPage: null
+    };
+  },
+
   props: {
+    perPageOptions: {
+      type: Array,
+
+      default() {
+        return [20, 50, 100];
+      }
+
+    },
     items: {
       type: Number,
       default: 0,
       validator: value => {
         return value >= 0;
-      }
-    },
-    perPage: {
-      type: Number,
-      default: 20,
-      validator: value => {
-        return value > 0;
       }
     },
     maxLinks: {
@@ -306,18 +314,21 @@ var script$2 = {
   },
   methods: { ...mapActions('paginationModule', {
       setPage: 'setPageAction'
+    }),
+    ...mapActions('itemsPerPageModule', {
+      setItemsPerPage: 'setItemsPerPageAction'
     })
   },
   computed: {
     start: function () {
-      return (this.page - 1) * this.perPage + 1;
+      return (this.page - 1) * this.itemsPerPage + 1;
     },
     end: function () {
-      let end = this.start + this.perPage - 1;
+      let end = this.start + this.itemsPerPage - 1;
       return this.items < end ? this.items : end;
     },
     totalPages: function () {
-      return Math.ceil(this.items / this.perPage);
+      return Math.ceil(this.items / this.itemsPerPage);
     },
     linkButtons: function () {
       let linksSpan = this.linksSpan;
@@ -348,8 +359,14 @@ var script$2 = {
         higher: higherBound
       };
     },
-    ...mapState('paginationModule', ['page'])
+    ...mapState('paginationModule', ['page']),
+    ...mapState('itemsPerPageModule', ['itemsPerPage'])
+  },
+
+  mounted() {
+    this.selectedItemsPerPage = this.itemsPerPage;
   }
+
 };
 
 /* script */
@@ -364,11 +381,43 @@ var __vue_render__$2 = function () {
   var _c = _vm._self._c || _h;
 
   return _c('nav', {
-    staticClass: "row mt-5"
+    staticClass: "row align-items-center mt-5"
   }, [_c('div', {
-    staticClass: "col-sm-6"
+    staticClass: "col-auto"
+  }, [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.selectedItemsPerPage,
+      expression: "selectedItemsPerPage"
+    }],
+    staticClass: "custom-select",
+    on: {
+      "change": [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.selectedItemsPerPage = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+      }, function ($event) {
+        return _vm.setItemsPerPage($event.target.value);
+      }]
+    }
+  }, _vm._l(_vm.perPageOptions, function (perPageOption) {
+    return _c('option', {
+      key: "perPageOptions" + perPageOption,
+      domProps: {
+        "value": perPageOption
+      }
+    }, [_vm._v(_vm._s(perPageOption) + "\n            ")]);
+  }), 0)]), _vm._v(" "), _c('div', {
+    staticClass: "col"
+  }, [_vm._v("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ")]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-auto mt-4 mt-sm-0"
   }, [_vm.totalPages > 1 ? _c('ul', {
-    staticClass: "pagination"
+    staticClass: "pagination mb-0"
   }, [_vm.page != 1 ? [_c('li', {
     staticClass: "page-item"
   }, [_c('a', {
@@ -460,9 +509,7 @@ var __vue_render__$2 = function () {
     staticClass: "fas fa-forward"
   }), _vm._v(" "), _c('span', {
     staticClass: "sr-only"
-  }, [_vm._v("Last")])])])] : _vm._e()], 2) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-6 text-sm-right"
-  }, [_vm._v("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ")])]);
+  }, [_vm._v("Last")])])])] : _vm._e()], 2) : _vm._e()])]);
 };
 
 var __vue_staticRenderFns__$2 = [];
@@ -584,6 +631,51 @@ const paginationModule = {
   }
 };
 
+const paginationStorageName$1 = `vue_table_${window.location.pathname}_items_per_page`;
+let itemsPerPage = window.localStorage.getItem(paginationStorageName$1);
+const itemsPerPageModule = {
+  namespaced: true,
+  state: {
+    itemsPerPage: itemsPerPage ? parseInt(itemsPerPage) : 20
+  },
+  mutations: {
+    /**
+     * Sets the amount of items displayed per page.
+     *
+     * @param state
+     * @param itemsPerPage
+     */
+    setItemsPerPage(state, itemsPerPage) {
+      state.itemsPerPage = itemsPerPage;
+    },
+
+    /**
+     * Saves the data into local storage.
+     *
+     * @param state
+     */
+    saveData(state) {
+      window.localStorage.setItem(paginationStorageName$1, state.itemsPerPage);
+    }
+
+  },
+  actions: {
+    /**
+     * The action of setting the amount of items displayed per page.
+     *
+     * @param commit
+     * @param itemsPerPage
+     */
+    setItemsPerPageAction({
+      commit
+    }, itemsPerPage) {
+      commit('setItemsPerPage', itemsPerPage);
+      commit('saveData');
+    }
+
+  }
+};
+
 const searchStorageName = `vue_table_${window.location.pathname}_search`;
 let value = window.localStorage.getItem(searchStorageName);
 const searchModule = {
@@ -681,6 +773,7 @@ var store = new Vuex.Store({
   modules: {
     filtersModule,
     paginationModule,
+    itemsPerPageModule,
     searchModule,
     sortingModule
   }
@@ -759,7 +852,7 @@ var script$3 = {
     },
     perPage: {
       type: Number,
-      default: 20,
+      default: null,
       validator: function (value) {
         return value > 0;
       }
@@ -789,7 +882,7 @@ var script$3 = {
           columns: this.columns,
           page: this.page,
           filters: this.filters,
-          perPage: this.perPage,
+          perPage: this.itemsPerPage,
           search: this.search,
           sorting: this.currentSorting
         },
@@ -864,6 +957,9 @@ var script$3 = {
     ...mapActions('paginationModule', {
       setPage: 'setPageAction'
     }),
+    ...mapActions('itemsPerPageModule', {
+      setItemsPerPage: 'setItemsPerPageAction'
+    }),
     ...mapActions('filtersModule', {
       setFilter: 'addFilterAction'
     })
@@ -892,9 +988,13 @@ var script$3 = {
     ...mapState('searchModule', {
       search: 'value'
     }),
-    ...mapState('paginationModule', ['page'])
+    ...mapState('paginationModule', ['page']),
+    ...mapState('itemsPerPageModule', ['itemsPerPage'])
   },
   watch: {
+    itemsPerPage: function () {
+      this.getItems();
+    },
     page: function () {
       this.getItems();
     },
@@ -916,7 +1016,13 @@ var script$3 = {
   },
 
   mounted() {
-    // Dispatch the sorting prop values
+    // If the perPage prop was used, let's override the local storage
+    // and set the items per page on the pagination module
+    if (this.perPage !== null) {
+      this.setItemsPerPage(this.perPage);
+    } // Dispatch the sorting prop values
+
+
     this.sorting.forEach(sort => this.addSort(sort)); // Register events
 
     this.$root.$on('filterOptionSelected', this.setFilter);
@@ -1004,7 +1110,7 @@ var __vue_render__$3 = function () {
     staticClass: "card"
   }, [_c('div', {
     staticClass: "card-body"
-  }, [_vm.items.length === 0 ? _c('div', {
+  }, [_vm._t("header"), _vm._v(" "), _vm.items.length === 0 ? _c('div', {
     staticClass: "alert alert-info"
   }, [_vm._v("\n                " + _vm._s(_vm.lang.no_records) + "\n            ")]) : _c('div', [_c('div', {
     staticClass: "table-responsive"
@@ -1133,10 +1239,9 @@ var __vue_render__$3 = function () {
     })], 2) : _vm._e()], 2);
   }), 0)], 1)]), _vm._v(" "), _vm.paginate ? _c('vue-table-pagination', {
     attrs: {
-      "per-page": _vm.perPage,
       "items": _vm.totalItems
     }
-  }) : _vm._e()], 1)])])]);
+  }) : _vm._e()], 1)], 2)])]);
 };
 
 var __vue_staticRenderFns__$3 = [];
@@ -1144,8 +1249,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-b4288ed2_0", {
-    source: ".fit-content[data-v-b4288ed2]{width:1%;white-space:nowrap}",
+  inject("data-v-e5dd9dd4_0", {
+    source: ".fit-content[data-v-e5dd9dd4]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1153,7 +1258,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-b4288ed2";
+const __vue_scope_id__$3 = "data-v-e5dd9dd4";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;

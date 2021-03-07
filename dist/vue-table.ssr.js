@@ -319,19 +319,23 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
   staticRenderFns: __vue_staticRenderFns__$1
 }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);var script$2 = {
   name: "VueTablePagination",
+  data: function data() {
+    return {
+      selectedItemsPerPage: null
+    };
+  },
   props: {
+    perPageOptions: {
+      type: Array,
+      default: function _default() {
+        return [20, 50, 100];
+      }
+    },
     items: {
       type: Number,
       default: 0,
       validator: function validator(value) {
         return value >= 0;
-      }
-    },
-    perPage: {
-      type: Number,
-      default: 20,
-      validator: function validator(value) {
-        return value > 0;
       }
     },
     maxLinks: {
@@ -344,17 +348,19 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
   },
   methods: _objectSpread2({}, Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
+  }), {}, Vuex.mapActions('itemsPerPageModule', {
+    setItemsPerPage: 'setItemsPerPageAction'
   })),
   computed: _objectSpread2({
     start: function start() {
-      return (this.page - 1) * this.perPage + 1;
+      return (this.page - 1) * this.itemsPerPage + 1;
     },
     end: function end() {
-      var end = this.start + this.perPage - 1;
+      var end = this.start + this.itemsPerPage - 1;
       return this.items < end ? this.items : end;
     },
     totalPages: function totalPages() {
-      return Math.ceil(this.items / this.perPage);
+      return Math.ceil(this.items / this.itemsPerPage);
     },
     linkButtons: function linkButtons() {
       var linksSpan = this.linksSpan;
@@ -385,7 +391,10 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
         higher: higherBound
       };
     }
-  }, Vuex.mapState('paginationModule', ['page']))
+  }, Vuex.mapState('paginationModule', ['page']), {}, Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
+  mounted: function mounted() {
+    this.selectedItemsPerPage = this.itemsPerPage;
+  }
 };/* script */
 var __vue_script__$2 = script$2;
 /* template */
@@ -398,12 +407,40 @@ var __vue_render__$2 = function __vue_render__() {
   var _c = _vm._self._c || _h;
 
   return _c('nav', {
-    staticClass: "row mt-5"
-  }, [_vm._ssrNode("<div class=\"col-sm-6\">" + (_vm.totalPages > 1 ? "<ul class=\"pagination\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
+    staticClass: "row align-items-center mt-5"
+  }, [_vm._ssrNode("<div class=\"col-auto\">", "</div>", [_c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.selectedItemsPerPage,
+      expression: "selectedItemsPerPage"
+    }],
+    staticClass: "custom-select",
+    on: {
+      "change": [function ($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.selectedItemsPerPage = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+      }, function ($event) {
+        return _vm.setItemsPerPage($event.target.value);
+      }]
+    }
+  }, _vm._l(_vm.perPageOptions, function (perPageOption) {
+    return _c('option', {
+      key: "perPageOptions" + perPageOption,
+      domProps: {
+        "value": perPageOption
+      }
+    }, [_vm._v(_vm._s(perPageOption) + "\n            ")]);
+  }), 0)]), _vm._ssrNode(" <div class=\"col\">" + _vm._ssrEscape("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ") + "</div> <div class=\"col-sm-auto mt-4 mt-sm-0\">" + (_vm.totalPages > 1 ? "<ul class=\"pagination mb-0\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
     return "<li" + _vm._ssrClass("page-item", {
       'active': linkButton == _vm.page
     }) + "><a href=\"#\" class=\"page-link\">" + _vm._ssrEscape(_vm._s(linkButton)) + "</a></li>";
-  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" : "<!---->") + "</div> <div class=\"col-sm-6 text-sm-right\">" + _vm._ssrEscape("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ") + "</div>")]);
+  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" : "<!---->") + "</div>")], 2);
 };
 
 var __vue_staticRenderFns__$2 = [];
@@ -415,7 +452,7 @@ var __vue_inject_styles__$2 = undefined;
 var __vue_scope_id__$2 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = "data-v-0231a6a9";
+var __vue_module_identifier__$2 = "data-v-99a92144";
 /* functional template */
 
 var __vue_is_functional_template__$2 = false;
@@ -515,6 +552,46 @@ var paginationModule = {
       commit('saveData');
     }
   }
+};var paginationStorageName$1 = "vue_table_".concat(window.location.pathname, "_items_per_page");
+var itemsPerPage = window.localStorage.getItem(paginationStorageName$1);
+var itemsPerPageModule = {
+  namespaced: true,
+  state: {
+    itemsPerPage: itemsPerPage ? parseInt(itemsPerPage) : 20
+  },
+  mutations: {
+    /**
+     * Sets the amount of items displayed per page.
+     *
+     * @param state
+     * @param itemsPerPage
+     */
+    setItemsPerPage: function setItemsPerPage(state, itemsPerPage) {
+      state.itemsPerPage = itemsPerPage;
+    },
+
+    /**
+     * Saves the data into local storage.
+     *
+     * @param state
+     */
+    saveData: function saveData(state) {
+      window.localStorage.setItem(paginationStorageName$1, state.itemsPerPage);
+    }
+  },
+  actions: {
+    /**
+     * The action of setting the amount of items displayed per page.
+     *
+     * @param commit
+     * @param itemsPerPage
+     */
+    setItemsPerPageAction: function setItemsPerPageAction(_ref, itemsPerPage) {
+      var commit = _ref.commit;
+      commit('setItemsPerPage', itemsPerPage);
+      commit('saveData');
+    }
+  }
 };var searchStorageName = "vue_table_".concat(window.location.pathname, "_search");
 var value = window.localStorage.getItem(searchStorageName);
 var searchModule = {
@@ -604,6 +681,7 @@ var store = new Vuex__default.Store({
   modules: {
     filtersModule: filtersModule,
     paginationModule: paginationModule,
+    itemsPerPageModule: itemsPerPageModule,
     searchModule: searchModule,
     sortingModule: sortingModule
   }
@@ -680,7 +758,7 @@ var store = new Vuex__default.Store({
     },
     perPage: {
       type: Number,
-      default: 20,
+      default: null,
       validator: function validator(value) {
         return value > 0;
       }
@@ -712,7 +790,7 @@ var store = new Vuex__default.Store({
           columns: this.columns,
           page: this.page,
           filters: this.filters,
-          perPage: this.perPage,
+          perPage: this.itemsPerPage,
           search: this.search,
           sorting: this.currentSorting
         },
@@ -791,6 +869,8 @@ var store = new Vuex__default.Store({
     addSort: 'addSortAction'
   }), {}, Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
+  }), {}, Vuex.mapActions('itemsPerPageModule', {
+    setItemsPerPage: 'setItemsPerPageAction'
   }), {}, Vuex.mapActions('filtersModule', {
     setFilter: 'addFilterAction'
   })),
@@ -817,8 +897,11 @@ var store = new Vuex__default.Store({
     currentSorting: 'sorting'
   }), {}, Vuex.mapState('searchModule', {
     search: 'value'
-  }), {}, Vuex.mapState('paginationModule', ['page'])),
+  }), {}, Vuex.mapState('paginationModule', ['page']), {}, Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
   watch: {
+    itemsPerPage: function itemsPerPage() {
+      this.getItems();
+    },
     page: function page() {
       this.getItems();
     },
@@ -840,7 +923,13 @@ var store = new Vuex__default.Store({
   mounted: function mounted() {
     var _this3 = this;
 
-    // Dispatch the sorting prop values
+    // If the perPage prop was used, let's override the local storage
+    // and set the items per page on the pagination module
+    if (this.perPage !== null) {
+      this.setItemsPerPage(this.perPage);
+    } // Dispatch the sorting prop values
+
+
     this.sorting.forEach(function (sort) {
       return _this3.addSort(sort);
     }); // Register events
@@ -902,13 +991,13 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-b4288ed2>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-b4288ed2>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-b4288ed2>", "</div>", [_vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-b4288ed2>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-b4288ed2>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-b4288ed2>", "</div>", [_vm._ssrNode("<table class=\"table table-striped\" data-v-b4288ed2>", "</table>", [_vm._ssrNode("<thead data-v-b4288ed2>", "</thead>", [_vm._ssrNode("<tr data-v-b4288ed2>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-b4288ed2></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-b4288ed2><div class=\"custom-control custom-checkbox\" data-v-b4288ed2><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-b4288ed2> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-b4288ed2></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
-    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-b4288ed2>", "</th>", [_c('vue-table-heading', {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-e5dd9dd4>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-e5dd9dd4>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-e5dd9dd4>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-e5dd9dd4>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-e5dd9dd4>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-e5dd9dd4>", "</div>", [_vm._t("header"), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-e5dd9dd4>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-e5dd9dd4>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-e5dd9dd4>", "</div>", [_vm._ssrNode("<table class=\"table table-striped\" data-v-e5dd9dd4>", "</table>", [_vm._ssrNode("<thead data-v-e5dd9dd4>", "</thead>", [_vm._ssrNode("<tr data-v-e5dd9dd4>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-e5dd9dd4></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-e5dd9dd4><div class=\"custom-control custom-checkbox\" data-v-e5dd9dd4><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-e5dd9dd4> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-e5dd9dd4></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
+    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-e5dd9dd4>", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
       }
     })], 1);
-  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-b4288ed2></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
+  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-e5dd9dd4></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
     attrs: {
       "tag": "tbody",
       "handle": ".v-table-drag-handle",
@@ -1002,10 +1091,9 @@ var __vue_render__$3 = function __vue_render__() {
     })], 2) : _vm._e()], 2);
   }), 0)], 2)]), _vm._ssrNode(" "), _vm.paginate ? _c('vue-table-pagination', {
     attrs: {
-      "per-page": _vm.perPage,
       "items": _vm.totalItems
     }
-  }) : _vm._e()], 2)])])], 2);
+  }) : _vm._e()], 2)], 2)])], 2);
 };
 
 var __vue_staticRenderFns__$3 = [];
@@ -1013,8 +1101,8 @@ var __vue_staticRenderFns__$3 = [];
 
 var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-b4288ed2_0", {
-    source: ".fit-content[data-v-b4288ed2]{width:1%;white-space:nowrap}",
+  inject("data-v-e5dd9dd4_0", {
+    source: ".fit-content[data-v-e5dd9dd4]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1022,10 +1110,10 @@ var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$3 = "data-v-b4288ed2";
+var __vue_scope_id__$3 = "data-v-e5dd9dd4";
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-b4288ed2";
+var __vue_module_identifier__$3 = "data-v-e5dd9dd4";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;
