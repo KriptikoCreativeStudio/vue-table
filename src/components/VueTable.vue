@@ -58,7 +58,8 @@
                                     <td v-if="checkable.display" class="fit-content align-middle">
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox"
-                                                   :id="`vueTableCheckable${_uid}_${item[checkable.attribute]}`" :value="item[checkable.attribute]"
+                                                   :id="`vueTableCheckable${_uid}_${item[checkable.attribute]}`"
+                                                   :value="item[checkable.attribute]"
                                                    v-model="selectedItems"
                                             >
                                             <label class="custom-control-label"
@@ -88,7 +89,6 @@
                     </div>
 
                     <vue-table-pagination v-if="paginate"
-                                          :per-page="perPage"
                                           :items="totalItems"
                     />
                 </div>
@@ -178,7 +178,7 @@
             },
             perPage: {
                 type: Number,
-                default: 20,
+                default: null,
                 validator: function (value) {
                     return value > 0;
                 }
@@ -207,7 +207,7 @@
                         columns: this.columns,
                         page: this.page,
                         filters: this.filters,
-                        perPage: this.perPage,
+                        perPage: this.itemsPerPage,
                         search: this.search,
                         sorting: this.currentSorting
                     },
@@ -280,6 +280,7 @@
 
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
             ...mapActions('paginationModule', { setPage: 'setPageAction' }),
+            ...mapActions('itemsPerPageModule', { setItemsPerPage: 'setItemsPerPageAction' }),
             ...mapActions('filtersModule', { setFilter: 'addFilterAction' })
         },
         computed: {
@@ -304,8 +305,12 @@
             ...mapState('sortingModule', { currentSorting: 'sorting' }),
             ...mapState('searchModule', { search: 'value' }),
             ...mapState('paginationModule', ['page']),
+            ...mapState('itemsPerPageModule', ['itemsPerPage']),
         },
         watch: {
+            itemsPerPage: function () {
+                this.getItems();
+            },
             page: function () {
                 this.getItems();
             },
@@ -325,6 +330,12 @@
             this.hydrateColumns();
         },
         mounted() {
+            // If the perPage prop was used, let's override the local storage
+            // and set the items per page on the pagination module
+            if (this.perPage !== null) {
+                this.setItemsPerPage(this.perPage);
+            }
+
             // Dispatch the sorting prop values
             this.sorting.forEach(sort => this.addSort(sort));
 
