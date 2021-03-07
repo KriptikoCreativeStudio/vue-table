@@ -61,6 +61,27 @@ import VueTable from '@kriptiko/vue-table'
 | sorting   | Array   | []                                  | The columns' sorting directions. See the [Sorting API](#sorting-api) for more info.              |
 
 
+## Slots
+
+For injecting HTML before the table, you can use the `header` slot. See the following example:
+```
+<vue-table v-bind="options" :items.sync="items" ref="vueTable">
+        <template v-slot:header>
+            <div class="mb-4 text-right">
+                <button class="btn btn-outline-secondary btn-sm mr-1" @click="importItems()">
+                    <i class="fas fa-file-import mr-1"></i> Import
+                </button>
+
+                <button class="btn btn-outline-secondary btn-sm" @click="exportItems($refs.vueTable.selectedItems)">
+                    <i class="fas fa-file-export mr-1"></i> Export
+                </button>
+            </div>
+        </template>
+
+...
+```
+
+
 ## Actions API
 
 | Property  | Type      | Default | Description                                                    | 

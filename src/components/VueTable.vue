@@ -14,13 +14,13 @@
 
         <div class="card">
             <div class="card-body">
+                <slot name="header"></slot>
+
                 <div class="alert alert-info" v-if="items.length === 0">
                     {{ lang.no_records }}
                 </div>
 
                 <div v-else>
-                    <slot name="header"></slot>
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>

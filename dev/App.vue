@@ -1,5 +1,5 @@
 <template>
-    <vue-table v-bind="options" :items.sync="items">
+    <vue-table v-bind="options" :items.sync="items" ref="vueTable">
         <template v-slot:filters>
             <div class="col-md-3">
                 <select class="custom-select" v-filter-column="'city.id'" ref="cityFilter">
@@ -13,11 +13,11 @@
 
         <template v-slot:header>
             <div class="mb-4 text-right">
-                <button class="btn btn-outline-secondary btn-sm mr-1">
+                <button class="btn btn-outline-secondary btn-sm mr-1" @click="importItems()">
                     <i class="fas fa-file-import mr-1"></i> Import
                 </button>
 
-                <button class="btn btn-outline-secondary btn-sm">
+                <button class="btn btn-outline-secondary btn-sm" @click="exportItems($refs.vueTable.selectedItems)">
                     <i class="fas fa-file-export mr-1"></i> Export
                 </button>
             </div>
@@ -42,9 +42,11 @@
 <script>
     import VueTable from "../src/components/VueTable";
     import filterColumn from "../src/directives/filter-column.directive";
+    import { dataMixin } from "./mixins/data.mixin";
 
     export default {
         name: 'App',
+        mixins: [dataMixin],
         components: {
             VueTable
         },
