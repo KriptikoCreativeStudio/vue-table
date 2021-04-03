@@ -129,6 +129,7 @@ data(){
 |---------------|:--------:|:-------:|----------------------------------------------------------------|
 | headerClasses | String   | null    | The CSS classes that will be assigned to the table headers.    |
 | name          | String   | ""      | The column's attribute name.                                   | 
+| slotName      | String   | ""      | The name of the slot to be rendered.                           | 
 | rowClasses    | String   | ""      | The CSS classes that will be assigned to the table rows.       |
 | searchable    | Boolean  | false   | Determines whether the column is searchable.                   |
 | sortable      | Boolean  | false   | Determines whether the column is sortable.                     |
