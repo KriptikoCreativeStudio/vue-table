@@ -23,24 +23,36 @@
             </div>
         </template>
 
-        <template v-slot:action-edit="slotProps">
-            <a class="btn btn-sm btn-primary"
-               :href="`${options.uri}/${slotProps.item.id}/edit`"
-            >
-                <i class="fas fa-pencil-alt"></i>
-            </a>
+        <template v-slot:star-slot="slotProps">
+            <star :id="slotProps.item.id"></star>
         </template>
 
-        <template v-slot:action-delete="slotProps">
-            <a class="btn btn-sm btn-danger ml-2" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
-                <i class="fas fa-trash-alt"></i>
-            </a>
+        <template v-slot:actions-slot="slotProps">
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm rounded text-muted" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item text-muted"
+                       :href="`${options.uri}/${slotProps.item.id}/edit`"
+                    >
+                        <i class="fas fa-pencil-alt fa-fw fa-xs mr-1"></i> Edit
+                    </a>
+
+                    <a class="dropdown-item text-muted" href="#" @click.prevent="handleItemDeleted(slotProps.item)">
+                        <i class="fas fa-trash-alt fa-fw fa-xs mr-1"></i> Delete
+                    </a>
+                </div>
+            </div>
         </template>
     </vue-table>
 </template>
 
 <script>
     import VueTable from "../src/components/VueTable";
+    import Star from "./components/Star";
     import filterColumn from "../src/directives/filter-column.directive";
     import { dataMixin } from "./mixins/data.mixin";
 
@@ -48,7 +60,8 @@
         name: 'App',
         mixins: [dataMixin],
         components: {
-            VueTable
+            VueTable,
+            Star
         },
         directives: { filterColumn },
         data() {
@@ -59,6 +72,12 @@
                 },
                 options: {
                     columns: [
+                        {
+                            slotName: "star-slot",
+                            rowClasses: "align-middle fit-content",
+                            sortable: false,
+                            searchable: false,
+                        },
                         {
                             headerClasses: "fit-content",
                             name: "id",
@@ -96,6 +115,12 @@
                             render(data) {
                                 return new Date(data.created_at).toLocaleDateString('pt');
                             }
+                        },
+                        {
+                            slotName: "actions-slot",
+                            rowClasses: "align-middle fit-content",
+                            sortable: false,
+                            searchable: false,
                         }
                     ],
                     sorting: [
@@ -109,13 +134,6 @@
                         attribute: "id",
                     },
                     orderable: true,
-                    actions: {
-                        classes: "fit-content align-middle",
-                        slots: [
-                            "edit",
-                            "delete"
-                        ]
-                    },
                     uri: "https://api.sandbox.codetech.pt/api/users",
                     metaKey: "meta",
                     locale: "pt"

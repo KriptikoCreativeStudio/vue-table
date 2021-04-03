@@ -1228,7 +1228,9 @@ var __vue_render__$3 = function () {
         domProps: {
           "innerHTML": _vm._s(column.render(item))
         }
-      })] : column.name ? [_vm._v("\n                                        " + _vm._s(item[column.name]) + "\n                                    ")] : _vm._e()], 2);
+      })] : column.name ? [_vm._v("\n                                        " + _vm._s(item[column.name]) + "\n                                    ")] : column.slotName ? [_vm._t(column.slotName, null, {
+        "item": item
+      })] : _vm._e()], 2);
     }), _vm._v(" "), _vm.actions.slots.length ? _c('td', {
       staticClass: "fit-content align-middle",
       class: _vm.actions.classes
@@ -1249,8 +1251,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-e5dd9dd4_0", {
-    source: ".fit-content[data-v-e5dd9dd4]{width:1%;white-space:nowrap}",
+  inject("data-v-02851dc0_0", {
+    source: ".fit-content[data-v-02851dc0]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1258,7 +1260,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-e5dd9dd4";
+const __vue_scope_id__$3 = "data-v-02851dc0";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
