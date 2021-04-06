@@ -14,7 +14,7 @@
 
         <div class="card">
             <div class="card-body">
-                <slot name="header"></slot>
+                <slot name="header" v-bind:table="this"></slot>
 
                 <div class="alert alert-info" v-if="items.length === 0">
                     {{ lang.no_records }}

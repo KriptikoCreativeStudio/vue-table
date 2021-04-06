@@ -1113,7 +1113,9 @@ var __vue_render__$3 = function () {
     staticClass: "card"
   }, [_c('div', {
     staticClass: "card-body"
-  }, [_vm._t("header"), _vm._v(" "), _vm.items.length === 0 ? _c('div', {
+  }, [_vm._t("header", null, {
+    "table": this
+  }), _vm._v(" "), _vm.items.length === 0 ? _c('div', {
     staticClass: "alert alert-info"
   }, [_vm._v("\n                " + _vm._s(_vm.lang.no_records) + "\n            ")]) : _c('div', [_c('div', {
     staticClass: "table-responsive"
@@ -1254,8 +1256,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-7e048500_0", {
-    source: ".fit-content[data-v-7e048500]{width:1%;white-space:nowrap}",
+  inject("data-v-fae3c992_0", {
+    source: ".fit-content[data-v-fae3c992]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1263,7 +1265,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-7e048500";
+const __vue_scope_id__$3 = "data-v-fae3c992";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
