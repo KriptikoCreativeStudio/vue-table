@@ -202,7 +202,9 @@
         },
         methods: {
             /**
-             * Get the items
+             * Get the items from storage.
+             *
+             * @returns {Promise<AxiosResponse<T>>}
              */
             getItems() {
                 const axios = require('axios');
@@ -222,7 +224,7 @@
                     },
                 };
 
-                axios.get(this.uri, options)
+                return axios.get(this.uri, options)
                     .then(response => {
                         if (Object.prototype.hasOwnProperty.call(response.data, this.dataKey)) {
                             this.items = response.data[this.dataKey];
@@ -240,9 +242,7 @@
              * @return {array}
              */
             getSearchableColumns() {
-                let columns = this.columns.filter(column => column.searchable);
-
-                return columns;
+                return this.columns.filter(column => column.searchable);
             },
 
             /**
@@ -301,7 +301,9 @@
             },
 
             /**
+             * Scope the columns to only include the ones that are visible.
              *
+             * @returns {*}
              */
             visibleColumns: function () {
                 return this.columns.filter((column) => column.visible);
