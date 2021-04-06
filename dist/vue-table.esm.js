@@ -870,7 +870,9 @@ var script$3 = {
   },
   methods: {
     /**
-     * Get the items
+     * Get the items from storage.
+     *
+     * @returns {Promise<AxiosResponse<T>>}
      */
     getItems() {
       const axios$1 = axios;
@@ -890,7 +892,7 @@ var script$3 = {
           return qs$1.stringify(params);
         }
       };
-      axios$1.get(this.uri, options).then(response => {
+      return axios$1.get(this.uri, options).then(response => {
         var _ref;
 
         if (Object.prototype.hasOwnProperty.call(response.data, this.dataKey)) {
@@ -908,8 +910,7 @@ var script$3 = {
      * @return {array}
      */
     getSearchableColumns() {
-      let columns = this.columns.filter(column => column.searchable);
-      return columns;
+      return this.columns.filter(column => column.searchable);
     },
 
     /**
@@ -976,7 +977,9 @@ var script$3 = {
     },
 
     /**
+     * Scope the columns to only include the ones that are visible.
      *
+     * @returns {*}
      */
     visibleColumns: function () {
       return this.columns.filter(column => column.visible);
@@ -1251,8 +1254,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-02851dc0_0", {
-    source: ".fit-content[data-v-02851dc0]{width:1%;white-space:nowrap}",
+  inject("data-v-7e048500_0", {
+    source: ".fit-content[data-v-7e048500]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1260,7 +1263,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-02851dc0";
+const __vue_scope_id__$3 = "data-v-7e048500";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
