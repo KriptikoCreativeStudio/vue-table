@@ -204,9 +204,10 @@
             /**
              * Get the items from storage.
              *
+             * @param extraParams
              * @returns {Promise<AxiosResponse<T>>}
              */
-            getItems() {
+            getItems(extraParams = {}) {
                 const axios = require('axios');
                 const qs = require('qs');
 
@@ -217,7 +218,8 @@
                         filters: this.filters,
                         perPage: this.itemsPerPage,
                         search: this.search,
-                        sorting: this.currentSorting
+                        sorting: this.currentSorting,
+                        extraParams: extraParams
                     },
                     paramsSerializer: function (params) {
                         return qs.stringify(params);

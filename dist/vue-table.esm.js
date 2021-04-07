@@ -872,9 +872,10 @@ var script$3 = {
     /**
      * Get the items from storage.
      *
+     * @param extraParams
      * @returns {Promise<AxiosResponse<T>>}
      */
-    getItems() {
+    getItems(extraParams = {}) {
       const axios$1 = axios;
 
       const qs$1 = qs;
@@ -886,7 +887,8 @@ var script$3 = {
           filters: this.filters,
           perPage: this.itemsPerPage,
           search: this.search,
-          sorting: this.currentSorting
+          sorting: this.currentSorting,
+          extraParams: extraParams
         },
         paramsSerializer: function (params) {
           return qs$1.stringify(params);
@@ -1256,8 +1258,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-fae3c992_0", {
-    source: ".fit-content[data-v-fae3c992]{width:1%;white-space:nowrap}",
+  inject("data-v-34d49a1e_0", {
+    source: ".fit-content[data-v-34d49a1e]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1265,7 +1267,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-fae3c992";
+const __vue_scope_id__$3 = "data-v-34d49a1e";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
