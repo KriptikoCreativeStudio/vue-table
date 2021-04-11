@@ -812,6 +812,14 @@ var script$3 = {
         return Object.prototype.hasOwnProperty.call(actions, 'slots') && typeof actions.slots === "object";
       }
     },
+    tableClass: {
+      type: String,
+      default: 'table table-striped'
+    },
+    rowClass: {
+      type: [String, Function],
+      default: ''
+    },
     columns: {
       type: Array,
       default: function () {
@@ -952,6 +960,20 @@ var script$3 = {
       } else {
         this.selectedItems = [];
       }
+    },
+
+    /**
+     * Evaluates whether the rowClass property is a String or a Function and returns the resulting evaluation.
+     *
+     * @param item
+     * @param index
+     */
+    setRowClass(item, index) {
+      if (typeof this.rowClass === 'function') {
+        return this.rowClass(item, index);
+      }
+
+      return this.rowClass;
     },
 
     ...mapActions('sortingModule', {
@@ -1122,7 +1144,7 @@ var __vue_render__$3 = function () {
   }, [_vm._v("\n                " + _vm._s(_vm.lang.no_records) + "\n            ")]) : _c('div', [_c('div', {
     staticClass: "table-responsive"
   }, [_c('table', {
-    staticClass: "table table-striped"
+    class: _vm.tableClass
   }, [_c('thead', [_c('tr', [_vm.orderable ? _c('th', {
     staticClass: "fit-content"
   }) : _vm._e(), _vm._v(" "), _vm.checkable.display ? _c('th', {
@@ -1172,7 +1194,8 @@ var __vue_render__$3 = function () {
     }
   }, _vm._l(_vm.items, function (item, index) {
     return _c('tr', {
-      key: index
+      key: index,
+      class: _vm.setRowClass(item, index)
     }, [_vm.orderable ? _c('td', {
       staticClass: "fit-content align-middle"
     }, [_c('button', {
@@ -1258,8 +1281,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-6003b847_0", {
-    source: ".fit-content[data-v-6003b847]{width:1%;white-space:nowrap}",
+  inject("data-v-0272658a_0", {
+    source: ".fit-content[data-v-0272658a]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1267,7 +1290,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-6003b847";
+const __vue_scope_id__$3 = "data-v-0272658a";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;

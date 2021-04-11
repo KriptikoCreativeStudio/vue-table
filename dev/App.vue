@@ -71,6 +71,7 @@
                     cities: [],
                 },
                 options: {
+                    tableClass: 'table',
                     columns: [
                         {
                             slotName: "star-slot",

@@ -718,6 +718,14 @@ var store = new Vuex__default.Store({
         return Object.prototype.hasOwnProperty.call(actions, 'slots') && _typeof(actions.slots) === "object";
       }
     },
+    tableClass: {
+      type: String,
+      default: 'table table-striped'
+    },
+    rowClass: {
+      type: [String, Function],
+      default: ''
+    },
     columns: {
       type: Array,
       default: function _default() {
@@ -869,6 +877,20 @@ var store = new Vuex__default.Store({
       } else {
         this.selectedItems = [];
       }
+    },
+
+    /**
+     * Evaluates whether the rowClass property is a String or a Function and returns the resulting evaluation.
+     *
+     * @param item
+     * @param index
+     */
+    setRowClass: function setRowClass(item, index) {
+      if (typeof this.rowClass === 'function') {
+        return this.rowClass(item, index);
+      }
+
+      return this.rowClass;
     }
   }, Vuex.mapActions('sortingModule', {
     addSort: 'addSortAction'
@@ -998,15 +1020,15 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-6003b847>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-6003b847>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-6003b847>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-6003b847>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-6003b847>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-6003b847>", "</div>", [_vm._t("header", null, {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-0272658a>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-0272658a>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-0272658a>", "</div>", [_vm._t("header", null, {
     "table": this
-  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-6003b847>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-6003b847>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-6003b847>", "</div>", [_vm._ssrNode("<table class=\"table table-striped\" data-v-6003b847>", "</table>", [_vm._ssrNode("<thead data-v-6003b847>", "</thead>", [_vm._ssrNode("<tr data-v-6003b847>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-6003b847></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-6003b847><div class=\"custom-control custom-checkbox\" data-v-6003b847><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-6003b847> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-6003b847></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
-    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-6003b847>", "</th>", [_c('vue-table-heading', {
+  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-0272658a>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-0272658a>", "</div>", [_vm._ssrNode("<table" + _vm._ssrClass(null, _vm.tableClass) + " data-v-0272658a>", "</table>", [_vm._ssrNode("<thead data-v-0272658a>", "</thead>", [_vm._ssrNode("<tr data-v-0272658a>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-0272658a></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-0272658a><div class=\"custom-control custom-checkbox\" data-v-0272658a><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-0272658a> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-0272658a></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
+    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-0272658a>", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
       }
     })], 1);
-  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-6003b847></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
+  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-0272658a></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
     attrs: {
       "tag": "tbody",
       "handle": ".v-table-drag-handle",
@@ -1026,7 +1048,8 @@ var __vue_render__$3 = function __vue_render__() {
     }
   }, _vm._l(_vm.items, function (item, index) {
     return _c('tr', {
-      key: index
+      key: index,
+      class: _vm.setRowClass(item, index)
     }, [_vm.orderable ? _c('td', {
       staticClass: "fit-content align-middle"
     }, [_c('button', {
@@ -1112,8 +1135,8 @@ var __vue_staticRenderFns__$3 = [];
 
 var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-6003b847_0", {
-    source: ".fit-content[data-v-6003b847]{width:1%;white-space:nowrap}",
+  inject("data-v-0272658a_0", {
+    source: ".fit-content[data-v-0272658a]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1121,10 +1144,10 @@ var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$3 = "data-v-6003b847";
+var __vue_scope_id__$3 = "data-v-0272658a";
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-6003b847";
+var __vue_module_identifier__$3 = "data-v-0272658a";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;

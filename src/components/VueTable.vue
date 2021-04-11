@@ -22,7 +22,7 @@
 
                 <div v-else>
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table :class="tableClass">
                             <thead>
                                 <tr>
                                     <th v-if="orderable" class="fit-content"></th>
@@ -51,7 +51,7 @@
                                            :disabled="!orderable"
                                            @change="$emit('itemsReordered', $event.moved.element, $event.moved.newIndex)"
                             >
-                                <tr v-for="(item, index) in items" :key="index">
+                                <tr v-for="(item, index) in items" :key="index" :class="setRowClass(item, index)">
                                     <td v-if="orderable" class="fit-content align-middle">
                                         <button class="btn btn-sm v-table-drag-handle" type="button">
                                             <i class="fas fa-arrows-alt-v"></i>
@@ -143,6 +143,14 @@
                 validator: function (actions) {
                     return Object.prototype.hasOwnProperty.call(actions, 'slots') && typeof actions.slots === "object";
                 }
+            },
+            tableClass: {
+                type: String,
+                default: 'table table-striped',
+            },
+            rowClass: {
+                type: [String, Function],
+                default: '',
             },
             columns: {
                 type: Array,
@@ -284,6 +292,19 @@
                 } else {
                     this.selectedItems = [];
                 }
+            },
+
+            /**
+             * Evaluates whether the rowClass property is a String or a Function and returns the resulting evaluation.
+             *
+             * @param item
+             * @param index
+             */
+            setRowClass(item, index) {
+                if (typeof (this.rowClass) === 'function') {
+                    return this.rowClass(item, index);
+                }
+                return this.rowClass;
             },
 
             ...mapActions('sortingModule', { addSort: 'addSortAction' }),
