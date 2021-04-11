@@ -76,12 +76,12 @@
                                             <div v-html="column.render(item)"></div>
                                         </template>
 
-                                        <template v-else-if="column.name">
-                                            {{ item[column.name] }}
-                                        </template>
-
                                         <template v-else-if="column.slotName">
                                             <slot :name="column.slotName" v-bind:item="item"></slot>
+                                        </template>
+
+                                        <template v-else-if="column.name">
+                                            {{ item[column.name] }}
                                         </template>
                                     </td>
                                     <td v-if="actions.slots.length" :class="actions.classes"
