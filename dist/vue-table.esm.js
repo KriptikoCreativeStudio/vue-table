@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import Vuex, { mapState, mapActions } from 'vuex';
+import debounce from 'lodash.debounce';
 import Vue from 'vue';
 import VueDraggable from 'vuedraggable';
 
@@ -204,7 +205,16 @@ var script$1 = {
 
   methods: { ...mapActions('searchModule', {
       setValue: 'setValueAction'
-    })
+    }),
+
+    /**
+     * Handles the search event.
+     *
+     * @param event
+     */
+    handleSearch: debounce(function (event) {
+      this.setValue(event.target.value);
+    }, 400)
   },
   computed: { ...mapState('searchModule', ['value'])
   }
@@ -233,9 +243,7 @@ var __vue_render__$1 = function () {
       "value": _vm.value
     },
     on: {
-      "input": function ($event) {
-        return _vm.setValue($event.target.value);
-      }
+      "input": _vm.handleSearch
     }
   })]);
 };
@@ -681,7 +689,7 @@ let value = window.localStorage.getItem(searchStorageName);
 const searchModule = {
   namespaced: true,
   state: {
-    value: value !== null && value !== void 0 ? value : ''
+    value: value || ''
   },
   mutations: {
     /**
@@ -903,13 +911,11 @@ var script$3 = {
         }
       };
       return axios$1.get(this.uri, options).then(response => {
-        var _ref;
-
         if (Object.prototype.hasOwnProperty.call(response.data, this.dataKey)) {
           this.items = response.data[this.dataKey];
         }
 
-        this.totalItems = (_ref = this.metaKey != null ? response.data[this.metaKey].total : response.data.total) !== null && _ref !== void 0 ? _ref : this.items.length;
+        this.totalItems = (this.metaKey != null ? response.data[this.metaKey].total : response.data.total) || this.items.length;
         this.$emit('update:items', this.items);
       });
     },
@@ -1281,8 +1287,8 @@ var __vue_staticRenderFns__$3 = [];
 
 const __vue_inject_styles__$3 = function (inject) {
   if (!inject) return;
-  inject("data-v-0272658a_0", {
-    source: ".fit-content[data-v-0272658a]{width:1%;white-space:nowrap}",
+  inject("data-v-468aacca_0", {
+    source: ".fit-content[data-v-468aacca]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1290,7 +1296,7 @@ const __vue_inject_styles__$3 = function (inject) {
 /* scoped */
 
 
-const __vue_scope_id__$3 = "data-v-0272658a";
+const __vue_scope_id__$3 = "data-v-468aacca";
 /* module identifier */
 
 const __vue_module_identifier__$3 = undefined;
