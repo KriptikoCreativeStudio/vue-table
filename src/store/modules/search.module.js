@@ -5,7 +5,7 @@ let value = window.localStorage.getItem(searchStorageName);
 export const searchModule = {
     namespaced: true,
     state: {
-        value: value ?? ''
+        value: value || ''
     },
     mutations: {
         /**

@@ -1,4 +1,42 @@
-'use strict';Object.defineProperty(exports,'__esModule',{value:true});function _interopDefault(e){return(e&&(typeof e==='object')&&'default'in e)?e['default']:e}var axios=_interopDefault(require('axios')),qs=_interopDefault(require('qs')),Vuex=require('vuex'),Vuex__default=_interopDefault(Vuex),Vue=_interopDefault(require('vue')),VueDraggable=_interopDefault(require('vuedraggable'));function _typeof(obj) {
+'use strict';Object.defineProperty(exports,'__esModule',{value:true});function _interopDefault(e){return(e&&(typeof e==='object')&&'default'in e)?e['default']:e}var axios=_interopDefault(require('axios')),qs=_interopDefault(require('qs')),Vuex=require('vuex'),Vuex__default=_interopDefault(Vuex),debounce=_interopDefault(require('lodash.debounce')),Vue=_interopDefault(require('vue')),VueDraggable=_interopDefault(require('vuedraggable'));function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _typeof(obj) {
   "@babel/helpers - typeof";
 
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -29,40 +67,6 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -72,7 +76,7 @@ function _arrayWithoutHoles(arr) {
 }
 
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -80,7 +84,7 @@ function _unsupportedIterableToArray(o, minLen) {
   if (typeof o === "string") return _arrayLikeToArray(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Map" || n === "Set") return Array.from(o);
   if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
 }
 
@@ -275,9 +279,18 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
       lang: this.$parent.lang
     };
   },
-  methods: _objectSpread2({}, Vuex.mapActions('searchModule', {
+  methods: _objectSpread2(_objectSpread2({}, Vuex.mapActions('searchModule', {
     setValue: 'setValueAction'
-  })),
+  })), {}, {
+    /**
+     * Handles the search event.
+     *
+     * @param event
+     */
+    handleSearch: debounce(function (event) {
+      this.setValue(event.target.value);
+    }, 400)
+  }),
   computed: _objectSpread2({}, Vuex.mapState('searchModule', ['value']))
 };/* script */
 var __vue_script__$1 = script$1;
@@ -304,7 +317,7 @@ var __vue_inject_styles__$1 = undefined;
 var __vue_scope_id__$1 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$1 = "data-v-a2920846";
+var __vue_module_identifier__$1 = "data-v-369faa6e";
 /* functional template */
 
 var __vue_is_functional_template__$1 = false;
@@ -346,12 +359,12 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
       }
     }
   },
-  methods: _objectSpread2({}, Vuex.mapActions('paginationModule', {
+  methods: _objectSpread2(_objectSpread2({}, Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
-  }), {}, Vuex.mapActions('itemsPerPageModule', {
+  })), Vuex.mapActions('itemsPerPageModule', {
     setItemsPerPage: 'setItemsPerPageAction'
   })),
-  computed: _objectSpread2({
+  computed: _objectSpread2(_objectSpread2({
     start: function start() {
       return (this.page - 1) * this.itemsPerPage + 1;
     },
@@ -391,7 +404,7 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
         higher: higherBound
       };
     }
-  }, Vuex.mapState('paginationModule', ['page']), {}, Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
+  }, Vuex.mapState('paginationModule', ['page'])), Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
   mounted: function mounted() {
     this.selectedItemsPerPage = this.itemsPerPage;
   }
@@ -597,7 +610,7 @@ var value = window.localStorage.getItem(searchStorageName);
 var searchModule = {
   namespaced: true,
   state: {
-    value: value !== null && value !== void 0 ? value : ''
+    value: value || ''
   },
   mutations: {
     /**
@@ -782,7 +795,7 @@ var store = new Vuex__default.Store({
       default: null
     }
   },
-  methods: _objectSpread2({
+  methods: _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({
     /**
      * Get the items from storage.
      *
@@ -813,13 +826,11 @@ var store = new Vuex__default.Store({
         }
       };
       return axios$1.get(this.uri, options).then(function (response) {
-        var _ref;
-
         if (Object.prototype.hasOwnProperty.call(response.data, _this.dataKey)) {
           _this.items = response.data[_this.dataKey];
         }
 
-        _this.totalItems = (_ref = _this.metaKey != null ? response.data[_this.metaKey].total : response.data.total) !== null && _ref !== void 0 ? _ref : _this.items.length;
+        _this.totalItems = (_this.metaKey != null ? response.data[_this.metaKey].total : response.data.total) || _this.items.length;
 
         _this.$emit('update:items', _this.items);
       });
@@ -894,14 +905,14 @@ var store = new Vuex__default.Store({
     }
   }, Vuex.mapActions('sortingModule', {
     addSort: 'addSortAction'
-  }), {}, Vuex.mapActions('paginationModule', {
+  })), Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
-  }), {}, Vuex.mapActions('itemsPerPageModule', {
+  })), Vuex.mapActions('itemsPerPageModule', {
     setItemsPerPage: 'setItemsPerPageAction'
-  }), {}, Vuex.mapActions('filtersModule', {
+  })), Vuex.mapActions('filtersModule', {
     setFilter: 'addFilterAction'
   })),
-  computed: _objectSpread2({
+  computed: _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({
     /**
      * Checks whether the search form should be displayed. The form will
      * be displayed if there is at least one searchable column.
@@ -922,11 +933,11 @@ var store = new Vuex__default.Store({
         return column.visible;
       });
     }
-  }, Vuex.mapState('filtersModule', ['filters']), {}, Vuex.mapState('sortingModule', {
+  }, Vuex.mapState('filtersModule', ['filters'])), Vuex.mapState('sortingModule', {
     currentSorting: 'sorting'
-  }), {}, Vuex.mapState('searchModule', {
+  })), Vuex.mapState('searchModule', {
     search: 'value'
-  }), {}, Vuex.mapState('paginationModule', ['page']), {}, Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
+  })), Vuex.mapState('paginationModule', ['page'])), Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
   watch: {
     itemsPerPage: function itemsPerPage() {
       this.getItems();
@@ -1020,15 +1031,15 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-0272658a>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-0272658a>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-0272658a>", "</div>", [_vm._t("header", null, {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-468aacca>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-468aacca>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-468aacca>", "</div>", [_vm._t("header", null, {
     "table": this
-  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-0272658a>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-0272658a>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-0272658a>", "</div>", [_vm._ssrNode("<table" + _vm._ssrClass(null, _vm.tableClass) + " data-v-0272658a>", "</table>", [_vm._ssrNode("<thead data-v-0272658a>", "</thead>", [_vm._ssrNode("<tr data-v-0272658a>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-0272658a></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-0272658a><div class=\"custom-control custom-checkbox\" data-v-0272658a><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-0272658a> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-0272658a></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
-    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-0272658a>", "</th>", [_c('vue-table-heading', {
+  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-468aacca>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-468aacca>", "</div>", [_vm._ssrNode("<table" + _vm._ssrClass(null, _vm.tableClass) + " data-v-468aacca>", "</table>", [_vm._ssrNode("<thead data-v-468aacca>", "</thead>", [_vm._ssrNode("<tr data-v-468aacca>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-468aacca></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-468aacca><div class=\"custom-control custom-checkbox\" data-v-468aacca><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-468aacca> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-468aacca></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
+    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-468aacca>", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
       }
     })], 1);
-  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-0272658a></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
+  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-468aacca></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
     attrs: {
       "tag": "tbody",
       "handle": ".v-table-drag-handle",
@@ -1135,8 +1146,8 @@ var __vue_staticRenderFns__$3 = [];
 
 var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-0272658a_0", {
-    source: ".fit-content[data-v-0272658a]{width:1%;white-space:nowrap}",
+  inject("data-v-468aacca_0", {
+    source: ".fit-content[data-v-468aacca]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1144,10 +1155,10 @@ var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$3 = "data-v-0272658a";
+var __vue_scope_id__$3 = "data-v-468aacca";
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-0272658a";
+var __vue_module_identifier__$3 = "data-v-468aacca";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;

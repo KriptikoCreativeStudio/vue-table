@@ -43,6 +43,7 @@
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",
     "jquery": "^3.6.0",
+    "lodash.debounce": "^4.0.8",
     "popper.js": "^1.16.1",
     "qs": "^6.5.2",
     "vue": "^2.6.11",
@@ -50,8 +51,8 @@
     "vuex": "^3.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/core": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
     "@rollup/plugin-alias": "^2.2.0",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-replace": "^2.3.2",

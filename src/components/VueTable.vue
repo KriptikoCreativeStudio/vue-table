@@ -240,7 +240,7 @@
                             this.items = response.data[this.dataKey];
                         }
 
-                        this.totalItems = ((this.metaKey != null) ? response.data[this.metaKey].total : response.data.total) ?? this.items.length;
+                        this.totalItems = ((this.metaKey != null) ? response.data[this.metaKey].total : response.data.total) || this.items.length;
 
                         this.$emit('update:items', this.items);
                     });

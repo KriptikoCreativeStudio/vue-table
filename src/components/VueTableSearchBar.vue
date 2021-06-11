@@ -7,12 +7,13 @@
         </div>
 
         <input type="text" class="form-control" :value="value" :placeholder="lang.search_for"
-               @input="setValue($event.target.value)">
+               @input="handleSearch">
     </div>
 </template>
 
 <script>
     import { mapActions, mapState } from 'vuex';
+    import debounce from 'lodash.debounce';
 
     export default {
         name: "VueTableSearchBar",
@@ -22,7 +23,16 @@
             };
         },
         methods: {
-            ...mapActions('searchModule', { setValue: 'setValueAction' })
+            ...mapActions('searchModule', { setValue: 'setValueAction' }),
+
+            /**
+             * Handles the search event.
+             *
+             * @param event
+             */
+            handleSearch: debounce(function (event) {
+                this.setValue(event.target.value);
+            }, 400)
         },
         computed: {
             ...mapState('searchModule', ['value'])

@@ -51,6 +51,7 @@ const baseConfig = {
 // Refer to https://rollupjs.org/guide/en/#warning-treating-module-as-external-dependency
 const external = [
     'axios',
+    'lodash.debounce',
     'qs',
     'vue',
     'vuedraggable',
@@ -60,11 +61,12 @@ const external = [
 // UMD/IIFE shared settings: output.globals
 // Refer to https://rollupjs.org/guide/en#output-globals for details
 const globals = {
-    axios: 'axios',
-    qs: 'qs',
-    vue: 'Vue',
-    vuedraggable: 'VueDraggable',
-    vuex: 'vuex'
+    'axios': 'axios',
+    'lodash.debounce': 'lodash.debounce',
+    'qs': 'qs',
+    'vue': 'Vue',
+    'vuedraggable': 'VueDraggable',
+    'vuex': 'vuex'
 };
 
 // Customize configs for individual targets
