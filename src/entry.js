@@ -1,5 +1,4 @@
 import VueTable from '@/components/VueTable';
-import filterColumn from '@/directives/filter-column.directive';
 
 // install function executed by Vue.use()
 const install = function installVueTable(Vue) {
@@ -40,6 +39,5 @@ VueTable.install = install;
 
 // Export component by default
 export {
-    VueTable,
-    filterColumn
+    VueTable
 };

@@ -1,12 +1,23 @@
 <template>
     <vue-table v-bind="options" :items.sync="items" ref="vueTable">
-        <template v-slot:filters>
+        <template v-slot:filters="slotProps">
             <div class="col-md-3">
-                <select class="custom-select" v-filter-column="'city.id'" ref="cityFilter">
-                    <option value="">Cities</option>
-                    <option v-for="city in filters.cities" :value="city.id" :key="city.id">
+                <select class="custom-select" @change="slotProps.refreshResults"
+                        v-model="slotProps.columns.city_id.value" multiple>
+                    <option value="" disabled>Cities</option>
+                    <option v-for="city in filtersOptions.cities" :value="city.id" :key="city.id">
                         {{ city.name }}
                     </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="custom-select" @change="slotProps.refreshResults"
+                        v-model="slotProps.columns.email.value">
+                    <option value="">Email</option>
+                    <option value="karianne29@example.com">karianne29@example.com</option>
+                    <option value="labbott@example.org">labbott@example.org</option>
+                    <option value="dejah85@example.org">dejah85@example.org</option>
+                    <option value="imante@example.net">imante@example.net</option>
                 </select>
             </div>
         </template>
@@ -47,13 +58,18 @@
                 </div>
             </div>
         </template>
+
+        <template v-slot:reset-button="slotProps">
+            <button type="button" class="btn btn-primary" @click="slotProps.resetFilters">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </template>
     </vue-table>
 </template>
 
 <script>
     import VueTable from "../src/components/VueTable";
     import Star from "./components/Star";
-    import filterColumn from "../src/directives/filter-column.directive";
     import { dataMixin } from "./mixins/data.mixin";
 
     export default {
@@ -63,11 +79,10 @@
             VueTable,
             Star
         },
-        directives: { filterColumn },
         data() {
             return {
                 items: [],
-                filters: {
+                filtersOptions: {
                     cities: [],
                 },
                 options: {
@@ -98,15 +113,16 @@
                             title: "Email"
                         },
                         {
-                            headerClasses: "text-center",
                             name: "city_id",
+                            value: [],
+                            visible: false,
+                        },
+                        {
+                            headerClasses: "text-center",
+                            name: "city.name",
                             rowClasses: "align-middle text-center",
                             sortable: false,
-                            searchable: true,
                             title: "City",
-                            render: function (data) {
-                                return data.city.name;
-                            }
                         },
                         {
                             headerClasses: "fit-content",
@@ -124,19 +140,14 @@
                             searchable: false,
                         }
                     ],
-                    sorting: [
-                        {
-                            column: "created_at",
-                            direction: "desc"
-                        }
-                    ],
                     checkable: {
                         display: true,
                         attribute: "id",
                     },
+                    saveState: true,
+                    localStorageName: 'demoVueTable',
                     orderable: true,
                     uri: "https://api.sandbox.codetech.pt/api/users",
-                    metaKey: "meta",
                     locale: "pt"
                 }
             };
@@ -159,14 +170,7 @@
 
                 axios.get('https://api.sandbox.codetech.pt/api/cities')
                     .then(response => {
-                        new Promise((resolve) => {
-                            this.filters.cities = response.data.data;
-
-                            resolve();
-                        })
-                            .then(() => {
-                                this.$refs.cityFilter.dispatchEvent(new Event('vueTable.optionsLoaded'));
-                            });
+                        this.filtersOptions.cities = response.data;
                     });
             }
         },

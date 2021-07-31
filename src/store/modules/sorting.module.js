@@ -1,45 +1,50 @@
-export const sortingStorageName = `vue_table_${ window.location.pathname }_sorting`;
-
-let sorting = window.localStorage.getItem(sortingStorageName);
-
 export const sortingModule = {
     namespaced: true,
     state: {
-        sorting: sorting ? JSON.parse(sorting) : []
+        sorting: {}
     },
     mutations: {
         /**
-         * Adds a sort to the store.
+         * Sets the sorting.
          *
          * @param state
-         * @param newSorting
+         * @param sorting
          */
-        addSort(state, newSort) {
-            // If a sorting with this key already exists, it must be removed from the array.
-            state.sorting = state.sorting.filter(sort => sort.column != newSort.column);
-
-            state.sorting.push(newSort);
+        setSorting(state, sorting) {
+            state.sorting = sorting;
         },
 
         /**
-         * Saves the data into local storage.
+         * Adds a sorting to the store.
          *
          * @param state
+         * @param columnName
+         * @param columnSort
          */
-        saveData(state) {
-            window.localStorage.setItem(sortingStorageName, JSON.stringify(state.sorting));
+        setColumnSort(state, { columnName, columnSort }) {
+            state.sorting = { ...state.sorting, [columnName]: columnSort };
         }
     },
     actions: {
         /**
-         * The action of adding a sorting.
+         * The action of setting the sorting.
          *
          * @param commit
          * @param sorting
          */
-        addSortAction({ commit }, sort) {
-            commit('addSort', sort);
-            commit('saveData');
+        setSortingAction({ commit }, sorting) {
+            commit('setSorting', sorting);
+        },
+
+        /**
+         * The action of setting a column sort.
+         *
+         * @param commit
+         * @param columnName
+         * @param columnSort
+         */
+        setColumnSortAction({ commit }, { columnName, columnSort }) {
+            commit('setColumnSort', { columnName, columnSort });
         }
     }
 };
