@@ -1,11 +1,7 @@
-export const paginationStorageName = `vue_table_${ window.location.pathname }_page`;
-
-let page = window.localStorage.getItem(paginationStorageName);
-
 export const paginationModule = {
     namespaced: true,
     state: {
-        page: page ? parseInt(page) : 1
+        page: 1
     },
     mutations: {
         /**
@@ -16,15 +12,6 @@ export const paginationModule = {
          */
         setPage(state, page) {
             state.page = page;
-        },
-
-        /**
-         * Saves the data into local storage.
-         *
-         * @param state
-         */
-        saveData(state) {
-            window.localStorage.setItem(paginationStorageName, state.page);
         }
     },
     actions: {
@@ -36,7 +23,6 @@ export const paginationModule = {
          */
         setPageAction({ commit }, page) {
             commit('setPage', page);
-            commit('saveData');
         }
     }
 };

@@ -24,6 +24,7 @@
         },
         methods: {
             ...mapActions('searchModule', { setValue: 'setValueAction' }),
+            ...mapActions('paginationModule', { setPage: 'setPageAction' }),
 
             /**
              * Handles the search event.
@@ -32,6 +33,10 @@
              */
             handleSearch: debounce(function (event) {
                 this.setValue(event.target.value);
+
+                this.setPage(1);
+
+                this.$emit('searchPerformed');
             }, 400)
         },
         computed: {

@@ -3,10 +3,20 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="form-row">
-                    <slot name="filters"></slot>
+                    <slot name="filters" v-bind:columns="columnsPayload" v-bind:refreshResults="refreshResults"></slot>
 
                     <div class="col">
-                        <vue-table-search-bar v-if="isSearchable"/>
+                        <vue-table-search-bar v-if="isSearchable"
+                                              @searchPerformed="getItems"
+                        />
+                    </div>
+
+                    <div class="col-auto">
+                        <slot name="reset-button" v-bind:resetFilters="resetFilters">
+                            <button type="button" class="btn btn-primary" @click="resetFilters">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </slot>
                     </div>
                 </div>
             </div>
@@ -39,9 +49,8 @@
                                         :key="column.name"
                                         :class="column.headerClasses"
                                     >
-                                        <vue-table-heading :column="column"/>
+                                        <vue-table-heading :column="column" @vueTableSortChanged="setColumnSorting"/>
                                     </th>
-                                    <th v-if="actions.slots.length"></th>
                                 </tr>
                             </thead>
 
@@ -49,7 +58,7 @@
                                            tag="tbody"
                                            handle=".v-table-drag-handle"
                                            :disabled="!orderable"
-                                           @change="$emit('itemsReordered', $event.moved.element, $event.moved.newIndex)"
+                                           @change="$emit('vueTableItemsReordered', $event.moved.element, $event.moved.newIndex)"
                             >
                                 <tr v-for="(item, index) in items" :key="index" :class="setRowClass(item, index)">
                                     <td v-if="orderable" class="fit-content align-middle">
@@ -81,13 +90,8 @@
                                         </template>
 
                                         <template v-else-if="column.name">
-                                            {{ item[column.name] }}
+                                            {{ column.name.split(".").reduce((a,b) => a[b], item) }}
                                         </template>
-                                    </td>
-                                    <td v-if="actions.slots.length" :class="actions.classes"
-                                        class="fit-content align-middle">
-                                        <slot v-for="action in actions.slots" :name="`action-${action}`"
-                                              v-bind:item="item"></slot>
                                     </td>
                                 </tr>
                             </vue-draggable>
@@ -96,6 +100,8 @@
 
                     <vue-table-pagination v-if="paginate"
                                           :items="totalItems"
+                                          @itemsPerPageSelected="getItems"
+                                          @pageSelected="getItems"
                     />
                 </div>
             </div>
@@ -109,11 +115,14 @@
     import VueTableSearchBar from "@/components/VueTableSearchBar";
     import VueTablePagination from "@/components/VueTablePagination";
     import store from '@/store/';
+    import { localStorageManager } from "../mixins/local-storage-manager";
+    import { filtersManager } from "../mixins/filters-manager";
     import VueDraggable from 'vuedraggable';
 
     export default {
         store,
         name: "VueTable",
+        mixins: [localStorageManager, filtersManager],
         components: {
             VueTableHeading,
             VueDraggable,
@@ -128,22 +137,11 @@
                     "no_records": "No records found!",
                     "search_for": "Search for..."
                 },
-                totalItems: 0
+                totalItems: 0,
+                columnsPayload: {}
             };
         },
         props: {
-            actions: {
-                type: Object,
-                default: function () {
-                    return {
-                        classes: "",
-                        slots: []
-                    };
-                },
-                validator: function (actions) {
-                    return Object.prototype.hasOwnProperty.call(actions, 'slots') && typeof actions.slots === "object";
-                }
-            },
             tableClass: {
                 type: String,
                 default: 'table table-striped',
@@ -190,19 +188,6 @@
                 type: Boolean,
                 default: true
             },
-            perPage: {
-                type: Number,
-                default: null,
-                validator: function (value) {
-                    return value > 0;
-                }
-            },
-            sorting: {
-                type: Array,
-                default: function () {
-                    return [];
-                }
-            },
             uri: {
                 type: String,
                 default: null
@@ -221,18 +206,18 @@
 
                 let options = {
                     params: {
-                        columns: this.columns,
+                        columns: this.columnsPayload,
                         page: this.page,
-                        filters: this.filters,
                         perPage: this.itemsPerPage,
                         search: this.search,
-                        sorting: this.currentSorting,
                         extraParams: extraParams
                     },
                     paramsSerializer: function (params) {
                         return qs.stringify(params);
                     },
                 };
+
+                this.storeFilters();
 
                 return axios.get(this.uri, options)
                     .then(response => {
@@ -247,6 +232,15 @@
             },
 
             /**
+             * Refresh results.
+             */
+            refreshResults() {
+                this.setPage(1);
+
+                this.getItems();
+            },
+
+            /**
              * Returns the searchable columns
              *
              * @return {array}
@@ -256,8 +250,8 @@
             },
 
             /**
-             * Checks whether the columns contain all the necessary properties
-             * and whether these properties have been initialized correctly.
+             * Checks that the columns contain all the required properties
+             * and that these properties are correctly initialized.
              */
             hydrateColumns() {
                 this.columns.forEach(column => {
@@ -307,10 +301,15 @@
                 return this.rowClass;
             },
 
-            ...mapActions('sortingModule', { addSort: 'addSortAction' }),
+            setColumnSorting({ columnName, columnSort }) {
+                this.columnsPayload[columnName].sort = columnSort;
+
+                this.getItems();
+            },
+
             ...mapActions('paginationModule', { setPage: 'setPageAction' }),
+            ...mapActions('searchModule', { setSearchValue: 'setValueAction' }),
             ...mapActions('itemsPerPageModule', { setItemsPerPage: 'setItemsPerPageAction' }),
-            ...mapActions('filtersModule', { setFilter: 'addFilterAction' })
         },
         computed: {
             /**
@@ -332,50 +331,12 @@
                 return this.columns.filter((column) => column.visible);
             },
 
-            ...mapState('filtersModule', ['filters']),
-            ...mapState('sortingModule', { currentSorting: 'sorting' }),
             ...mapState('searchModule', { search: 'value' }),
             ...mapState('paginationModule', ['page']),
             ...mapState('itemsPerPageModule', ['itemsPerPage']),
         },
-        watch: {
-            itemsPerPage: function () {
-                this.getItems();
-            },
-            page: function () {
-                this.getItems();
-            },
-            currentSorting: function () {
-                this.getItems();
-            },
-            search: function () {
-                this.setPage(1);
-                this.getItems();
-            },
-            filters: function () {
-                this.setPage(1);
-                this.getItems();
-            }
-        },
         created() {
             this.hydrateColumns();
-        },
-        mounted() {
-            // If the perPage prop was used, let's override the local storage
-            // and set the items per page on the pagination module
-            if (this.perPage !== null) {
-                this.setItemsPerPage(this.perPage);
-            }
-
-            // Dispatch the sorting prop values
-            this.sorting.forEach(sort => this.addSort(sort));
-
-            // Register events
-            this.$root.$on('filterOptionSelected', this.setFilter);
-
-            if (this.uri !== null) {
-                this.getItems();
-            }
         }
     };
 </script>

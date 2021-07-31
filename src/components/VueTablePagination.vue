@@ -1,7 +1,7 @@
 <template>
     <nav class="row align-items-center mt-5">
         <div class="col-auto">
-            <select class="custom-select" @change="setItemsPerPage($event.target.value)" v-model="selectedItemsPerPage">
+            <select class="custom-select" @change="handleItemsPerPageChanged" :value="itemsPerPage">
                 <option :value="perPageOption" v-for="perPageOption in perPageOptions"
                         :key="`perPageOptions${perPageOption}`">{{ perPageOption }}
                 </option>
@@ -16,13 +16,13 @@
             <ul class="pagination mb-0" v-if="totalPages > 1">
                 <template v-if="page != 1">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="First" @click.prevent="setPage(1)">
+                        <a class="page-link" href="#" aria-label="First" @click.prevent="handlePageSelect(1)">
                             <i class="fas fa-backward"></i>
                             <span class="sr-only">First</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous" @click.prevent="setPage(page - 1)">
+                        <a class="page-link" href="#" aria-label="Previous" @click.prevent="handlePageSelect(page - 1)">
                             <i class="fas fa-caret-left"></i>
                             <span class="sr-only">Previous</span>
                         </a>
@@ -34,18 +34,18 @@
                     class="page-item"
                     :class="{'active': linkButton == page}"
                 >
-                    <a class="page-link" href="#" @click.prevent="setPage(linkButton)">{{ linkButton }}</a>
+                    <a class="page-link" href="#" @click.prevent="handlePageSelect(linkButton)">{{ linkButton }}</a>
                 </li>
 
                 <template v-if="page != totalPages">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next" @click.prevent="setPage(page + 1)">
+                        <a class="page-link" href="#" aria-label="Next" @click.prevent="handlePageSelect(page + 1)">
                             <i class="fas fa-caret-right"></i>
                             <span class="sr-only">Next</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Last" @click.prevent="setPage(totalPages)">
+                        <a class="page-link" href="#" aria-label="Last" @click.prevent="handlePageSelect(totalPages)">
                             <i class="fas fa-forward"></i>
                             <span class="sr-only">Last</span>
                         </a>
@@ -61,11 +61,6 @@
 
     export default {
         name: "VueTablePagination",
-        data() {
-            return {
-                selectedItemsPerPage: null
-            };
-        },
         props: {
             perPageOptions: {
                 type: Array,
@@ -89,6 +84,20 @@
             }
         },
         methods: {
+            handleItemsPerPageChanged(event) {
+                this.setPage(1);
+
+                this.setItemsPerPage(event.target.value)
+
+                this.$emit('itemsPerPageSelected', event.target.value);
+            },
+
+            handlePageSelect(page) {
+                this.setPage(page);
+
+                this.$emit('pageSelected');
+            },
+
             ...mapActions('paginationModule', { setPage: 'setPageAction' }),
             ...mapActions('itemsPerPageModule', { setItemsPerPage: 'setItemsPerPageAction' })
         },
@@ -144,9 +153,6 @@
             },
             ...mapState('paginationModule', ['page']),
             ...mapState('itemsPerPageModule', ['itemsPerPage'])
-        },
-        mounted() {
-            this.selectedItemsPerPage = this.itemsPerPage;
         }
     };
 </script>

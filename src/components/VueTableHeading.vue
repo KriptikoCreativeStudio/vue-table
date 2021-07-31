@@ -19,11 +19,6 @@
 
     export default {
         name: "VueTableHeading",
-        data() {
-            return {
-                direction: null
-            };
-        },
         props: {
             column: {
                 type: Object,
@@ -37,36 +32,40 @@
         },
         computed: {
             sortIcon: function () {
-                switch (this.direction) {
+                switch (this.sorting[this.column.name]) {
                     case 'asc':
                         return 'fa-sort-up';
-
                     case 'desc':
                         return 'fa-sort-down';
-
                     default:
                         return 'fa-sort';
                 }
             },
+            sort: function () {
+                switch (this.sorting[this.column.name]) {
+                    case 'asc':
+                        return 'desc';
+                    case 'desc':
+                        return null;
+                    default:
+                        return 'asc';
+                }
+            },
+
             ...mapState('sortingModule', ['sorting'])
         },
         methods: {
             setOrder() {
-                this.direction = this.direction == null ? 'asc' : (this.direction === 'asc' ? 'desc' : null);
+                const payload = {
+                    columnName: this.column.name,
+                    columnSort: this.sort
+                };
 
-                this.addSort({ column: this.column.name, direction: this.direction });
-            },
-            extractDirectionFromSorting() {
-                let column = this.sorting.filter(sort => sort.column == this.column.name);
+                this.setColumnSort(payload);
 
-                return column[0] ? column[0].direction : null;
+                this.$emit('vueTableSortChanged', payload);
             },
-            ...mapActions('sortingModule', { addSort: 'addSortAction' }),
-        },
-        mounted() {
-            if(this.sortable){
-                this.direction = this.extractDirectionFromSorting();
-            }
+            ...mapActions('sortingModule', { setColumnSort: 'setColumnSortAction' }),
         }
     };
 </script>
