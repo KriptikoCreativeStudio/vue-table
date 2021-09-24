@@ -36,20 +36,40 @@ function _objectSpread2(target) {
   return target;
 }
 
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof = function (obj) {
-      return typeof obj;
-    };
-  } else {
-    _typeof = function (obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    };
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
   }
 
-  return _typeof(obj);
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
 }
 
 function _defineProperty(obj, key, value) {
@@ -65,46 +85,8 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }var script = {
   name: "VueTableHeading",
-  data: function data() {
-    return {
-      direction: null
-    };
-  },
   props: {
     column: {
       type: Object,
@@ -116,7 +98,7 @@ function _nonIterableSpread() {
   },
   computed: _objectSpread2({
     sortIcon: function sortIcon() {
-      switch (this.direction) {
+      switch (this.sorting[this.column.name]) {
         case 'asc':
           return 'fa-sort-up';
 
@@ -126,32 +108,32 @@ function _nonIterableSpread() {
         default:
           return 'fa-sort';
       }
+    },
+    sort: function sort() {
+      switch (this.sorting[this.column.name]) {
+        case 'asc':
+          return 'desc';
+
+        case 'desc':
+          return null;
+
+        default:
+          return 'asc';
+      }
     }
   }, Vuex.mapState('sortingModule', ['sorting'])),
   methods: _objectSpread2({
     setOrder: function setOrder() {
-      this.direction = this.direction == null ? 'asc' : this.direction === 'asc' ? 'desc' : null;
-      this.addSort({
-        column: this.column.name,
-        direction: this.direction
-      });
-    },
-    extractDirectionFromSorting: function extractDirectionFromSorting() {
-      var _this = this;
-
-      var column = this.sorting.filter(function (sort) {
-        return sort.column == _this.column.name;
-      });
-      return column[0] ? column[0].direction : null;
+      var payload = {
+        columnName: this.column.name,
+        columnSort: this.sort
+      };
+      this.setColumnSort(payload);
+      this.$emit('vueTableSortChanged', payload);
     }
   }, Vuex.mapActions('sortingModule', {
-    addSort: 'addSortAction'
-  })),
-  mounted: function mounted() {
-    if (this.sortable) {
-      this.direction = this.extractDirectionFromSorting();
-    }
-  }
+    setColumnSort: 'setColumnSortAction'
+  }))
 };function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
     if (typeof shadowMode !== 'boolean') {
         createInjectorSSR = createInjector;
@@ -259,7 +241,7 @@ var __vue_inject_styles__ = undefined;
 var __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = "data-v-7cf4d2e0";
+var __vue_module_identifier__ = "data-v-8acd8ac0";
 /* functional template */
 
 var __vue_is_functional_template__ = false;
@@ -279,8 +261,10 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
       lang: this.$parent.lang
     };
   },
-  methods: _objectSpread2(_objectSpread2({}, Vuex.mapActions('searchModule', {
+  methods: _objectSpread2(_objectSpread2(_objectSpread2({}, Vuex.mapActions('searchModule', {
     setValue: 'setValueAction'
+  })), Vuex.mapActions('paginationModule', {
+    setPage: 'setPageAction'
   })), {}, {
     /**
      * Handles the search event.
@@ -289,6 +273,8 @@ var __vue_component__ = /*#__PURE__*/normalizeComponent({
      */
     handleSearch: debounce(function (event) {
       this.setValue(event.target.value);
+      this.setPage(1);
+      this.$emit('searchPerformed');
     }, 400)
   }),
   computed: _objectSpread2({}, Vuex.mapState('searchModule', ['value']))
@@ -317,7 +303,7 @@ var __vue_inject_styles__$1 = undefined;
 var __vue_scope_id__$1 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$1 = "data-v-369faa6e";
+var __vue_module_identifier__$1 = "data-v-23d3fe80";
 /* functional template */
 
 var __vue_is_functional_template__$1 = false;
@@ -332,11 +318,6 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
   staticRenderFns: __vue_staticRenderFns__$1
 }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);var script$2 = {
   name: "VueTablePagination",
-  data: function data() {
-    return {
-      selectedItemsPerPage: null
-    };
-  },
   props: {
     perPageOptions: {
       type: Array,
@@ -359,7 +340,17 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
       }
     }
   },
-  methods: _objectSpread2(_objectSpread2({}, Vuex.mapActions('paginationModule', {
+  methods: _objectSpread2(_objectSpread2({
+    handleItemsPerPageChanged: function handleItemsPerPageChanged(event) {
+      this.setPage(1);
+      this.setItemsPerPage(event.target.value);
+      this.$emit('itemsPerPageSelected', event.target.value);
+    },
+    handlePageSelect: function handlePageSelect(page) {
+      this.setPage(page);
+      this.$emit('pageSelected');
+    }
+  }, Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
   })), Vuex.mapActions('itemsPerPageModule', {
     setItemsPerPage: 'setItemsPerPageAction'
@@ -404,10 +395,7 @@ var __vue_component__$1 = /*#__PURE__*/normalizeComponent({
         higher: higherBound
       };
     }
-  }, Vuex.mapState('paginationModule', ['page'])), Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
-  mounted: function mounted() {
-    this.selectedItemsPerPage = this.itemsPerPage;
-  }
+  }, Vuex.mapState('paginationModule', ['page'])), Vuex.mapState('itemsPerPageModule', ['itemsPerPage']))
 };/* script */
 var __vue_script__$2 = script$2;
 /* template */
@@ -421,39 +409,13 @@ var __vue_render__$2 = function __vue_render__() {
 
   return _c('nav', {
     staticClass: "row align-items-center mt-5"
-  }, [_vm._ssrNode("<div class=\"col-auto\">", "</div>", [_c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.selectedItemsPerPage,
-      expression: "selectedItemsPerPage"
-    }],
-    staticClass: "custom-select",
-    on: {
-      "change": [function ($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.selectedItemsPerPage = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }, function ($event) {
-        return _vm.setItemsPerPage($event.target.value);
-      }]
-    }
-  }, _vm._l(_vm.perPageOptions, function (perPageOption) {
-    return _c('option', {
-      key: "perPageOptions" + perPageOption,
-      domProps: {
-        "value": perPageOption
-      }
-    }, [_vm._v(_vm._s(perPageOption) + "\n            ")]);
-  }), 0)]), _vm._ssrNode(" <div class=\"col\">" + _vm._ssrEscape("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ") + "</div> <div class=\"col-sm-auto mt-4 mt-sm-0\">" + (_vm.totalPages > 1 ? "<ul class=\"pagination mb-0\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
+  }, [_vm._ssrNode("<div class=\"col-auto\"><select" + _vm._ssrAttr("value", _vm.itemsPerPage) + " class=\"custom-select\">" + _vm._ssrList(_vm.perPageOptions, function (perPageOption) {
+    return "<option" + _vm._ssrAttr("value", perPageOption) + ">" + _vm._ssrEscape(_vm._s(perPageOption) + "\n            ") + "</option>";
+  }) + "</select></div> <div class=\"col\">" + _vm._ssrEscape("\n        Showing " + _vm._s(_vm.start) + " - " + _vm._s(_vm.end) + " of " + _vm._s(_vm.items) + "\n    ") + "</div> <div class=\"col-sm-auto mt-4 mt-sm-0\">" + (_vm.totalPages > 1 ? "<ul class=\"pagination mb-0\">" + (_vm.page != 1 ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"First\" class=\"page-link\"><i class=\"fas fa-backward\"></i> <span class=\"sr-only\">First</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Previous\" class=\"page-link\"><i class=\"fas fa-caret-left\"></i> <span class=\"sr-only\">Previous</span></a></li>" : "<!---->") + " " + _vm._ssrList(_vm.linkButtons, function (linkButton, index) {
     return "<li" + _vm._ssrClass("page-item", {
       'active': linkButton == _vm.page
     }) + "><a href=\"#\" class=\"page-link\">" + _vm._ssrEscape(_vm._s(linkButton)) + "</a></li>";
-  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" : "<!---->") + "</div>")], 2);
+  }) + " " + (_vm.page != _vm.totalPages ? "<li class=\"page-item\"><a href=\"#\" aria-label=\"Next\" class=\"page-link\"><i class=\"fas fa-caret-right\"></i> <span class=\"sr-only\">Next</span></a></li> <li class=\"page-item\"><a href=\"#\" aria-label=\"Last\" class=\"page-link\"><i class=\"fas fa-forward\"></i> <span class=\"sr-only\">Last</span></a></li>" : "<!---->") + "</ul>" : "<!---->") + "</div>")]);
 };
 
 var __vue_staticRenderFns__$2 = [];
@@ -465,7 +427,7 @@ var __vue_inject_styles__$2 = undefined;
 var __vue_scope_id__$2 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = "data-v-99a92144";
+var __vue_module_identifier__$2 = "data-v-cf43e54e";
 /* functional template */
 
 var __vue_is_functional_template__$2 = false;
@@ -478,59 +440,10 @@ var __vue_is_functional_template__$2 = false;
 var __vue_component__$2 = /*#__PURE__*/normalizeComponent({
   render: __vue_render__$2,
   staticRenderFns: __vue_staticRenderFns__$2
-}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);var filtersStorageName = "vue_table_".concat(window.location.pathname, "_filters");
-var filters = window.localStorage.getItem(filtersStorageName);
-var filtersModule = {
+}, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);var paginationModule = {
   namespaced: true,
   state: {
-    filters: filters ? JSON.parse(filters) : []
-  },
-  mutations: {
-    /**
-     * Adds a filter to the store.
-     *
-     * @param state
-     * @param newFilter
-     */
-    addFilter: function addFilter(state, newFilter) {
-      // If a filter with this key already exists, it must be removed from the array.
-      state.filters = state.filters.filter(function (filter) {
-        return filter.column != newFilter.column;
-      });
-
-      if (newFilter.values.length) {
-        state.filters.push(newFilter);
-      }
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(filtersStorageName, JSON.stringify(state.filters));
-    }
-  },
-  actions: {
-    /**
-     * The action of adding a filter.
-     *
-     * @param commit
-     * @param filter
-     */
-    addFilterAction: function addFilterAction(_ref, filter) {
-      var commit = _ref.commit;
-      commit('addFilter', filter);
-      commit('saveData');
-    }
-  }
-};var paginationStorageName = "vue_table_".concat(window.location.pathname, "_page");
-var page = window.localStorage.getItem(paginationStorageName);
-var paginationModule = {
-  namespaced: true,
-  state: {
-    page: page ? parseInt(page) : 1
+    page: 1
   },
   mutations: {
     /**
@@ -541,15 +454,6 @@ var paginationModule = {
      */
     setPage: function setPage(state, page) {
       state.page = page;
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(paginationStorageName, state.page);
     }
   },
   actions: {
@@ -562,15 +466,12 @@ var paginationModule = {
     setPageAction: function setPageAction(_ref, page) {
       var commit = _ref.commit;
       commit('setPage', page);
-      commit('saveData');
     }
   }
-};var paginationStorageName$1 = "vue_table_".concat(window.location.pathname, "_items_per_page");
-var itemsPerPage = window.localStorage.getItem(paginationStorageName$1);
-var itemsPerPageModule = {
+};var itemsPerPageModule = {
   namespaced: true,
   state: {
-    itemsPerPage: itemsPerPage ? parseInt(itemsPerPage) : 20
+    itemsPerPage: 20
   },
   mutations: {
     /**
@@ -580,16 +481,7 @@ var itemsPerPageModule = {
      * @param itemsPerPage
      */
     setItemsPerPage: function setItemsPerPage(state, itemsPerPage) {
-      state.itemsPerPage = itemsPerPage;
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(paginationStorageName$1, state.itemsPerPage);
+      state.itemsPerPage = parseInt(itemsPerPage);
     }
   },
   actions: {
@@ -602,15 +494,12 @@ var itemsPerPageModule = {
     setItemsPerPageAction: function setItemsPerPageAction(_ref, itemsPerPage) {
       var commit = _ref.commit;
       commit('setItemsPerPage', itemsPerPage);
-      commit('saveData');
     }
   }
-};var searchStorageName = "vue_table_".concat(window.location.pathname, "_search");
-var value = window.localStorage.getItem(searchStorageName);
-var searchModule = {
+};var searchModule = {
   namespaced: true,
   state: {
-    value: value || ''
+    value: ''
   },
   mutations: {
     /**
@@ -621,15 +510,6 @@ var searchModule = {
      */
     setValue: function setValue(state, value) {
       state.value = value;
-    },
-
-    /**
-     * Saves the data into local storage.
-     *
-     * @param state
-     */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(searchStorageName, state.value);
     }
   },
   actions: {
@@ -642,65 +522,243 @@ var searchModule = {
     setValueAction: function setValueAction(_ref, value) {
       var commit = _ref.commit;
       commit('setValue', value);
-      commit('saveData');
     }
   }
-};var sortingStorageName = "vue_table_".concat(window.location.pathname, "_sorting");
-var sorting = window.localStorage.getItem(sortingStorageName);
-var sortingModule = {
+};var sortingModule = {
   namespaced: true,
   state: {
-    sorting: sorting ? JSON.parse(sorting) : []
+    sorting: {}
   },
   mutations: {
     /**
-     * Adds a sort to the store.
+     * Sets the sorting.
      *
      * @param state
-     * @param newSorting
+     * @param sorting
      */
-    addSort: function addSort(state, newSort) {
-      // If a sorting with this key already exists, it must be removed from the array.
-      state.sorting = state.sorting.filter(function (sort) {
-        return sort.column != newSort.column;
-      });
-      state.sorting.push(newSort);
+    setSorting: function setSorting(state, sorting) {
+      state.sorting = sorting;
     },
 
     /**
-     * Saves the data into local storage.
+     * Adds a sorting to the store.
      *
      * @param state
+     * @param columnName
+     * @param columnSort
      */
-    saveData: function saveData(state) {
-      window.localStorage.setItem(sortingStorageName, JSON.stringify(state.sorting));
+    setColumnSort: function setColumnSort(state, _ref) {
+      var columnName = _ref.columnName,
+          columnSort = _ref.columnSort;
+      state.sorting = _objectSpread2(_objectSpread2({}, state.sorting), {}, _defineProperty({}, columnName, columnSort));
     }
   },
   actions: {
     /**
-     * The action of adding a sorting.
+     * The action of setting the sorting.
      *
      * @param commit
      * @param sorting
      */
-    addSortAction: function addSortAction(_ref, sort) {
-      var commit = _ref.commit;
-      commit('addSort', sort);
-      commit('saveData');
+    setSortingAction: function setSortingAction(_ref2, sorting) {
+      var commit = _ref2.commit;
+      commit('setSorting', sorting);
+    },
+
+    /**
+     * The action of setting a column sort.
+     *
+     * @param commit
+     * @param columnName
+     * @param columnSort
+     */
+    setColumnSortAction: function setColumnSortAction(_ref3, _ref4) {
+      var commit = _ref3.commit;
+      var columnName = _ref4.columnName,
+          columnSort = _ref4.columnSort;
+      commit('setColumnSort', {
+        columnName: columnName,
+        columnSort: columnSort
+      });
     }
   }
 };Vue.use(Vuex__default);
 var store = new Vuex__default.Store({
   modules: {
-    filtersModule: filtersModule,
     paginationModule: paginationModule,
     itemsPerPageModule: itemsPerPageModule,
     searchModule: searchModule,
     sortingModule: sortingModule
   }
-});var script$3 = {
+});var localStorageManager = {
+  data: function data() {
+    return {
+      selection: null
+    };
+  },
+  props: {
+    saveState: {
+      type: Boolean,
+      default: false
+    },
+    localStorageName: {
+      type: String,
+      default: function _default() {
+        return "".concat(this.$options.name, "_").concat(this._uid, "_").concat(window.location.pathname);
+      }
+    }
+  },
+  methods: {
+    /**
+     * Get the state of the local storage.
+     */
+    getStoredValues: function getStoredValues() {
+      return JSON.parse(localStorage.getItem(this.localStorageName));
+    },
+
+    /**
+     * Stores the state in local storage.
+     */
+    storeState: function storeState(data) {
+      if (this.saveState) {
+        localStorage.setItem(this.localStorageName, JSON.stringify(data));
+      }
+    }
+  }
+};var filtersManager = {
+  data: function data() {
+    return {
+      filters: {}
+    };
+  },
+  props: {
+    perPage: {
+      type: Number,
+      default: 20,
+      validator: function validator(value) {
+        return value > 0;
+      }
+    }
+  },
+  methods: _objectSpread2({
+    /**
+     * Store the filters in the local storage.
+     */
+    storeFilters: function storeFilters() {
+      var filters = {};
+
+      for (var columnName in this.columnsPayload) {
+        if (this.columnsPayload[columnName].value) {
+          filters[columnName] = this.columnsPayload[columnName].value;
+        }
+      }
+
+      this.storeState({
+        filters: filters,
+        page: this.page,
+        perPage: this.itemsPerPage,
+        search: this.search,
+        sorting: this.currentSorting
+      });
+    },
+
+    /**
+     * Load the filters from local storage.
+     */
+    loadStoredFilters: function loadStoredFilters() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var storedSettings;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                storedSettings = _this.getStoredValues() || {};
+
+                _this.setColumnsPayload(storedSettings.filters, storedSettings.sorting);
+
+                _this.setPage(storedSettings.page || 1);
+
+                _this.setItemsPerPage(storedSettings.perPage || _this.perPage);
+
+                _this.setSearchValue(storedSettings.search || null);
+
+                if (storedSettings.sorting) {
+                  _this.setSorting(storedSettings.sorting);
+                }
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+
+    /**
+     * Resets all the filters.
+     */
+    resetFilters: function resetFilters() {
+      this.setColumnsPayload();
+      this.setSorting(this.currentSorting);
+      this.setPage(1);
+      this.setItemsPerPage(this.itemsPerPage);
+      this.setSearchValue(null);
+      this.getItems();
+    },
+
+    /**
+     * Set the columns payload to be sent with requests
+     */
+    setColumnsPayload: function setColumnsPayload() {
+      var _this2 = this;
+
+      var storedFilters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var storedSorting = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      this.columns.forEach(function (column) {
+        if (column.name) {
+          var columnPayload = {
+            modifiers: column.modifiers || [],
+            searchable: column.searchable || false,
+            sort: storedSorting[column.name] || column.sort || null,
+            value: storedFilters[column.name] || column.value || ''
+          };
+
+          _this2.$set(_this2.columnsPayload, column.name, columnPayload);
+        }
+      });
+    }
+  }, Vuex.mapActions('sortingModule', {
+    setSorting: 'setSortingAction'
+  })),
+  computed: _objectSpread2({
+    currentSorting: function currentSorting() {
+      var sorting = {};
+
+      for (var columnName in this.columnsPayload) {
+        if (this.columnsPayload[columnName].sort) {
+          sorting[columnName] = this.columnsPayload[columnName].sort;
+        }
+      }
+
+      return sorting;
+    }
+  }, Vuex.mapState('sortingModule', ['sorting'])),
+  beforeMount: function beforeMount() {
+    var _this3 = this;
+
+    this.loadStoredFilters().then(function () {
+      if (_this3.uri !== null) {
+        _this3.getItems();
+      }
+    });
+  }
+};var script$3 = {
   store: store,
   name: "VueTable",
+  mixins: [localStorageManager, filtersManager],
   components: {
     VueTableHeading: __vue_component__,
     VueDraggable: VueDraggable,
@@ -715,22 +773,11 @@ var store = new Vuex__default.Store({
         "no_records": "No records found!",
         "search_for": "Search for..."
       },
-      totalItems: 0
+      totalItems: 0,
+      columnsPayload: {}
     };
   },
   props: {
-    actions: {
-      type: Object,
-      default: function _default() {
-        return {
-          classes: "",
-          slots: []
-        };
-      },
-      validator: function validator(actions) {
-        return Object.prototype.hasOwnProperty.call(actions, 'slots') && _typeof(actions.slots) === "object";
-      }
-    },
     tableClass: {
       type: String,
       default: 'table table-striped'
@@ -777,25 +824,12 @@ var store = new Vuex__default.Store({
       type: Boolean,
       default: true
     },
-    perPage: {
-      type: Number,
-      default: null,
-      validator: function validator(value) {
-        return value > 0;
-      }
-    },
-    sorting: {
-      type: Array,
-      default: function _default() {
-        return [];
-      }
-    },
     uri: {
       type: String,
       default: null
     }
   },
-  methods: _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({
+  methods: _objectSpread2(_objectSpread2(_objectSpread2({
     /**
      * Get the items from storage.
      *
@@ -813,18 +847,17 @@ var store = new Vuex__default.Store({
 
       var options = {
         params: {
-          columns: this.columns,
+          columns: this.columnsPayload,
           page: this.page,
-          filters: this.filters,
           perPage: this.itemsPerPage,
           search: this.search,
-          sorting: this.currentSorting,
           extraParams: extraParams
         },
         paramsSerializer: function paramsSerializer(params) {
           return qs$1.stringify(params);
         }
       };
+      this.storeFilters();
       return axios$1.get(this.uri, options).then(function (response) {
         if (Object.prototype.hasOwnProperty.call(response.data, _this.dataKey)) {
           _this.items = response.data[_this.dataKey];
@@ -834,6 +867,14 @@ var store = new Vuex__default.Store({
 
         _this.$emit('update:items', _this.items);
       });
+    },
+
+    /**
+     * Refresh results.
+     */
+    refreshResults: function refreshResults() {
+      this.setPage(1);
+      this.getItems();
     },
 
     /**
@@ -848,8 +889,8 @@ var store = new Vuex__default.Store({
     },
 
     /**
-     * Checks whether the columns contain all the necessary properties
-     * and whether these properties have been initialized correctly.
+     * Checks that the columns contain all the required properties
+     * and that these properties are correctly initialized.
      */
     hydrateColumns: function hydrateColumns() {
       this.columns.forEach(function (column) {
@@ -902,17 +943,21 @@ var store = new Vuex__default.Store({
       }
 
       return this.rowClass;
+    },
+    setColumnSorting: function setColumnSorting(_ref) {
+      var columnName = _ref.columnName,
+          columnSort = _ref.columnSort;
+      this.columnsPayload[columnName].sort = columnSort;
+      this.getItems();
     }
-  }, Vuex.mapActions('sortingModule', {
-    addSort: 'addSortAction'
-  })), Vuex.mapActions('paginationModule', {
+  }, Vuex.mapActions('paginationModule', {
     setPage: 'setPageAction'
+  })), Vuex.mapActions('searchModule', {
+    setSearchValue: 'setValueAction'
   })), Vuex.mapActions('itemsPerPageModule', {
     setItemsPerPage: 'setItemsPerPageAction'
-  })), Vuex.mapActions('filtersModule', {
-    setFilter: 'addFilterAction'
   })),
-  computed: _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({
+  computed: _objectSpread2(_objectSpread2(_objectSpread2({
     /**
      * Checks whether the search form should be displayed. The form will
      * be displayed if there is at least one searchable column.
@@ -933,52 +978,11 @@ var store = new Vuex__default.Store({
         return column.visible;
       });
     }
-  }, Vuex.mapState('filtersModule', ['filters'])), Vuex.mapState('sortingModule', {
-    currentSorting: 'sorting'
-  })), Vuex.mapState('searchModule', {
+  }, Vuex.mapState('searchModule', {
     search: 'value'
   })), Vuex.mapState('paginationModule', ['page'])), Vuex.mapState('itemsPerPageModule', ['itemsPerPage'])),
-  watch: {
-    itemsPerPage: function itemsPerPage() {
-      this.getItems();
-    },
-    page: function page() {
-      this.getItems();
-    },
-    currentSorting: function currentSorting() {
-      this.getItems();
-    },
-    search: function search() {
-      this.setPage(1);
-      this.getItems();
-    },
-    filters: function filters() {
-      this.setPage(1);
-      this.getItems();
-    }
-  },
   created: function created() {
     this.hydrateColumns();
-  },
-  mounted: function mounted() {
-    var _this3 = this;
-
-    // If the perPage prop was used, let's override the local storage
-    // and set the items per page on the pagination module
-    if (this.perPage !== null) {
-      this.setItemsPerPage(this.perPage);
-    } // Dispatch the sorting prop values
-
-
-    this.sorting.forEach(function (sort) {
-      return _this3.addSort(sort);
-    }); // Register events
-
-    this.$root.$on('filterOptionSelected', this.setFilter);
-
-    if (this.uri !== null) {
-      this.getItems();
-    }
   }
 };function createInjectorSSR(context) {
     if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
@@ -1031,15 +1035,37 @@ var __vue_render__$3 = function __vue_render__() {
 
   var _c = _vm._self._c || _h;
 
-  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-468aacca>", "</div>", [_vm._t("filters"), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-468aacca>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar') : _vm._e()], 1)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-468aacca>", "</div>", [_vm._t("header", null, {
+  return _c('div', [_vm._ssrNode("<div class=\"card mb-4\" data-v-2e00ee22>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-2e00ee22>", "</div>", [_vm._ssrNode("<div class=\"form-row\" data-v-2e00ee22>", "</div>", [_vm._t("filters", null, {
+    "columns": _vm.columnsPayload,
+    "refreshResults": _vm.refreshResults
+  }), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col\" data-v-2e00ee22>", "</div>", [_vm.isSearchable ? _c('vue-table-search-bar', {
+    on: {
+      "searchPerformed": _vm.getItems
+    }
+  }) : _vm._e()], 1), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"col-auto\" data-v-2e00ee22>", "</div>", [_vm._t("reset-button", [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.resetFilters
+    }
+  }, [_c('i', {
+    staticClass: "fas fa-eraser"
+  })])], {
+    "resetFilters": _vm.resetFilters
+  })], 2)], 2)])]), _vm._ssrNode(" "), _vm._ssrNode("<div class=\"card\" data-v-2e00ee22>", "</div>", [_vm._ssrNode("<div class=\"card-body\" data-v-2e00ee22>", "</div>", [_vm._t("header", null, {
     "table": this
-  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-468aacca>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-468aacca>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-468aacca>", "</div>", [_vm._ssrNode("<table" + _vm._ssrClass(null, _vm.tableClass) + " data-v-468aacca>", "</table>", [_vm._ssrNode("<thead data-v-468aacca>", "</thead>", [_vm._ssrNode("<tr data-v-468aacca>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-468aacca></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-468aacca><div class=\"custom-control custom-checkbox\" data-v-468aacca><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-468aacca> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-468aacca></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
-    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-468aacca>", "</th>", [_c('vue-table-heading', {
+  }), _vm._ssrNode(" "), _vm.items.length === 0 ? _vm._ssrNode("<div class=\"alert alert-info\" data-v-2e00ee22>", "</div>", [_vm._ssrNode(_vm._ssrEscape("\n                " + _vm._s(_vm.lang.no_records) + "\n            "))], 2) : _vm._ssrNode("<div data-v-2e00ee22>", "</div>", [_vm._ssrNode("<div class=\"table-responsive\" data-v-2e00ee22>", "</div>", [_vm._ssrNode("<table" + _vm._ssrClass(null, _vm.tableClass) + " data-v-2e00ee22>", "</table>", [_vm._ssrNode("<thead data-v-2e00ee22>", "</thead>", [_vm._ssrNode("<tr data-v-2e00ee22>", "</tr>", [_vm._ssrNode((_vm.orderable ? "<th class=\"fit-content\" data-v-2e00ee22></th>" : "<!---->") + " " + (_vm.checkable.display ? "<th class=\"fit-content\" data-v-2e00ee22><div class=\"custom-control custom-checkbox\" data-v-2e00ee22><input type=\"checkbox\"" + _vm._ssrAttr("id", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-input\" data-v-2e00ee22> <label" + _vm._ssrAttr("for", "vueTableCheckableAll" + _vm._uid) + " class=\"custom-control-label\" data-v-2e00ee22></label></div></th>" : "<!---->") + " "), _vm._l(_vm.visibleColumns, function (column) {
+    return _vm._ssrNode("<th" + _vm._ssrClass(null, column.headerClasses) + " data-v-2e00ee22>", "</th>", [_c('vue-table-heading', {
       attrs: {
         "column": column
+      },
+      on: {
+        "vueTableSortChanged": _vm.setColumnSorting
       }
     })], 1);
-  }), _vm._ssrNode(" " + (_vm.actions.slots.length ? "<th data-v-468aacca></th>" : "<!---->"))], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
+  })], 2)]), _vm._ssrNode(" "), _c('vue-draggable', {
     attrs: {
       "tag": "tbody",
       "handle": ".v-table-drag-handle",
@@ -1047,7 +1073,7 @@ var __vue_render__$3 = function __vue_render__() {
     },
     on: {
       "change": function change($event) {
-        return _vm.$emit('itemsReordered', $event.moved.element, $event.moved.newIndex);
+        return _vm.$emit('vueTableItemsReordered', $event.moved.element, $event.moved.newIndex);
       }
     },
     model: {
@@ -1125,18 +1151,17 @@ var __vue_render__$3 = function __vue_render__() {
         }
       })] : column.slotName ? [_vm._t(column.slotName, null, {
         "item": item
-      })] : column.name ? [_vm._v("\n                                        " + _vm._s(item[column.name]) + "\n                                    ")] : _vm._e()], 2);
-    }), _vm._v(" "), _vm.actions.slots.length ? _c('td', {
-      staticClass: "fit-content align-middle",
-      class: _vm.actions.classes
-    }, [_vm._l(_vm.actions.slots, function (action) {
-      return _vm._t("action-" + action, null, {
-        "item": item
-      });
-    })], 2) : _vm._e()], 2);
+      })] : column.name ? [_vm._v("\n                                        " + _vm._s(column.name.split(".").reduce(function (a, b) {
+        return a[b];
+      }, item)) + "\n                                    ")] : _vm._e()], 2);
+    })], 2);
   }), 0)], 2)]), _vm._ssrNode(" "), _vm.paginate ? _c('vue-table-pagination', {
     attrs: {
       "items": _vm.totalItems
+    },
+    on: {
+      "itemsPerPageSelected": _vm.getItems,
+      "pageSelected": _vm.getItems
     }
   }) : _vm._e()], 2)], 2)])], 2);
 };
@@ -1146,8 +1171,8 @@ var __vue_staticRenderFns__$3 = [];
 
 var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
   if (!inject) return;
-  inject("data-v-468aacca_0", {
-    source: ".fit-content[data-v-468aacca]{width:1%;white-space:nowrap}",
+  inject("data-v-2e00ee22_0", {
+    source: ".fit-content[data-v-2e00ee22]{width:1%;white-space:nowrap}",
     map: undefined,
     media: undefined
   });
@@ -1155,10 +1180,10 @@ var __vue_inject_styles__$3 = function __vue_inject_styles__(inject) {
 /* scoped */
 
 
-var __vue_scope_id__$3 = "data-v-468aacca";
+var __vue_scope_id__$3 = "data-v-2e00ee22";
 /* module identifier */
 
-var __vue_module_identifier__$3 = "data-v-468aacca";
+var __vue_module_identifier__$3 = "data-v-2e00ee22";
 /* functional template */
 
 var __vue_is_functional_template__$3 = false;
@@ -1167,45 +1192,7 @@ var __vue_is_functional_template__$3 = false;
 var __vue_component__$3 = /*#__PURE__*/normalizeComponent({
   render: __vue_render__$3,
   staticRenderFns: __vue_staticRenderFns__$3
-}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, createInjectorSSR, undefined);var filterColumn_directive = {
-  name: 'filter-column',
-  bind: function bind(el, binding, vnode) {
-    var columnName = binding.value;
-    var storedFilters = window.localStorage.getItem(filtersStorageName);
-    storedFilters = storedFilters ? JSON.parse(storedFilters) : [];
-    var storedFilter = storedFilters.find(function (filter) {
-      return filter.column == columnName;
-    });
-
-    var setSelection = function setSelection(el) {
-      if (typeof storedFilter !== 'undefined') {
-        _toConsumableArray(el.options).filter(function (option) {
-          return storedFilter.values.includes(option.value);
-        }).map(function (option) {
-          return option.setAttribute('selected', true);
-        });
-      }
-    };
-
-    setSelection(el);
-    el.addEventListener('vueTable.optionsLoaded', function (event) {
-      setSelection(event.target);
-    });
-    el.addEventListener('change', function (event) {
-      var selectedValues = _toConsumableArray(event.target.options).filter(function (option) {
-        return option.selected && option.value;
-      }).map(function (option) {
-        return option.value;
-      });
-
-      var payload = {
-        column: columnName,
-        values: selectedValues
-      };
-      vnode.context.$root.$emit('filterOptionSelected', payload);
-    });
-  }
-};var install = function installVueTable(Vue) {
+}, __vue_inject_styles__$3, __vue_script__$3, __vue_scope_id__$3, __vue_is_functional_template__$3, __vue_module_identifier__$3, false, undefined, createInjectorSSR, undefined);var install = function installVueTable(Vue) {
   if (install.installed) {
     return;
   }
@@ -1239,4 +1226,4 @@ var plugin = {
 
 
 __vue_component__$3.install = install; // Export component by default
-exports.VueTable=__vue_component__$3;exports.filterColumn=filterColumn_directive;
+exports.VueTable=__vue_component__$3;
